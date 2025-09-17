@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.5)
+
+# 设置项目名称
+project(esp32_http_gpio_ap)
+
+# 包含 main 目录
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(esp32_http_gpio_ap)
