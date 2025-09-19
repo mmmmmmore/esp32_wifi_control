@@ -4,6 +4,12 @@
 #include "ov7670.h"
 
 void app_main(void) {
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    printf("ESP32S3 Boot Success...\n");
     // 初始化 WiFi SoftAP
     wifi_init_softap();
 
