@@ -2,6 +2,7 @@
 #define OV7670_CFG_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 typedef struct {
     uint8_t reg;

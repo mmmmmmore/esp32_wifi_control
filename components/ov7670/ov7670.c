@@ -31,6 +31,8 @@
 #define OV7670_FIFO_D5 5
 #define OV7670_FIFO_D6 6
 #define OV7670_FIFO_D7 7
+/*
+
 
 static const gpio_num_t ov7670_data_pins[OV7670_DATA_GPIO_NUM] = {
     OV7670_FIFO_D0,
@@ -43,7 +45,7 @@ static const gpio_num_t ov7670_data_pins[OV7670_DATA_GPIO_NUM] = {
     OV7670_FIFO_D7
 };
 
-
+*/
 
 //define control pin
 #define OV7670_WRST 14
@@ -54,7 +56,7 @@ static const gpio_num_t ov7670_data_pins[OV7670_DATA_GPIO_NUM] = {
 #define OV7670_VSYNC 10
 
 
-
+/*
 void ov7670_init(void) {
     // 初始化 GPIO 和 SCCB
     ov7670_gpio_init();
@@ -75,6 +77,7 @@ void ov7670_init(void) {
     printf("OV7670 初始化完成。\n");
 }
 
+*/
 // 可选：设置窗口大小（如使用 AL422B FIFO）
 void ov7670_window_set(uint16_t startX, uint16_t startY, uint16_t width, uint16_t height) {
     // 示例：设置窗口寄存器（需要根据实际寄存器定义调整）

@@ -2,6 +2,7 @@
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "esp_rom_sys.h"
 
 static gpio_num_t sccb_sda;
 static gpio_num_t sccb_scl;
@@ -9,7 +10,7 @@ static gpio_num_t sccb_scl;
 #define SCCB_DELAY_US 5  // SCCB 时序延迟，单位微秒
 
 static void sccb_delay() {
-    ets_delay_us(SCCB_DELAY_US);
+    esp_rom_delay_us(SCCB_DELAY_US);
 }
 
 static void sccb_set_sda(int level) {
@@ -51,4 +52,11 @@ static void sccb_start() {
     sccb_delay();
 }
 
-static void sccb_stop
+static void sccb_stop(){
+    sccb_set_sda(0);
+    sccb_delay();
+    sccb_set_scl(1);
+    sccb_delay();
+    sccb_set_sda(1);
+    sccb_delay();
+}
