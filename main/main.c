@@ -3,6 +3,9 @@
 #include "webserver.h"
 #include "ov7670.h"
 #include "nvs_flash.h"
+#include "esp_netif.h"
+#include "esp_event.h"
+
 
 void app_main(void) {
     esp_err_t ret = nvs_flash_init();
@@ -14,6 +17,11 @@ void app_main(void) {
     // 初始化 WiFi SoftAP
     wifi_init_softap();
 
+    //初始化网络协议栈
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+
+    
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）
     ov7670_init();
 
