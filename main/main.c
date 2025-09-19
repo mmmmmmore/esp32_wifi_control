@@ -2,6 +2,7 @@
 #include "wifi_ap.h"
 #include "webserver.h"
 #include "ov7670.h"
+#include "nvs_flash.h"
 
 void app_main(void) {
     esp_err_t ret = nvs_flash_init();
