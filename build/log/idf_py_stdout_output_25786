@@ -1,0 +1,71 @@
+Command: ninja flash
+[1/5] cd /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build && /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/partition_table/partition-table.bin /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/esp32_wifi_control.bin
+esp32_wifi_control.bin binary size 0xbbc70 bytes. Smallest app partition is 0x100000 bytes. 0x44390 bytes (27%) free.
+[2/5] Performing build step for 'bootloader'
+[1/1] cd /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/bootloader && /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/bootloader/bootloader.bin
+Bootloader binary size 0x52e0 bytes. 0x2d20 bytes (35%) free.
+[3/5] No install step for 'bootloader'
+[4/5] Completed 'bootloader'
+[4/5] Running utility command for flash
+esptool.py --chip esp32s3 -p /dev/tty.usbmodem5AF70906551 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 bootloader/bootloader.bin 0x8000 partition_table/partition-table.bin 0x10000 esp32_wifi_control.bin
+esptool.py v4.10.dev2
+Serial port /dev/tty.usbmodem5AF70906551
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+MAC: dc:b4:d9:04:7c:04
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x00010000 to 0x000cbfff...
+SHA digest in image updated
+Compressed 21216 bytes to 13530...
+Writing at 0x00000000... (100 %)
+Wrote 21216 bytes (13530 compressed) at 0x00000000 in 0.6 seconds (effective 268.8 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 103...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (103 compressed) at 0x00008000 in 0.1 seconds (effective 441.0 kbit/s)...
+Hash of data verified.
+Compressed 769136 bytes to 482635...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001c680... (6 %)
+Writing at 0x00025a57... (10 %)
+Writing at 0x00031121... (13 %)
+Writing at 0x000372fc... (16 %)
+Writing at 0x0003dbc2... (20 %)
+Writing at 0x00043a69... (23 %)
+Writing at 0x00049880... (26 %)
+Writing at 0x0004f431... (30 %)
+Writing at 0x000553aa... (33 %)
+Writing at 0x0005aa7d... (36 %)
+Writing at 0x00060237... (40 %)
+Writing at 0x00065737... (43 %)
+Writing at 0x0006aa65... (46 %)
+Writing at 0x0006fc6d... (50 %)
+Writing at 0x00074fcf... (53 %)
+Writing at 0x0007a602... (56 %)
+Writing at 0x00080654... (60 %)
+Writing at 0x00086019... (63 %)
+Writing at 0x0008bb93... (66 %)
+Writing at 0x00091752... (70 %)
+Writing at 0x00096f45... (73 %)
+Writing at 0x0009cbb4... (76 %)
+Writing at 0x000a2e61... (80 %)
+Writing at 0x000ab106... (83 %)
+Writing at 0x000b0e9f... (86 %)
+Writing at 0x000b7544... (90 %)
+Writing at 0x000bd396... (93 %)
+Writing at 0x000c3b39... (96 %)
+Writing at 0x000c8beb... (100 %)
+Wrote 769136 bytes (482635 compressed) at 0x00010000 in 11.5 seconds (effective 534.6 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
