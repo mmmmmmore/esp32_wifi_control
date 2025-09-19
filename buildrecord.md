@@ -13,3 +13,12 @@
    23 | static int sccb_get_sda() {
       |            ^~~~~~~~~~~~
 [3/31] Building C object esp-idf/ov7670/CMakeFiles/__idf_ov7670.dir/ov7670.c.obj
+
+
+
+
+/Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.1.0/../../../../xtensa-esp-elf/bin/ld: esp-idf/ov7670gpio/libov7670gpio.a(ov7670_gpio.c.obj): in function `ov7670_init':
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/ov7670gpio/ov7670_gpio.c:167: multiple definition of `ov7670_init'; esp-idf/ov7670/libov7670.a(ov7670.c.obj):/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/ov7670/ov7670.c:60: first defined here
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+ninja failed with exit code 1, output of the command is in the /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/log/idf_py_stderr_output_14066 and /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/log/idf_py_stdout_output_14066
