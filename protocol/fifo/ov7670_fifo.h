@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 // 初始化 FIFO 控制引脚
 void fifo_init(void);

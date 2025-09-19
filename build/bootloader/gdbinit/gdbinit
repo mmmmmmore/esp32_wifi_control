@@ -1,0 +1,2 @@
+source /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/bootloader/gdbinit/symbols
+source /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/bootloader/gdbinit/connect

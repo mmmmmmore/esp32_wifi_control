@@ -1,6 +1,6 @@
 #include "esp_http_server.h"
 #include "stream_control.h"
-#include "fifo.h"
+#include "ov7670_fifo.h"
 
 static esp_err_t toggle_handler(httpd_req_t *req) {
     char buf[8];
@@ -80,7 +80,7 @@ void register_static_handlers(httpd_handle_t server) {
     httpd_uri_t index_uri = {
         .uri = "/",
         .method = HTTP_GET,
-        .handler = index_handler
+        .handler = image_handler
     };
     httpd_register_uri_handler(server, &index_uri);
 }

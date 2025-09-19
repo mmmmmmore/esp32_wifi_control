@@ -15,14 +15,52 @@
 #define OV7670_WREN     15
 #define OV7670_VSYNC    10
 
+
+//define the I2C pin
+#define OV7670_I2C_SDA 8
+#define OV7670_I2C_SCL 9
+
+#define OV7670_DATA_GPIO_NUM 8
+
+//define the D0-D7 to GPIO
+#define OV7670_FIFO_D0 0
+#define OV7670_FIFO_D1 1
+#define OV7670_FIFO_D2 2
+#define OV7670_FIFO_D3 3
+#define OV7670_FIFO_D4 4
+#define OV7670_FIFO_D5 5
+#define OV7670_FIFO_D6 6
+#define OV7670_FIFO_D7 7
+
+static const gpio_num_t ov7670_data_pins[OV7670_DATA_GPIO_NUM] = {
+    OV7670_FIFO_D0,
+    OV7670_FIFO_D1,
+    OV7670_FIFO_D2,
+    OV7670_FIFO_D3,
+    OV7670_FIFO_D4,
+    OV7670_FIFO_D5,
+    OV7670_FIFO_D6,
+    OV7670_FIFO_D7
+};
+
+
+
+//define control pin
+#define OV7670_WRST 14
+#define OV7670_WEN 15
+#define OV7670_RRST 13
+#define OV7670_RCLK 16
+
+#define OV7670_VSYNC 10
+
 static const char *TAG = "OV7670";
 
 // I2C initialization for SCCB
 void sccb_init() {
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = SCCB_SDA_GPIO,
-        .scl_io_num = SCCB_SCL_GPIO,
+        .sda_io_num = OV7670_I2C_SDA,
+        .scl_io_num = OV7670_I2C_SCL,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
         .master.clk_speed = 100000
@@ -116,7 +154,7 @@ void ov7670_gpio_init() {
             .pull_down_en = GPIO_PULLDOWN_DISABLE,
             .intr_type = GPIO_INTR_DISABLE
         };
-        gpio_config(&data_conf)
+        gpio_config(&data_conf);
     }
 
 }
