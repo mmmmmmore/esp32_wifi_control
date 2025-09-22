@@ -1,0 +1,98 @@
+Command: /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/tools/idf_monitor.py -p /dev/tty.usbmodem5AF70906551 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/esp32_wifi_control.elf /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/bootloader/bootloader.elf -m '/Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python' '/Users/maochun/esp32prj/esp-idf/tools/idf.py' '-p' '/dev/tty.usbmodem5AF70906551'
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+[0;32mI (24) boot: ESP-IDF HEAD-HASH-NOTFOUND 2nd stage bootloader[0m
+[0;32mI (25) boot: compile time Sep 17 2025 17:51:54[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (26) boot: chip revision: v0.2[0m
+[0;32mI (29) boot: efuse block revision: v1.3[0m
+[0;32mI (32) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (36) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (40) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (44) boot: Enabling RNG early entropy source...[0m
+[0;32mI (48) boot: Partition Table:[0m
+[0;32mI (51) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (70) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (77) boot: End of partition table[0m
+[0;32mI (80) esp_image: segment 0: paddr=00010020 vaddr=3c090020 size=1b5b4h (112052) map[0m
+[0;32mI (107) esp_image: segment 1: paddr=0002b5dc vaddr=3fc9a900 size=04a24h ( 18980) load[0m
+[0;32mI (111) esp_image: segment 2: paddr=00030008 vaddr=40374000 size=10010h ( 65552) load[0m
+[0;32mI (126) esp_image: segment 3: paddr=00040020 vaddr=42000020 size=8d208h (578056) map[0m
+[0;32mI (228) esp_image: segment 4: paddr=000cd230 vaddr=40384010 size=06898h ( 26776) load[0m
+[0;32mI (234) esp_image: segment 5: paddr=000d3ad0 vaddr=600fe000 size=00020h (    32) load[0m
+[0;32mI (243) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (244) boot: Disabling RNG early entropy source...[0m
+[0;32mI (254) cpu_start: Multicore app[0m
+[0;32mI (263) cpu_start: Pro cpu start user code[0m
+[0;32mI (263) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (263) app_init: Application information:[0m
+[0;32mI (263) app_init: Project name:     PROJECT_NAME[0m
+[0;32mI (267) app_init: App version:      1[0m
+[0;32mI (271) app_init: Compile time:     Sep 17 2025 17:50:51[0m
+[0;32mI (276) app_init: ELF file SHA256:  42924036d...[0m
+[0;32mI (280) app_init: ESP-IDF:          HEAD-HASH-NOTFOUND[0m
+[0;32mI (285) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (289) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (293) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (297) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (303) heap_init: At 3FCA3000 len 00046710 (281 KiB): RAM[0m
+[0;32mI (308) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (313) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (318) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM[0m
+[0;32mI (325) spi_flash: detected chip: boya[0m
+[0;32mI (327) spi_flash: flash io: dio[0m
+[0;33mW (330) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (343) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (349) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (356) main_task: Started on CPU0[0m
+[0;32mI (376) main_task: Calling app_main()[0m
+[0;32mI (396) pp: pp rom version: e7ae62f[0m
+[0;32mI (396) net80211: net80211 rom version: e7ae62f[0m
+[0;32mI (406) wifi:wifi driver task: 3fced478, prio:23, stack:6656, core=0[0m
+[0;32mI (406) wifi:wifi firmware version: f3dbad7[0m
+[0;32mI (406) wifi:wifi certification version: v7.0[0m
+[0;32mI (406) wifi:config NVS flash: enabled[0m
+[0;32mI (406) wifi:config nano formatting: disabled[0m
+[0;32mI (416) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (416) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (426) wifi:Init management short buffer num: 32[0m
+[0;32mI (426) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (436) wifi:Init static tx FG buffer num: 2[0m
+[0;32mI (436) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (436) wifi:Init static rx buffer num: 10[0m
+[0;32mI (446) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (446) wifi_init: rx ba win: 6[0m
+[0;32mI (446) wifi_init: accept mbox: 6[0m
+[0;32mI (456) wifi_init: tcpip mbox: 32[0m
+[0;32mI (456) wifi_init: udp mbox: 6[0m
+[0;32mI (456) wifi_init: tcp mbox: 6[0m
+[0;32mI (466) wifi_init: tcp tx win: 5760[0m
+[0;32mI (466) wifi_init: tcp rx win: 5760[0m
+[0;32mI (466) wifi_init: tcp mss: 1440[0m
+[0;32mI (476) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (476) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (486) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10[0m
+[0;32mI (526) wifi:mode : softAP (dc:b4:d9:04:7c:05)[0m
+[0;32mI (526) wifi:Total power save buffer number: 16[0m
+[0;32mI (526) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (526) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (526) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (536) main_task: Returned from app_main()[0m
+[0;32mI (5596) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (5596) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U[0m
+[0;32mI (5636) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;32mI (5716) wifi:station: 5c:5f:67:ed:16:1a leave, AID = 1, reason = 1, bss_flags is 756835, bss:0x3fca5c98[0m
+[0;32mI (5716) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (11006) wifi:new:<1,1>, old:<1,0>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (11006) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U[0m
+[0;32mI (11206) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;32mI (14856) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:75, winSize:64[0m
