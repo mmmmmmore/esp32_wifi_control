@@ -2,6 +2,15 @@
 # Automatically generated file. DO NOT EDIT.
 # Espressif IoT Development Framework (ESP-IDF) 6.0.0 Project Configuration
 #
+
+CONFIG_WIFI_SOFTSAP_SSID ="ESP32_TEST"
+CONFIG_WIFI_SOFTSAP_PASSWORD ="niwenwoa"
+
+
+
+
+
+##
 CONFIG_SOC_ADC_SUPPORTED=y
 CONFIG_SOC_UART_SUPPORTED=y
 CONFIG_SOC_PCNT_SUPPORTED=y
