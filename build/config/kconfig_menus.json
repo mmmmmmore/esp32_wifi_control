@@ -34865,6 +34865,81 @@
                 "id": "component-config-wi-fi-provisioning-manager",
                 "title": "Wi-Fi Provisioning Manager",
                 "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "SSID (network name) for the example to connect to.",
+                        "id": "WIFI_SOFTAP_SSID",
+                        "name": "WIFI_SOFTAP_SSID",
+                        "range": null,
+                        "title": "SoftAP SSID",
+                        "type": "string"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "WiFi password (WPA or WPA2) for the example to use.",
+                        "id": "WIFI_SOFTAP_PASSWORD",
+                        "name": "WIFI_SOFTAP_PASSWORD",
+                        "range": null,
+                        "title": "SoftAP Password",
+                        "type": "string"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "WiFi channel (network channel) for the example to use.",
+                        "id": "ESP_WIFI_CHANNEL",
+                        "name": "ESP_WIFI_CHANNEL",
+                        "range": [
+                            1,
+                            13
+                        ],
+                        "title": "WiFi Channel",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Max number of the STA connects to AP.",
+                        "id": "ESP_MAX_STA_CONN",
+                        "name": "ESP_MAX_STA_CONN",
+                        "range": null,
+                        "title": "Maximal STA connections",
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "ESP_GTK_REKEYING_ENABLE",
+                                "help": "GTK rekeying interval in seconds.",
+                                "id": "ESP_GTK_REKEY_INTERVAL",
+                                "name": "ESP_GTK_REKEY_INTERVAL",
+                                "range": [
+                                    60,
+                                    65535
+                                ],
+                                "title": "GTK rekey interval",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "Flag to enable GTK rekeying.",
+                        "id": "ESP_GTK_REKEYING_ENABLE",
+                        "name": "ESP_GTK_REKEYING_ENABLE",
+                        "range": null,
+                        "title": "Enable GTK Rekeying",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-wifi_menu_configuration",
+                "title": "Wifi_Menu_Configuration",
+                "type": "menu"
             }
         ],
         "depends_on": null,

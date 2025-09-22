@@ -1,11 +1,12 @@
 #include "wifi_ap.h"
+#include "sdkconfig.h"
 
 
 #define WIFI_SSID "ESP32-AP"
 #define WIFI_PASS "12345678"
 #define LED_GPIO GPIO_NUM_2
 
-static const char *TAG = "main";
+//static const char *TAG = "main";
 
 // 从 sdkconfig 中读取 SSID 和密码
 const char* ssid = CONFIG_WIFI_SOFTAP_SSID;

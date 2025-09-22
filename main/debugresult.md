@@ -1,93 +1,93 @@
-W (341) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
-W (354) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`
-I (363) sleep_gpio: Configure to isolate all GPIO pins in sleep state
-I (370) sleep_gpio: Enable automatic switching of GPIO sleep configuration
-I (377) main_task: Started on CPU0
-I (387) main_task: Calling app_main()
+
+Rebooting...
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0xc (RTC_SW_CPU_RST),boot:0x9 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x4037c941
+--- 0x4037c941: esp_restart_noos at /Users/maochun/esp32prj/esp-idf/components/esp_system/port/soc/esp32s3/system_internal.c:164
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x1588
+load:0x403c8700,len:0xd7c
+--- 0x403c8700: _stext at ??:?
+load:0x403cb700,len:0x2f80
+entry 0x403c8908
+--- 0x403c8908: call_start_cpu0 at /Users/maochun/esp32prj/esp-idf/components/bootloader/subproject/main/bootloader_start.c:25
+I (29) boot: ESP-IDF v6.0-dev-2039-g2044fba6e7 2nd stage bootloader
+I (29) boot: compile time Sep 22 2025 20:08:24
+I (29) boot: Multicore bootloader
+I (31) boot: chip revision: v0.2
+I (34) boot: efuse block revision: v1.3
+I (37) boot.esp32s3: Boot SPI Speed : 80MHz
+I (41) boot.esp32s3: SPI Mode       : DIO
+I (45) boot.esp32s3: SPI Flash Size : 2MB
+I (49) boot: Enabling RNG early entropy source...
+I (53) boot: Partition Table:
+I (56) boot: ## Label            Usage          Type ST Offset   Length
+I (62) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (69) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (75) boot:  2 factory          factory app      00 00 00010000 00100000
+I (82) boot: End of partition table
+I (85) esp_image: segment 0: paddr=00010020 vaddr=3c0a0020 size=1cec4h (118468) map
+I (114) esp_image: segment 1: paddr=0002ceec vaddr=3fc98e00 size=0312ch ( 12588) load
+I (117) esp_image: segment 2: paddr=00030020 vaddr=42000020 size=90438h (590904) map
+I (223) esp_image: segment 3: paddr=000c0460 vaddr=3fc9bf2c size=01ae0h (  6880) load
+I (225) esp_image: segment 4: paddr=000c1f48 vaddr=40374000 size=14d4ch ( 85324) load
+I (246) esp_image: segment 5: paddr=000d6c9c vaddr=50000000 size=00020h (    32) load
+I (255) boot: Loaded app from partition at offset 0x10000
+I (255) boot: Disabling RNG early entropy source...
+I (265) cpu_start: Multicore app
+I (274) cpu_start: GPIO 44 and 43 are used as console UART I/O pins
+I (275) cpu_start: Pro cpu start user code
+I (275) cpu_start: cpu freq: 160000000 Hz
+I (276) app_init: Application information:
+I (280) app_init: Project name:     esp32_wifi_control
+I (285) app_init: App version:      ff9e9e6-dirty
+I (289) app_init: Compile time:     Sep 22 2025 20:08:00
+I (294) app_init: ELF file SHA256:  3b87af81a...
+I (299) app_init: ESP-IDF:          v6.0-dev-2039-g2044fba6e7
+I (304) efuse_init: Min chip rev:     v0.0
+I (308) efuse_init: Max chip rev:     v0.99 
+I (312) efuse_init: Chip rev:         v0.2
+I (316) heap_init: Initializing. RAM available for dynamic allocation:
+I (322) heap_init: At 3FCA1718 len 00047FF8 (287 KiB): RAM
+I (327) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (333) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (338) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM
+I (344) spi_flash: detected chip: boya
+I (347) spi_flash: flash io: dio
+W (349) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+W (362) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`
+I (372) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (378) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (385) main_task: Started on CPU0
+I (395) main_task: Calling app_main()
 ESP32S3 Boot Success...
-I (407) pp: pp rom version: e7ae62f
-I (407) net80211: net80211 rom version: e7ae62f
-I (417) wifi:wifi driver task: 3fcec988, prio:23, stack:6656, core=0
-I (417) wifi:wifi firmware version: df85326
-I (417) wifi:wifi certification version: v7.0
-I (417) wifi:config NVS flash: enabled
-I (427) wifi:config nano formatting: disabled
-I (427) wifi:Init data frame dynamic rx buffer num: 32
-I (427) wifi:Init static rx mgmt buffer num: 5
-I (437) wifi:Init management short buffer num: 32
-I (437) wifi:Init dynamic tx buffer num: 32
-I (447) wifi:Init static tx FG buffer num: 2
-I (447) wifi:Init static rx buffer size: 1600
-I (447) wifi:Init static rx buffer num: 10
-I (457) wifi:Init dynamic rx buffer num: 32
-I (457) wifi_init: rx ba win: 6
-I (467) wifi_init: accept mbox: 6
-I (467) wifi_init: tcpip mbox: 32
-I (467) wifi_init: udp mbox: 6
-I (467) wifi_init: tcp mbox: 6
-I (477) wifi_init: tcp tx win: 5760
-I (477) wifi_init: tcp rx win: 5760
-I (477) wifi_init: tcp mss: 1440
-I (487) wifi_init: WiFi IRAM OP enabled
-I (487) wifi_init: WiFi RX IRAM OP enabled
-I (497) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10
-E (537) wifi:failed to post WiFi event=43 ret=259
-I (537) wifi:mode : softAP (dc:b4:d9:04:7c:05)
-I (537) wifi:Total power save buffer number: 16
-I (537) wifi:Init max length of beacon: 752/752
-I (537) wifi:Init max length of beacon: 752/752
-E (547) wifi:failed to post WiFi event=12 ret=259
-I (547) wifi_ap: WiFi SoftAP started. SSID: ESP32-SoftAP
-I (607) OV7670: OV7670 initialized
-系统初始化完成，等待客户端连接...
-I (607) main_task: Returned from app_main()
-I (24767) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
-I (24767) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+ESP_ERROR_CHECK failed: esp_err_t 0x103 (ESP_ERR_INVALID_STATE) at 0x420150b9
+--- 0x420150b9: esp_netif_create_default_wifi_ap at /Users/maochun/esp32prj/esp-idf/components/esp_wifi/src/wifi_default.c:410
+file: "/IDF/components/esp_wifi/src/wifi_default.c" line 410
+func: esp_netif_create_default_wifi_ap
+expression: esp_wifi_set_default_wifi_ap_handlers()
+
+abort() was called at PC 0x4037c7af on core 0
+--- 0x4037c7af: _esp_error_check_failed at /Users/maochun/esp32prj/esp-idf/components/esp_system/esp_err.c:49
 
 
- (330) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
-I (343) sleep_gpio: Configure to isolate all GPIO pins in sleep state
-I (349) sleep_gpio: Enable automatic switching of GPIO sleep configuration
-I (356) main_task: Started on CPU0
-I (376) main_task: Calling app_main()
-I (396) pp: pp rom version: e7ae62f
-I (396) net80211: net80211 rom version: e7ae62f
-I (406) wifi:wifi driver task: 3fced478, prio:23, stack:6656, core=0
-I (406) wifi:wifi firmware version: f3dbad7
-I (406) wifi:wifi certification version: v7.0
-I (406) wifi:config NVS flash: enabled
-I (406) wifi:config nano formatting: disabled
-I (416) wifi:Init data frame dynamic rx buffer num: 32
-I (416) wifi:Init static rx mgmt buffer num: 5
-I (426) wifi:Init management short buffer num: 32
-I (426) wifi:Init dynamic tx buffer num: 32
-I (436) wifi:Init static tx FG buffer num: 2
-I (436) wifi:Init static rx buffer size: 1600
-I (436) wifi:Init static rx buffer num: 10
-I (446) wifi:Init dynamic rx buffer num: 32
-I (446) wifi_init: rx ba win: 6
-I (446) wifi_init: accept mbox: 6
-I (456) wifi_init: tcpip mbox: 32
-I (456) wifi_init: udp mbox: 6
-I (456) wifi_init: tcp mbox: 6
-I (466) wifi_init: tcp tx win: 5760
-I (466) wifi_init: tcp rx win: 5760
-I (466) wifi_init: tcp mss: 1440
-I (476) wifi_init: WiFi IRAM OP enabled
-I (476) wifi_init: WiFi RX IRAM OP enabled
-I (486) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10
-I (526) wifi:mode : softAP (dc:b4:d9:04:7c:05)
-I (526) wifi:Total power save buffer number: 16
-I (526) wifi:Init max length of beacon: 752/752
-I (526) wifi:Init max length of beacon: 752/752
-I (526) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1
-I (536) main_task: Returned from app_main()
-I (5596) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
-I (5596) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
-I (5636) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
-I (5716) wifi:station: 5c:5f:67:ed:16:1a leave, AID = 1, reason = 1, bss_flags is 756835, bss:0x3fca5c98
-I (5716) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
-I (11006) wifi:new:<1,1>, old:<1,0>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
-I (11006) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
-I (11206) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
-I (14856) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:75, winSize:64
+Backtrace: 0x4037c7f1:0x3fca4f70 0x4037c7b9:0x3fca4f90 0x40382955:0x3fca4fb0 
+--- 0x4037c7f1: panic_abort at /Users/maochun/esp32prj/esp-idf/components/esp_system/panic.c:480
+--- 0x4037c7b9: esp_system_abort at /Users/maochun/esp32prj/esp-idf/components/esp_system/port/esp_system_chip.c:87
+--- 0x40382955: abort at /Users/maochun/esp32prj/esp-idf/components/newlib/src/abort.c:38
+0x4037c7af:0x3fca5020 0x420150b9:0x3fca5050 0x4200b10b:0x3fca50
+--- 0x4037c7af: _esp_error_check_failed at /Users/maochun/esp32prj/esp-idf/components/esp_system/esp_err.c:49
+--- 0x420150b9: esp_netif_create_default_wifi_ap at /Users/maochun/esp32prj/esp-idf/components/esp_wifi/src/wifi_default.c:410
+--- 0x4200b10b: wifi_init_softap at /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/protocol/wifi_ap/wifi_ap.c:18
+80 0x4200aea4:0x3fca51f0 0x42006aa0:0x3fca5210 0x4208cfe2:0x3fca
+--- 0x4200aea4: app_main at /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/main/main.c:18
+--- 0x42006aa0: main_task at /Users/maochun/esp32prj/esp-idf/components/freertos/app_startup.c:208
+--- 0x4208cfe2: vPortTaskWrapper at /Users/maochun/esp32prj/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:139
+5240
+
+
+
+
+ELF file SHA256: 3b87af81a
