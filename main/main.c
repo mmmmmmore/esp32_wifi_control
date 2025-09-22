@@ -18,8 +18,8 @@ void app_main(void) {
     wifi_init_softap();
 
     //初始化网络协议栈
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    //ESP_ERROR_CHECK(esp_netif_init());
+    //ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）

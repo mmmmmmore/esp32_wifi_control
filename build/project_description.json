@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "esp32_wifi_control",
-    "project_version":    "ff9e9e6-dirty",
+    "project_version":    "4d4cabc-dirty",
     "project_path":       "/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control",
     "idf_path":           "/Users/maochun/esp32prj/esp-idf",
     "build_dir":          "/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build",

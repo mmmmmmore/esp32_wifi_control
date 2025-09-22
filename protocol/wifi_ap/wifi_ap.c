@@ -15,7 +15,12 @@ const char* password = CONFIG_WIFI_SOFTAP_PASSWORD;
 static const char *TAG = "wifi_ap";
 
 void wifi_init_softap(void) {
-    esp_netif_create_default_wifi_ap();
+    esp_err_t err = esp_netif_create_default_wifi_ap();
+    if (err!=ESP_OK){
+        ESP_LOGE(TAG,"failed to create default Wifi AP: %s",esp_err_to_name(err));
+        return;
+    }
+
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
 
