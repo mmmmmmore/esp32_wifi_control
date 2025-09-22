@@ -10,9 +10,9 @@
 #define OV7670_DATA_GPIO_NUM 8
 
 //define the D0-D7 to GPIO
-#define OV7670_FIFO_D0 0
-#define OV7670_FIFO_D1 1
-#define OV7670_FIFO_D2 2
+#define OV7670_FIFO_D0 16
+#define OV7670_FIFO_D1 17
+#define OV7670_FIFO_D2 18
 #define OV7670_FIFO_D3 3
 #define OV7670_FIFO_D4 4
 #define OV7670_FIFO_D5 5
@@ -76,3 +76,4 @@ void fifo_read_frame(uint8_t *buffer, size_t size) {
         buffer[i] = fifo_read_byte();
     }
 }
+
