@@ -14,19 +14,15 @@ static const char *TAG = "wifi_ap";
 
 void wifi_init_softap(void)
 {
-    // 确保网络栈已初始化（建议在 app_main 中完成）
-    esp_err_t err;
-
-    // 创建默认的 WiFi AP 接口
-    err = esp_netif_create_default_wifi_ap();
-    if (err != ESP_OK) {
-        ESP_LOGW(TAG, "SoftAP interface already created or failed: %s", esp_err_to_name(err));
+    esp_netif_t *netif = esp_netif_create_default_wifi_ap();
+    if (netif == NULL){
+        ESP_LOGE(TAG, "Fail to cteate the default wifi AP interface");
         return;
     }
 
     // 初始化 WiFi 驱动
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    err = esp_wifi_init(&cfg);
+    esp_err_t err = esp_wifi_init(&cfg);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_wifi_init failed: %s", esp_err_to_name(err));
         return;
