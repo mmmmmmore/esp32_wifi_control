@@ -91,3 +91,8 @@ Backtrace: 0x4037c7f1:0x3fca4f70 0x4037c7b9:0x3fca4f90 0x40382955:0x3fca4fb0
 
 
 ELF file SHA256: 3b87af81a
+
+
+In function 'wifi_init_softap':
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/protocol/wifi_ap/wifi_ap.c:21:9: error: assignment to 'esp_err_t' {aka 'int'} from 'esp_netif_t *' {aka 'struct esp_netif_obj *'} makes integer from pointer without a cast [-Wint-conversion]
+   21 |     err = esp_netif_create_default_wifi_ap();
