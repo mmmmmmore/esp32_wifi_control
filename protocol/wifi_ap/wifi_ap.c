@@ -14,10 +14,19 @@ static const char *TAG = "wifi_ap";
 
 void wifi_init_softap(void)
 {
-    esp_netif_t *netif = esp_netif_create_default_wifi_ap();
-    if (netif == NULL){
-        ESP_LOGE(TAG, "Fail to cteate the default wifi AP interface");
-        return;
+    // 确保网络栈已初始化（建议在 app_main 中完成）
+    // 这里不重复调用 esp_netif_init() 和 esp_event_loop_create_default()
+
+    // 创建默认的 WiFi AP 接口（只调用一次）
+    esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
+    if (netif == NULL) {
+        netif = esp_netif_create_default_wifi_ap();
+        if (netif == NULL) {
+            ESP_LOGE(TAG, "Failed to create default WiFi AP interface");
+            return;
+        }
+    } else {
+        ESP_LOGW(TAG, "Default WiFi AP interface already exists, skipping creation.");
     }
 
     // 初始化 WiFi 驱动
@@ -63,4 +72,13 @@ void wifi_init_softap(void)
     }
 
     ESP_LOGI(TAG, "WiFi SoftAP started. SSID: %s, Password: %s", WIFI_SSID, WIFI_PASS);
+
+    // 可选：检查 DHCP 状态
+    esp_netif_dhcp_status_t dhcp_status;
+    esp_netif_dhcps_get_status(netif, &dhcp_status);
+    if (dhcp_status == ESP_NETIF_DHCP_STARTED) {
+        ESP_LOGI(TAG, "DHCP server is running.");
+    } else {
+        ESP_LOGW(TAG, "DHCP server is NOT running.");
+    }
 }
