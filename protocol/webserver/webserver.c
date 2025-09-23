@@ -26,13 +26,44 @@ static esp_err_t image_handler(httpd_req_t *req) {
         return ESP_OK;
     }
 
-    uint8_t frame_buffer[640 * 480];  // 示例：灰度图像
-    fifo_read_frame(frame_buffer, sizeof(frame_buffer));
+    size_t frame_size = 640 * 480;  // 示例：灰度图像
+    uint8_t *frame_buffer = malloc(frame_size);
+    if (!frame_buffer) {
+        ESP_LOGE("image_handler", "Failed to allocate memory for frame buffer");
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    fifo_read_frame(frame_buffer, frame_size);
 
     httpd_resp_set_type(req, "application/octet-stream");
-    httpd_resp_send(req, (const char *)frame_buffer, sizeof(frame_buffer));
+    httpd_resp_send(req, (const char *)frame_buffer, frame_size);
+
+    free(frame_buffer);  // 释放堆内存
     return ESP_OK;
 }
+
+
+
+//static esp_err_t image_handler(httpd_req_t *req) {
+//    if (!capture_control_get()) {
+//        httpd_resp_sendstr(req, "Capture disabled");
+//        return ESP_OK;
+//    }
+//
+//    uint8_t *frame_buffer = malloc (640*480);
+//    if (!frame_buffer){
+//        httpd_resp_send_500(req);
+//        return ESP_FAIL;
+//    }
+//    uint8_t frame_buffer[640 * 480];  // 示例：灰度图像
+//    fifo_read_frame(frame_buffer, sizeof(frame_buffer));
+//
+//    httpd_resp_set_type(req, "application/octet-stream");
+//    httpd_resp_send(req, (const char *)frame_buffer, sizeof(frame_buffer));
+//    return ESP_OK;
+//}
+
 
 httpd_handle_t start_webserver(void) {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
@@ -67,6 +98,7 @@ httpd_handle_t start_webserver(void) {
 
 
 
+//
 //httpd_handle_t start_webserver(void) {
 //    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 //    httpd_handle_t server = NULL;
@@ -83,7 +115,7 @@ httpd_handle_t start_webserver(void) {
 //            .uri = "/image",
 //            .method = HTTP_GET,
 //            .handler = image_handler
-//       };
+//        };
 //        httpd_register_uri_handler(server, &image_uri);
 //    }
 //
@@ -117,4 +149,3 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
-
