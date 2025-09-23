@@ -59,3 +59,24 @@ I (31) boot: chip revision: v0.2
 
 cd /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/esp-idf/partition_table && /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/components/partition_table/gen_esp32part.py -q --offset 0x8000 --primary-bootloader-offset 0x0 --flash-size 2MB -- /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/partitions.csv /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/partition_table/partition-table.bin && /usr/local/bin/cmake -E echo "Partition table binary generated. Contents:" && /usr/local/bin/cmake -E echo "*******************************************************************************" && /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/components/partition_table/gen_esp32part.py -q --offset 0x8000 --primary-bootloader-offset 0x0 --flash-size 2MB -- /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/partition_table/partition-table.bin && /usr/local/bin/cmake -E echo "*******************************************************************************"
 Partitions tables occupies 4.0MB of flash (4194304 bytes) which does not fit in configured flash size 2MB. Change the flash size in menuconfig under the 'Serial Flasher Config' menu.
+
+
+系统初始化完成，等待客户端连接...
+I (718) main_task: Returned from app_main()
+I (23268) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (23268) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (30178) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (31388) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:73, winSize:64
+W (32518) httpd_uri: httpd_uri: Method '1' not allowed for URI '/toggle'
+W (32518) httpd_txrx: httpd_resp_send_err: 405 Method Not Allowed - Specified method is invalid for this resource
+I (38948) stream_control: Capture set to: OFF
+I (71758) stream_control: Capture set to: OFF
+I (74228) stream_control: Capture set to: OFF
+I (74908) stream_control: Capture set to: OFF
+I (76638) stream_control: Capture set to: OFF
+I (200758) toggle_handler: Received toggle command: ON
+I (200758) stream_control: Capture set to: ON
+I (223278) stream_control: Capture set to: ON
+E (223278) image_handler: Failed to allocate memory for frame buffer
+W (223278) httpd_txrx: httpd_resp_send_err: 500 Internal Server Error - Server has encountered an unexpected error
+W (223288) httpd_uri: httpd_uri: uri handler execution failed
