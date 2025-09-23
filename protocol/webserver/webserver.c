@@ -2,6 +2,7 @@
 #include "stream_control.h"
 #include "ov7670_fifo.h"
 #include "esp_log.h"
+#include "esp_new_jpeg.h"
 
 static esp_err_t toggle_handler(httpd_req_t *req) {
     char buf[8] ={0};
@@ -23,7 +24,7 @@ static esp_err_t toggle_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
-#include "esp_new_jpeg.h"
+
 
 static esp_err_t image_handler(httpd_req_t *req) {
     if (!capture_control_get()) {
