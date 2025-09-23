@@ -19,15 +19,15 @@ void wifi_init_softap(void)
 
     // 创建默认的 WiFi AP 接口（只调用一次）
     esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
-    if (netif == NULL) {
-        netif = esp_netif_create_default_wifi_ap();
-        if (netif == NULL) {
-            ESP_LOGE(TAG, "Failed to create default WiFi AP interface");
-            return;
-        }
-    } else {
-        ESP_LOGW(TAG, "Default WiFi AP interface already exists, skipping creation.");
-    }
+    //if (netif == NULL) {
+    //    netif = esp_netif_create_default_wifi_ap();
+    //   if (netif == NULL) {
+    //        ESP_LOGE(TAG, "Failed to create default WiFi AP interface");
+    //        return;
+    //    }
+    //} else {
+    //    ESP_LOGW(TAG, "Default WiFi AP interface already exists, skipping creation.");
+    // }
 
     // 初始化 WiFi 驱动
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
