@@ -9,7 +9,7 @@
 
 
 void init_spiffs(){
-    esp_vfs_spiffs_conf_r conf ={
+    esp_vfs_spiffs_conf_t conf ={
         .base_path = "/spiffs",
         .partition_label = "spiffs",
         .max_files =5,
