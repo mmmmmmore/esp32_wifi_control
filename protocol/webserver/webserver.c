@@ -52,10 +52,43 @@ httpd_handle_t start_webserver(void) {
             .handler = image_handler
         };
         httpd_register_uri_handler(server, &image_uri);
+
+        // 注册根路径处理器
+        httpd_uri_t index_uri = {
+            .uri = "/",
+            .method = HTTP_GET,
+            .handler = image_handler  // 或 index_handler，如果你启用 SPIFFS
+        };
+        httpd_register_uri_handler(server, &index_uri);
     }
 
     return server;
 }
+
+
+
+//httpd_handle_t start_webserver(void) {
+//    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+//    httpd_handle_t server = NULL;
+//
+//    if (httpd_start(&server, &config) == ESP_OK) {
+//        httpd_uri_t toggle_uri = {
+//            .uri = "/toggle",
+//            .method = HTTP_POST,
+//            .handler = toggle_handler
+//        };
+//        httpd_register_uri_handler(server, &toggle_uri);
+//
+//        httpd_uri_t image_uri = {
+//            .uri = "/image",
+//            .method = HTTP_GET,
+//            .handler = image_handler
+//       };
+//        httpd_register_uri_handler(server, &image_uri);
+//    }
+//
+//    return server;
+//}
 //
 //static esp_err_t index_handler(httpd_req_t *req) {
 //    FILE *f = fopen("/spiffs/index.html", "r");
@@ -84,3 +117,4 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
+
