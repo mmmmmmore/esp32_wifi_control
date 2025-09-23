@@ -55,3 +55,7 @@ I (29) boot: ESP-IDF v6.0-dev-2039-g2044fba6e7 2nd stage bootloader
 I (29) boot: compile time Sep 23 2025 07:58:20
 I (29) boot: Multicore bootloader
 I (31) boot: chip revision: v0.2
+
+
+cd /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/esp-idf/partition_table && /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/components/partition_table/gen_esp32part.py -q --offset 0x8000 --primary-bootloader-offset 0x0 --flash-size 2MB -- /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/partitions.csv /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/partition_table/partition-table.bin && /usr/local/bin/cmake -E echo "Partition table binary generated. Contents:" && /usr/local/bin/cmake -E echo "*******************************************************************************" && /Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python /Users/maochun/esp32prj/esp-idf/components/partition_table/gen_esp32part.py -q --offset 0x8000 --primary-bootloader-offset 0x0 --flash-size 2MB -- /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/partition_table/partition-table.bin && /usr/local/bin/cmake -E echo "*******************************************************************************"
+Partitions tables occupies 4.0MB of flash (4194304 bytes) which does not fit in configured flash size 2MB. Change the flash size in menuconfig under the 'Serial Flasher Config' menu.
