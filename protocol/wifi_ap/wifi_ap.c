@@ -15,10 +15,23 @@ static const char *TAG = "wifi_ap";
 void wifi_init_softap(void)
 {
     // 确保网络栈已初始化（建议在 app_main 中完成）
+    esp_err_t err;
+    err = esp_netif_init();
+    if (err!= ESP_OK){
+        ESP_LOGE(TAG, "esp_netif_init failed : %s", esp_err_to_name(err));
+        return;
+    }
+
+
+    err = esp_event_loop_create_default();
+    if (err!= ESP_OK && err != ESP_ERR_INVALID_STATE){
+        ESP_LOGE(TAG, "esp_event_loop_create_default_ failed: %s", esp_err_to_name(err));
+        return;
+    }
     // 这里不重复调用 esp_netif_init() 和 esp_event_loop_create_default()
 
     // 创建默认的 WiFi AP 接口（只调用一次）
-    esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
+    esp_netif_t *netif = esp_netif_create_default_wifi_ap();
     //if (netif == NULL) {
     //    netif = esp_netif_create_default_wifi_ap();
     //   if (netif == NULL) {
@@ -31,7 +44,7 @@ void wifi_init_softap(void)
 
     // 初始化 WiFi 驱动
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    esp_err_t err = esp_wifi_init(&cfg);
+    err = esp_wifi_init(&cfg);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_wifi_init failed: %s", esp_err_to_name(err));
         return;
