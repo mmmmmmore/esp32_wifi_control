@@ -9,6 +9,6 @@ void capture_control_set(bool enabled) {
 
 bool capture_control_get(void) {
     return capture_enabled;
-    ESP_LOGI("stream_control", "Capture set to: %s", enabled ? "ON" : "OFF");
+    ESP_LOGI("stream_control", "Capture set to: %s", "ON" : "OFF");
 
 }
