@@ -23,28 +23,60 @@ static esp_err_t toggle_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
+#include "esp_new_jpeg.h"
+
 static esp_err_t image_handler(httpd_req_t *req) {
     if (!capture_control_get()) {
         httpd_resp_sendstr(req, "Capture disabled");
         return ESP_OK;
     }
 
-    size_t frame_size = 640 * 480;  // 示例：灰度图像
-    uint8_t *frame_buffer = malloc(frame_size);
+    size_t width = 320;
+    size_t height = 240;
+    size_t frame_size = width * height * 2;  // RGB565 = 2 bytes per pixel
+    uint8_t *frame_buffer = heap_caps_malloc(frame_size, MALLOC_CAP_SPIRAM);
     if (!frame_buffer) {
-        ESP_LOGE("image_handler", "Failed to allocate memory for frame buffer");
+        ESP_LOGE("image_handler", "Failed to allocate frame buffer");
         httpd_resp_send_500(req);
         return ESP_FAIL;
     }
 
-    fifo_read_frame(frame_buffer, frame_size);
+    fifo_read_frame(frame_buffer, frame_size);  // 从 OV7670 读取图像
 
-    httpd_resp_set_type(req, "application/octet-stream");
-    httpd_resp_send(req, (const char *)frame_buffer, frame_size);
+    // JPEG 编码配置
+    esp_new_jpeg_encoder_cfg_t jpeg_cfg = {
+        .width = width,
+        .height = height,
+        .format = JPEG_PIXEL_FORMAT_RGB565,
+        .quality = 75,
+        .out_buf_size = 64 * 1024  // 64KB 输出缓冲区
+    };
 
-    free(frame_buffer);  // 释放堆内存
+    uint8_t *jpeg_buf = heap_caps_malloc(jpeg_cfg.out_buf_size, MALLOC_CAP_SPIRAM);
+    if (!jpeg_buf) {
+        ESP_LOGE("image_handler", "Failed to allocate JPEG buffer");
+        free(frame_buffer);
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    size_t jpeg_size = 0;
+    esp_err_t ret = esp_new_jpeg_encode(&jpeg_cfg, frame_buffer, jpeg_buf, &jpeg_size);
+    free(frame_buffer);
+
+    if (ret != ESP_OK) {
+        ESP_LOGE("image_handler", "JPEG encoding failed");
+        free(jpeg_buf);
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    httpd_resp_set_type(req, "image/jpeg");
+    httpd_resp_send(req, (const char *)jpeg_buf, jpeg_size);
+    free(jpeg_buf);
     return ESP_OK;
 }
+
 
 
 
@@ -152,5 +184,6 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
+
 
 
