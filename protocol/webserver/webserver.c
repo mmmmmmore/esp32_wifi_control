@@ -2,7 +2,7 @@
 #include "stream_control.h"
 #include "ov7670_fifo.h"
 #include "esp_log.h"
-#include "esp_jpeg_enc.h"
+#include "esp_jpeg.h"
 
 static esp_err_t toggle_handler(httpd_req_t *req) {
     char buf[8] ={0};
@@ -26,6 +26,7 @@ static esp_err_t toggle_handler(httpd_req_t *req) {
 
 
 
+
 static esp_err_t image_handler(httpd_req_t *req) {
     if (!capture_control_get()) {
         httpd_resp_sendstr(req, "Capture disabled");
@@ -45,12 +46,12 @@ static esp_err_t image_handler(httpd_req_t *req) {
     fifo_read_frame(frame_buffer, frame_size);  // 从 OV7670 读取图像
 
     // JPEG 编码配置
-    esp_new_jpeg_encoder_cfg_t jpeg_cfg = {
+    esp_jpeg_encoder_cfg_t jpeg_cfg = {
         .width = width,
         .height = height,
-        .format = JPEG_PIXEL_FORMAT_RGB565,
+        .src_type = JPEG_RAW_TYPE_RGB565,
         .quality = 75,
-        .out_buf_size = 64 * 1024  // 64KB 输出缓冲区
+        .out_buf_size = 64 * 1024
     };
 
     uint8_t *jpeg_buf = heap_caps_malloc(jpeg_cfg.out_buf_size, MALLOC_CAP_SPIRAM);
@@ -60,6 +61,37 @@ static esp_err_t image_handler(httpd_req_t *req) {
         httpd_resp_send_500(req);
         return ESP_FAIL;
     }
+
+    esp_jpeg_encoder_handle_t encoder;
+    esp_err_t ret = esp_jpeg_encoder_create(&jpeg_cfg, &encoder);
+    if (ret != ESP_OK) {
+        ESP_LOGE("image_handler", "Failed to create JPEG encoder");
+        free(frame_buffer);
+        free(jpeg_buf);
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    size_t jpeg_size = jpeg_cfg.out_buf_size;
+    ret = esp_jpeg_encoder_process(encoder, frame_buffer, jpeg_buf, &jpeg_size);
+    esp_jpeg_encoder_destroy(encoder);
+
+    free(frame_buffer);
+
+    if (ret != ESP_OK) {
+        ESP_LOGE("image_handler", "JPEG encoding failed");
+        free(jpeg_buf);
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    httpd_resp_set_type(req, "image/jpeg");
+    httpd_resp_send(req, (const char *)jpeg_buf, jpeg_size);
+    free(jpeg_buf);
+
+    return ESP_OK;
+}
+
 
     size_t jpeg_size = 0;
     esp_err_t ret = esp_new_jpeg_encode(&jpeg_cfg, frame_buffer, jpeg_buf, &jpeg_size);
@@ -185,6 +217,7 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
+
 
 
 
