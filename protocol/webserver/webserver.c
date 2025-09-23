@@ -125,24 +125,24 @@ httpd_handle_t start_webserver(void) {
 //    return server;
 //}
 //
-//static esp_err_t index_handler(httpd_req_t *req) {
-//    FILE *f = fopen("/spiffs/index.html", "r");
-//    if (!f) {
-//        httpd_resp_send_404(req);
-//        return ESP_FAIL;
-//    }
-//
-//    char buf[1024];
-//    size_t read_bytes;
-//    httpd_resp_set_type(req, "text/html");
-//
-//    while ((read_bytes = fread(buf, 1, sizeof(buf), f)) > 0) {
-//        httpd_resp_send_chunk(req, buf, read_bytes);
-//    }
-//    fclose(f);
-//    httpd_resp_send_chunk(req, NULL, 0);  // 结束响应
-//    return ESP_OK;
-//}
+static esp_err_t index_handler(httpd_req_t *req) {
+    FILE *f = fopen("/spiffs/index.html", "r");
+    if (!f) {
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+    }
+
+    char buf[1024];
+    size_t read_bytes;
+    httpd_resp_set_type(req, "text/html");
+
+    while ((read_bytes = fread(buf, 1, sizeof(buf), f)) > 0) {
+        httpd_resp_send_chunk(req, buf, read_bytes);
+    }
+    fclose(f);
+    httpd_resp_send_chunk(req, NULL, 0);  // 结束响应
+    return ESP_OK;
+}
 
 void register_static_handlers(httpd_handle_t server) {
     httpd_uri_t index_uri = {
@@ -152,4 +152,5 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
+
 
