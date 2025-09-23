@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Camera Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        img { width: 640px; height: 480px; border: 1px solid #ccc; margin-top: 20px; }
+        button { padding: 10px 20px; font-size: 16px; }
+    </style>
+    <script>
+        function toggleCapture() {
+            fetch('/toggle', {
+                method: 'POST',
+                body: 'ON'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                refreshImage();
+            })
+            .catch(error => {
+                alert('Error toggling capture: ' + error);
+            });
+        }
+
+        function refreshImage() {
+            const img = document.getElementById('cameraImage');
+            img.src = '/image?' + new Date().getTime(); // 防止缓存
+        }
+
+        window.onload = function() {
+            refreshImage();
+        };
+    </script>
+</head>
+<body>
+    <h1>ESP32 Camera Interface</h1>
+    <button onclick="toggleCapture()">Toggle Capture</button>
+    <br>
+    /image
+</body>
+</html>
