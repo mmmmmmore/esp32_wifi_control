@@ -3,12 +3,14 @@
 #include "ov7670_fifo.h"
 
 static esp_err_t toggle_handler(httpd_req_t *req) {
-    char buf[8];
-    int ret = httpd_req_recv(req, buf, sizeof(buf));
+    char buf[8] ={0};
+    int ret = httpd_req_recv(req, buf, sizeof(buf)-1);
     if (ret <= 0) {
         httpd_resp_send_500(req);
         return ESP_FAIL;
     }
+    buf[ret] ='\0';
+    ESP_LOGI("toggle_handler", "Received toggle command: %s", buf);
 
     if (strncmp(buf, "ON", 2) == 0) {
         capture_control_set(true);
@@ -149,3 +151,4 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
+
