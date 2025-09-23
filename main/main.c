@@ -5,6 +5,27 @@
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_event.h"
+#include "esp_spiffs.h"
+
+
+void init_spiffs(){
+    esp_vfs_spiffs_conf_r conf ={
+        .base_path = "/spiffs",
+        .partition_label = "spiffs",
+        .max_files =5,
+        .format_if_mount_failed = true
+    } ;
+    
+    esp_err_t ret = esp_vfs_spiffs_register(&conf);
+    if (ret != ESP_OK){
+        ESP_LOGE("SPIFFS:","Failed to mount or format filesystem : %s", esp_err_to_name(ret));
+    }else{
+        ESP_LOGI("SPIFFS:","SPIFFS mounted successfully");
+    }
+}
+
+
+
 
 
 void app_main(void) {
@@ -25,6 +46,7 @@ void app_main(void) {
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）
     ov7670_init();
 
+    init_spiffs();
     // 启动 HTTP 服务器
     start_webserver();
 
