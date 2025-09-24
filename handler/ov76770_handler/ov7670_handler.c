@@ -82,14 +82,19 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     fifo_reset_read_pointer();      // 准备读取
     fifo_enable_output(true);       // 启用输出
 
-    for (size_t i = 0; i < buffer_size; i++) {
-        image_buffer[i] = fifo_read_byte();
+    for (size_t i = 0; i < pixel_count; i++) {
+    uint8_t high = fifo_read_byte();  // 高字节
+    uint8_t low  = fifo_read_byte();  // 低字节
+    image_buffer[i * 2]     = high;
+    image_buffer[i * 2 + 1] = low;
     }
+
 
     fifo_enable_output(false);
 
     *out_len = buffer_size;
     return image_buffer;
 }
+
 
 
