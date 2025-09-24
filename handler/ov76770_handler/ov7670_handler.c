@@ -13,12 +13,40 @@ void ov7670_handler_init(void) {
     // 可选：初始化 VSYNC 中断或采集任务
 }
 
+static void wait_for_vsync() {
+    // 等待 VSYNC 上升沿
+    while (gpio_get_level(GPIO_VSYNC) == 0) {
+        vTaskDelay(pdMS_TO_TICKS(1));
+    }
+    // 等待 VSYNC 下降沿
+    while (gpio_get_level(GPIO_VSYNC) == 1) {
+        vTaskDelay(pdMS_TO_TICKS(1));
+    }
+}
+
+static void fifo_capture_frame_start() {
+    fifo_reset_write_pointer();  // WRST 复位
+    wait_for_vsync();            // 等待第一帧开始
+    gpio_set_level(GPIO_WEN, 1); // 开始写入
+    wait_for_vsync();            // 等待帧结束
+    gpio_set_level(GPIO_WEN, 0); // 停止写入
+}
+
+
 static void fifo_reset_read_pointer() {
     gpio_set_level(GPIO_RRST, 0);
     gpio_set_level(GPIO_RCLK, 0);
     gpio_set_level(GPIO_RCLK, 1);
     gpio_set_level(GPIO_RRST, 1);
 }
+
+void fifo_reset_write_pointer() {
+    gpio_set_level(GPIO_WRST, 0);
+    gpio_set_level(GPIO_WEN, 0);
+    ets_delay_us(1);
+    gpio_set_level(GPIO_WRST, 1);
+}
+
 
 static void fifo_enable_output(bool enable) {
     gpio_set_level(GPIO_OE, enable ? 0 : 1); // OE低电平使能
@@ -44,14 +72,15 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     if (!size || size->width == 0 || size->height == 0) return NULL;
 
     size_t pixel_count = size->width * size->height;
-    size_t buffer_size = pixel_count * 2; // 假设 RGB565，每像素2字节
+    size_t buffer_size = pixel_count * 2; // RGB565 每像素2字节
 
     if (image_buffer) free(image_buffer);
     image_buffer = malloc(buffer_size);
     if (!image_buffer) return NULL;
 
-    fifo_reset_read_pointer();
-    fifo_enable_output(true);
+    fifo_capture_frame_start();     // 新增：采集一帧图像
+    fifo_reset_read_pointer();      // 准备读取
+    fifo_enable_output(true);       // 启用输出
 
     for (size_t i = 0; i < buffer_size; i++) {
         image_buffer[i] = fifo_read_byte();
@@ -62,3 +91,5 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     *out_len = buffer_size;
     return image_buffer;
 }
+
+
