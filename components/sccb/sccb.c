@@ -2,10 +2,12 @@
 #include "global_gpio.h"
 #include "driver/gpio.h"
 #include "freertos/task.h"
+#include "camera_cfg.h"
+
 
 #define SCCB_DELAY_US 5
-#define SCCB_ID_WRITE 0x42
-#define SCCB_ID_READ  0x43
+#define SCCB_ID_WRITE (OV7670_I2C_ADDR << 1 | 0)        //0x42
+#define SCCB_ID_READ  (OV7670_I2C_ADDR << 1 | 1)        //0x43
 
 static void sccb_delay() {
     ets_delay_us(SCCB_DELAY_US);
