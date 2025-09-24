@@ -1,4 +1,4 @@
-#include "jpeg_encoder.h"
+#include "jpeg.h"
 #include "tiny_jpeg.h"
 #include <stdlib.h>
 #include <string.h>

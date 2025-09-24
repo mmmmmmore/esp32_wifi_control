@@ -1,5 +1,5 @@
 #include "sccb.h"
-#include "global_gpio.h"
+#include "common_gpio.h"
 #include "driver/gpio.h"
 #include "freertos/task.h"
 #include "camera_cfg.h"

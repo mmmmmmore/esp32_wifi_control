@@ -1,4 +1,3 @@
-#include "ov7670_config.h"
 #include "sccb.h"
 #include "freertos/task.h"
 #include "esp_log.h"

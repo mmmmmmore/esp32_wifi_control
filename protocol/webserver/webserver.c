@@ -1,8 +1,7 @@
 
 #include "webserver.h"
 #include "esp_http_server.h"
-#include "stream_control.h"
-#include "ov7670_fifo.h"
+#include "ov7670_handler.h"
 #include "jpeg_encoder.h"
 #include "esp_log.h"
 #include "esp_heap_caps.h"

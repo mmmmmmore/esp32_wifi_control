@@ -1,10 +1,12 @@
 #include "ov7670_handler.h"
-#include "global_gpio.h"
+#include "common_gpio.h"
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdlib.h>
 #include <string.h>
+
+
 
 // 图像缓冲区（可根据尺寸动态分配）
 static uint8_t* image_buffer = NULL;
@@ -15,11 +17,11 @@ void ov7670_handler_init(void) {
 
 static void wait_for_vsync() {
     // 等待 VSYNC 上升沿
-    while (gpio_get_level(GPIO_VSYNC) == 0) {
+    while (gpio_get_level(PIN_VSYNC) == 0) {
         vTaskDelay(pdMS_TO_TICKS(1));
     }
     // 等待 VSYNC 下降沿
-    while (gpio_get_level(GPIO_VSYNC) == 1) {
+    while (gpio_get_level(PIN_VSYNC) == 1) {
         vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
@@ -27,44 +29,44 @@ static void wait_for_vsync() {
 static void fifo_capture_frame_start() {
     fifo_reset_write_pointer();  // WRST 复位
     wait_for_vsync();            // 等待第一帧开始
-    gpio_set_level(GPIO_WEN, 1); // 开始写入
+    gpio_set_level(PIN_WEN, 1); // 开始写入
     wait_for_vsync();            // 等待帧结束
-    gpio_set_level(GPIO_WEN, 0); // 停止写入
+    gpio_set_level(PIN_WEN, 0); // 停止写入
 }
 
 
 static void fifo_reset_read_pointer() {
-    gpio_set_level(GPIO_RRST, 0);
-    gpio_set_level(GPIO_RCLK, 0);
-    gpio_set_level(GPIO_RCLK, 1);
-    gpio_set_level(GPIO_RRST, 1);
+    gpio_set_level(PIN_RRST, 0);
+    gpio_set_level(PIN_RCLK, 0);
+    gpio_set_level(PIN_RCLK, 1);
+    gpio_set_level(PIN_RRST, 1);
 }
 
 void fifo_reset_write_pointer() {
-    gpio_set_level(GPIO_WRST, 0);
-    gpio_set_level(GPIO_WEN, 0);
+    gpio_set_level(PIN_WRST, 0);
+    gpio_set_level(PIN_WEN, 0);
     ets_delay_us(1);
-    gpio_set_level(GPIO_WRST, 1);
+    gpio_set_level(PIN_WRST, 1);
 }
 
 
 static void fifo_enable_output(bool enable) {
-    gpio_set_level(GPIO_OE, enable ? 0 : 1); // OE低电平使能
+    gpio_set_level(PIN_OE, enable ? 0 : 1); // OE低电平使能
 }
 
 static uint8_t fifo_read_byte() {
-    gpio_set_level(GPIO_RCLK, 0);
+    gpio_set_level(PIN_RCLK, 0);
     ets_delay_us(1); // 可调节
     uint8_t data = 0;
-    data |= gpio_get_level(GPIO_D0) << 0;
-    data |= gpio_get_level(GPIO_D1) << 1;
-    data |= gpio_get_level(GPIO_D2) << 2;
-    data |= gpio_get_level(GPIO_D3) << 3;
-    data |= gpio_get_level(GPIO_D4) << 4;
-    data |= gpio_get_level(GPIO_D5) << 5;
-    data |= gpio_get_level(GPIO_D6) << 6;
-    data |= gpio_get_level(GPIO_D7) << 7;
-    gpio_set_level(GPIO_RCLK, 1);
+    data |= gpio_get_level(PIN_D0) << 0;
+    data |= gpio_get_level(PIN_D1) << 1;
+    data |= gpio_get_level(PIN_D2) << 2;
+    data |= gpio_get_level(PIN_D3) << 3;
+    data |= gpio_get_level(PIN_D4) << 4;
+    data |= gpio_get_level(PIN_D5) << 5;
+    data |= gpio_get_level(PIN_D6) << 6;
+    data |= gpio_get_level(PIN_D7) << 7;
+    gpio_set_level(PIN_RCLK, 1);
     return data;
 }
 

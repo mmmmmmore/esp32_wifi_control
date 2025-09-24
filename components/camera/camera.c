@@ -1,18 +1,12 @@
 #include "camera.h"
-#include "global_gpio.h"
+#include "common_gpio.h"
 #include "sccb.h"
-#include "ov7670_config.h"
 #include "esp_log.h"
 #include "freertos/task.h"
 #include "camera_reg.h"
 #include "driver/i2c.h"
 
 static const char *TAG = "camera";
-
-
-
-
-
 
 void i2c_master_init() {
     i2c_config_t conf = {
