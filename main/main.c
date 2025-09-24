@@ -1,11 +1,16 @@
 #include <stdio.h>
-#include "wifi_ap.h"
+#include "wifiap.h"
 #include "webserver.h"
 #include "ov7670.h"
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_event.h"
 #include "esp_spiffs.h"
+#include "camera.h"
+#include "common_gpio.h"
+#include "jpeg.h"
+#include "ov7670_handler.h"
+#include "sccb.h"
 
 
 void init_spiffs(){
