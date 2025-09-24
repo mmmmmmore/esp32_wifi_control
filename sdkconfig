@@ -2303,6 +2303,12 @@ CONFIG_ESP_MAX_STA_CONN=4
 CONFIG_ESP_GTK_REKEYING_ENABLE=y
 CONFIG_ESP_GTK_REKEY_INTERVAL=600
 # end of Wifi_Menu_Configuration
+
+#
+# JPEG Decoder
+#
+CONFIG_JD_USE_ROM=y
+# end of JPEG Decoder
 # end of Component config
 
 # CONFIG_IDF_EXPERIMENTAL_FEATURES is not set
