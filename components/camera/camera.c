@@ -22,11 +22,11 @@ const struct regval_list ov7670_qvga_rgb565[] = {
     { REG_COM14, 0x19 },    // SCW maunal adjust, /2
     { REG_SCALING_XSC, 0x3A },    //default value
     { REG_SCALING_YSC, 0x35 },    //default value
-    { REG_SCALING_DSP, 0x03 },    //
-    { REG_HSTART, 0x16 },
-    { REG_HSTOP, 0x04 },
-    { REG_HREF, 0x24 },
-    { REG_VSTART, 0x02 },
+    { REG_SCALING_DCWCTR, 0x03 },    //horizen 8-->1
+    { REG_HSTART, 0x16 },        // low bit 110
+    { REG_HSTOP, 0x04 },        // low bit 100
+    { REG_HREF, 0x24 },        //100 110 match with HSTART and HSTOP
+    { REG_VSTART, 0x02 },    //
     { REG_VSTOP, 0x7A },
     { REG_VREF, 0x0A },
 };
