@@ -5,9 +5,36 @@
 #include "esp_log.h"
 #include "freertos/task.h"
 #include "camera_reg.h"
-
+#include "driver/i2c.h"
 
 static const char *TAG = "camera";
+
+
+
+
+
+
+void i2c_master_init() {
+    i2c_config_t conf = {
+        .mode = I2C_MODE_MASTER,
+        .sda_io_num = I2C_MASTER_SDA_IO,
+        .scl_io_num = I2C_MASTER_SCL_IO,
+        .sda_pullup_en = GPIO_PULLUP_ENABLE,
+        .scl_pullup_en = GPIO_PULLUP_ENABLE,
+        .master.clk_speed = I2C_MASTER_FREQ_HZ,
+    };
+    i2c_param_config(I2C_MASTER_NUM, &conf);
+    i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
+}
+
+
+esp_err_t write_register(uint8_t reg, uint8_t val) {
+    uint8_t data[2] = { reg, val };
+    return i2c_master_write_to_device(I2C_MASTER_NUM, OV7670_I2C_ADDR, data, sizeof(data), 1000 / portTICK_PERIOD_MS);
+}
+
+
+
 
 const struct regval_list ov7670_qvga_rgb565[] = {
     { REG_COM7, 0x80 },     //reverse
