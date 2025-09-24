@@ -95,7 +95,7 @@
 #define REG_AWBCTR0     0x6F
 #define REG_SCALING_XSC 0x70
 #define REG_SCALING_YSC 0x71
-#define REG_SCALING_DSP 0x72
+#define REG_SCALING_DCWCTR 0x72
 #define REG_SCALING_PCLK 0x73
 #define REG_REG74       0x74
 #define REG_REG75       0x75
