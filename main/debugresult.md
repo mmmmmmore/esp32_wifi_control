@@ -1,34 +1,143 @@
-
--- Configuring incomplete, errors occurred!
-HINT: The component 'esp_jpeg_enc' could not be found. This could be because: component name was misspelled, the component was not added to the build, the component has been moved to the IDF component manager, the component has been removed and refactored into some other component or the component may not be supported by the selected target.
-Please look out for component in 'https://components.espressif.com' and add using 'idf.py add-dependency' command.
-Refer to the migration guide for more details about moved components.
-Refer to the build-system guide for more details about how components are found and included in the build.
-
-Adding "set-target"'s dependency "fullclean" to list of commands with default set of options.
-Executing action: fullclean
-Build directory '/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build' not found. Nothing to clean.
-Executing action: set-target
-Set Target to: esp32s3, new sdkconfig will be created.
-Running cmake in directory /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build
-Executing "cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/Users/maochun/.espressif/python_env/idf6.0_py3.13_env/bin/python -DESP_PLATFORM=1 -DIDF_TARGET=esp32s3 -DCCACHE_ENABLE=0 /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control"...
-CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
-  Compatibility with CMake < 3.10 will be removed from a future version of
-  CMake.
-
-  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
-  to tell CMake that the project requires at least <min> but has been updated
-  to work with policies introduced by <max> or earlier.
-
-
--- Found Git: /usr/bin/git (found version "2.37.1 (Apple Git-137.1)")
-CMake Error at /Users/maochun/esp32prj/esp-idf/tools/cmake/project.cmake:472 (message):
-  Directory specified in EXTRA_COMPONENT_DIRS doesn't exist:
-  /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/protocol/fifo
-Call Stack (most recent call first):
-  /Users/maochun/esp32prj/esp-idf/tools/cmake/project.cmake:574 (__project_init)
-  CMakeLists.txt:8 (project)
-
-
--- Configuring incomplete, errors occurred!
-cmake failed with exit code 1, output of the command is in the /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/log/idf_py_stderr_output_2992 and /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/build/log/idf_py_stdout_output_2992
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:41:7: note: in expansion of macro 'REG_COM7'
+   41 |     { REG_COM7, 0x80 },     //reverse
+      |       ^~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:31:25: note: (near initialization for 'ov7670_qvga_rgb565')
+   31 | #define REG_COM7        0x12
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:41:7: note: in expansion of macro 'REG_COM7'
+   41 |     { REG_COM7, 0x80 },     //reverse
+      |       ^~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:41:17: warning: excess elements in scalar initializer
+   41 |     { REG_COM7, 0x80 },     //reverse
+      |                 ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:41:17: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:5: warning: braces around scalar initializer
+   42 |     { REG_CLKRC, 0x80 },    //use external clk signal
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:30:25: error: initialization of 'const struct regval_list *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   30 | #define REG_CLKRC       0x11
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:7: note: in expansion of macro 'REG_CLKRC'
+   42 |     { REG_CLKRC, 0x80 },    //use external clk signal
+      |       ^~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:30:25: note: (near initialization for 'ov7670_qvga_rgb565')
+   30 | #define REG_CLKRC       0x11
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:7: note: in expansion of macro 'REG_CLKRC'
+   42 |     { REG_CLKRC, 0x80 },    //use external clk signal
+      |       ^~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:18: warning: excess elements in scalar initializer
+   42 |     { REG_CLKRC, 0x80 },    //use external clk signal
+      |                  ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:18: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:5: warning: excess elements in scalar initializer
+   42 |     { REG_CLKRC, 0x80 },    //use external clk signal
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:42:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:5: warning: braces around scalar initializer
+   43 |     { REG_COM11, 0x0A },    //use BD50ST and expourse time smaller
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:63:25: error: initialization of 'const struct regval_list *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   63 | #define REG_COM11       0x3B
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:7: note: in expansion of macro 'REG_COM11'
+   43 |     { REG_COM11, 0x0A },    //use BD50ST and expourse time smaller
+      |       ^~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:63:25: note: (near initialization for 'ov7670_qvga_rgb565')
+   63 | #define REG_COM11       0x3B
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:7: note: in expansion of macro 'REG_COM11'
+   43 |     { REG_COM11, 0x0A },    //use BD50ST and expourse time smaller
+      |       ^~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:18: warning: excess elements in scalar initializer
+   43 |     { REG_COM11, 0x0A },    //use BD50ST and expourse time smaller
+      |                  ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:18: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:5: warning: excess elements in scalar initializer
+   43 |     { REG_COM11, 0x0A },    //use BD50ST and expourse time smaller
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:43:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:5: warning: braces around scalar initializer
+   44 |     { REG_COM7, 0x04 },     //output RGB mode
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:31:25: error: initialization of 'const struct regval_list *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   31 | #define REG_COM7        0x12
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:7: note: in expansion of macro 'REG_COM7'
+   44 |     { REG_COM7, 0x04 },     //output RGB mode
+      |       ^~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:31:25: note: (near initialization for 'ov7670_qvga_rgb565')
+   31 | #define REG_COM7        0x12
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:7: note: in expansion of macro 'REG_COM7'
+   44 |     { REG_COM7, 0x04 },     //output RGB mode
+      |       ^~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:17: warning: excess elements in scalar initializer
+   44 |     { REG_COM7, 0x04 },     //output RGB mode
+      |                 ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:17: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:5: warning: excess elements in scalar initializer
+   44 |     { REG_COM7, 0x04 },     //output RGB mode
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:44:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:5: warning: braces around scalar initializer
+   45 |     { REG_RGB444, 0x00 },    //RGB44 disable
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:127:25: error: initialization of 'const struct regval_list *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  127 | #define REG_RGB444      0x8C
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:7: note: in expansion of macro 'REG_RGB444'
+   45 |     { REG_RGB444, 0x00 },    //RGB44 disable
+      |       ^~~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:127:25: note: (near initialization for 'ov7670_qvga_rgb565')
+  127 | #define REG_RGB444      0x8C
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:7: note: in expansion of macro 'REG_RGB444'
+   45 |     { REG_RGB444, 0x00 },    //RGB44 disable
+      |       ^~~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:19: warning: excess elements in scalar initializer
+   45 |     { REG_RGB444, 0x00 },    //RGB44 disable
+      |                   ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:19: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:5: warning: excess elements in scalar initializer
+   45 |     { REG_RGB444, 0x00 },    //RGB44 disable
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:45:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:5: warning: braces around scalar initializer
+   46 |     { REG_COM15, 0xD0 },    //output 00-FF, RGB565 match with RGB444 low
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:68:25: error: initialization of 'const struct regval_list *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   68 | #define REG_COM15       0x40
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:7: note: in expansion of macro 'REG_COM15'
+   46 |     { REG_COM15, 0xD0 },    //output 00-FF, RGB565 match with RGB444 low
+      |       ^~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:68:25: note: (near initialization for 'ov7670_qvga_rgb565')
+   68 | #define REG_COM15       0x40
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:7: note: in expansion of macro 'REG_COM15'
+   46 |     { REG_COM15, 0xD0 },    //output 00-FF, RGB565 match with RGB444 low
+      |       ^~~~~~~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:18: warning: excess elements in scalar initializer
+   46 |     { REG_COM15, 0xD0 },    //output 00-FF, RGB565 match with RGB444 low
+      |                  ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:18: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:5: warning: excess elements in scalar initializer
+   46 |     { REG_COM15, 0xD0 },    //output 00-FF, RGB565 match with RGB444 low
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:46:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:47:5: warning: braces around scalar initializer
+   47 |     { REG_COM1, 0x00 },    ///disable general control
+      |     ^
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:47:5: note: (near initialization for 'ov7670_qvga_rgb565')
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera_reg.h:17:25: error: initialization of 'const struct regval_list *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   17 | #define REG_COM1        0x04
+      |                         ^~~~
+/Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:47:7: note: in expansion of macro 'REG_COM1'
+   47 |     { REG_COM1, 0x00 },    ///disable general control
+      |       ^~~~~~~~
