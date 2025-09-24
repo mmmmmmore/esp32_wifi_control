@@ -2,11 +2,6 @@
 #include "stream_control.h"
 #include "ov7670_fifo.h"
 #include "esp_log.h"
-#include "esp_jpeg.h"
-#include "esp_http_server.h"
-#include "stream_control.h"
-#include "ov7670_fifo.h"
-#include "esp_log.h"
 #include "esp_new_jpeg.h"
 #include "esp_heap_caps.h"
 
