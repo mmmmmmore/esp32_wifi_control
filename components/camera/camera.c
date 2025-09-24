@@ -26,14 +26,15 @@ const struct regval_list ov7670_qvga_rgb565[] = {
     { REG_HSTART, 0x16 },        // low bit 110
     { REG_HSTOP, 0x04 },        // low bit 100
     { REG_HREF, 0x24 },        //100 110 match with HSTART and HSTOP
-    { REG_VSTART, 0x02 },    //
-    { REG_VSTOP, 0x7A },
-    { REG_VREF, 0x0A },
+    { REG_VSTART, 0x02 },    // 11
+    { REG_VSTOP, 0x7A },    //11
+    { REG_VREF, 0x0A },    //
 };
 
 void ov7670_init_qvga_rgb565() {
     for (int i = 0; i < sizeof(ov7670_qvga_rgb565)/sizeof(ov7670_qvga_rgb565[0]); i++) {
         write_register(ov7670_qvga_rgb565[i].reg, ov7670_qvga_rgb565[i].val);
+        //by cycle write the register value setup the init status
     }
 }
 
