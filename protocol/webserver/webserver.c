@@ -4,6 +4,7 @@
 #include "esp_log.h"
 #include "esp_new_jpeg.h"
 #include "esp_heap_caps.h"
+#include "jpeg.h"
 
 
 static void rgb565_to_rgb888(uint8_t *src, uint8_t *dst, size_t pixel_count) {
