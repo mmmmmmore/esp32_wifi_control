@@ -2,6 +2,8 @@
 #define CAMERA_REGS_H
 
 
+#define OV7670_I2C_ADDR 0x21
+
 // OV7670 Register Addresses
 #define REG_GAIN        0x00
 #define REG_BLUE        0x01
