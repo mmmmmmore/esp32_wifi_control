@@ -1,16 +1,10 @@
 #pragma once
 
-#include "esp_err.h"
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// JPEG 编码函数接口
+// 输入：原始图像数据（RGB565）、图像尺寸
+// 输出：JPEG 数据指针和长度（动态分配，需外部释放）
+uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t width, uint16_t height, size_t* jpeg_len);
 
-esp_err_t encode_rgb565_to_jpeg(uint8_t *rgb565_buf, size_t width, size_t height,
-                                 uint8_t **jpeg_buf_out, size_t *jpeg_size_out);
-
-#ifdef __cplusplus
-}
-#endif
