@@ -1,24 +1,19 @@
+#include "jpeg.h"
 #include "esp_new_jpeg.h"
 #include "esp_log.h"
 #include "esp_heap_caps.h"
 
 #define TAG "jpeg_encoder"
 
-// 将 RGB565 转换为 RGB888（JPEG 编码器需要 RGB888）
 static void rgb565_to_rgb888(uint8_t *src, uint8_t *dst, size_t pixel_count) {
     for (size_t i = 0; i < pixel_count; i++) {
         uint16_t pixel = ((uint16_t *)src)[i];
-        uint8_t r = (pixel >> 11) & 0x1F;
-        uint8_t g = (pixel >> 5) & 0x3F;
-        uint8_t b = pixel & 0x1F;
-
-        dst[i * 3 + 0] = (r << 3);       // Red
-        dst[i * 3 + 1] = (g << 2);       // Green
-        dst[i * 3 + 2] = (b << 3);       // Blue
+        dst[i * 3 + 0] = (pixel >> 11) << 3;       // R
+        dst[i * 3 + 1] = ((pixel >> 5) & 0x3F) << 2; // G
+        dst[i * 3 + 2] = (pixel & 0x1F) << 3;       // B
     }
 }
 
-// JPEG 编码函数
 esp_err_t encode_rgb565_to_jpeg(uint8_t *rgb565_buf, size_t width, size_t height,
                                  uint8_t **jpeg_buf_out, size_t *jpeg_size_out) {
     esp_err_t ret;
@@ -26,7 +21,6 @@ esp_err_t encode_rgb565_to_jpeg(uint8_t *rgb565_buf, size_t width, size_t height
     size_t pixel_count = width * height;
     size_t rgb888_size = pixel_count * 3;
 
-    // 分配 RGB888 缓冲区
     uint8_t *rgb888_buf = heap_caps_malloc(rgb888_size, MALLOC_CAP_SPIRAM);
     if (!rgb888_buf) {
         ESP_LOGE(TAG, "Failed to allocate RGB888 buffer");
@@ -35,7 +29,6 @@ esp_err_t encode_rgb565_to_jpeg(uint8_t *rgb565_buf, size_t width, size_t height
 
     rgb565_to_rgb888(rgb565_buf, rgb888_buf, pixel_count);
 
-    // JPEG 编码配置
     jpeg_encode_config_t cfg = {
         .width = width,
         .height = height,
