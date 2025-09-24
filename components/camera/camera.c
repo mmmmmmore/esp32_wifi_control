@@ -4,6 +4,8 @@
 #include "ov7670_config.h"
 #include "esp_log.h"
 #include "freertos/task.h"
+#include "camera_reg.h"
+
 
 static const char *TAG = "camera";
 
