@@ -8,6 +8,8 @@
 #include "esp_heap_caps.h"
 #include <string.h>
 
+#define STREAM_FRAME_INTERVAL_MS 100 // stream image flash time interval ms
+
 static const char *TAG = "webserver";
 
 static esp_err_t toggle_handler(httpd_req_t *req) {
@@ -108,7 +110,7 @@ static esp_err_t stream_handler(httpd_req_t *req) {
 
         free(jpeg_buf);
 
-        vTaskDelay(pdMS_TO_TICKS(100));  // ~10fps
+        vTaskDelay(pdMS_TO_TICKS(STREAM_FRAME_INTERVAL_MS));  // ~10fps
     }
 
     httpd_resp_send_chunk(req, "--frame--\r\n", strlen("--frame--\r\n"));
@@ -142,5 +144,37 @@ httpd_handle_t start_webserver(void) {
         httpd_register_uri_handler(server, &stream_uri);
     }
 
+    httpd_uri_t index_uri = {
+    .uri = "/",
+    .method = HTTP_GET,
+    .handler = index_handler
+    };
+    httpd_register_uri_handler(server, &index_uri);
+
+    
     return server;
 }
+
+
+static esp_err_t index_handler(httpd_req_t *req) {
+    FILE *f = fopen("/spiffs/index.html", "r");
+    if (!f) {
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+    }
+
+    char buf[1024];
+    size_t read_bytes;
+    httpd_resp_set_type(req, "text/html");
+
+    while ((read_bytes = fread(buf, 1, sizeof(buf), f)) > 0) {
+        httpd_resp_send_chunk(req, buf, read_bytes);
+    }
+    fclose(f);
+    httpd_resp_send_chunk(req, NULL, 0);  // 结束响应
+    return ESP_OK;
+}
+
+
+
+
