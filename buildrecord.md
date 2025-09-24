@@ -1,4 +1,8 @@
 2025-09-24 
+
+![Uploading image.png…]()
+
+
 ######about GPIO PIN connection definition
 根据目前查询的AL422B的PIN输出定义，包含 VCC3.3, GND, SCL, SDA, RCLK, RRST, WRST, WEN, OE VSYNC 和8个数据pin D0-D7. 如何确保这些pin脚连接到了ESP32-S3-WROOM-1U-N16R8 上合理合适的PIN脚上？
 Copilot said:
