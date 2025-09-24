@@ -1,8 +1,13 @@
 #ifndef CAMERA_REGS_H
 #define CAMERA_REGS_H
 
+//init I2C default addr definition
+#define I2C_MASTER_NUM I2C_NUM_0
+#define I2C_MASTER_SCL_IO 22
+#define I2C_MASTER_SDA_IO 21
+#define I2C_MASTER_FREQ_HZ 100000
+#define OV7670_I2C_ADDR 0x21  // 7-bit address
 
-#define OV7670_I2C_ADDR 0x21
 
 // OV7670 Register Addresses
 #define REG_GAIN        0x00
