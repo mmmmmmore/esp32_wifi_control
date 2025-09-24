@@ -1,62 +1,60 @@
 #include "sccb.h"
+#include "global_gpio.h"
 #include "driver/gpio.h"
-#include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_rom_sys.h"
 
-static gpio_num_t sccb_sda;
-static gpio_num_t sccb_scl;
-
-#define SCCB_DELAY_US 5  // SCCB 时序延迟，单位微秒
+#define SCCB_DELAY_US 5
 
 static void sccb_delay() {
-    esp_rom_delay_us(SCCB_DELAY_US);
-}
-
-static void sccb_set_sda(int level) {
-    gpio_set_level(sccb_sda, level);
-}
-
-static void sccb_set_scl(int level) {
-    gpio_set_level(sccb_scl, level);
-}
-
-static int sccb_get_sda() {
-    return gpio_get_level(sccb_sda);
-}
-
-void sccb_init(gpio_num_t sda, gpio_num_t scl) {
-    sccb_sda = sda;
-    sccb_scl = scl;
-
-    gpio_config_t conf = {
-        .mode = GPIO_MODE_OUTPUT,
-        .pin_bit_mask = (1ULL << sda) | (1ULL << scl),
-        .pull_up_en = GPIO_PULLUP_ENABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE
-    };
-    gpio_config(&conf);
-
-    sccb_set_sda(1);
-    sccb_set_scl(1);
+    ets_delay_us(SCCB_DELAY_US);
 }
 
 static void sccb_start() {
-    sccb_set_sda(1);
-    sccb_set_scl(1);
+    gpio_set_level(GPIO_SDA, 1);
+    gpio_set_level(GPIO_SCL, 1);
     sccb_delay();
-    sccb_set_sda(0);
+    gpio_set_level(GPIO_SDA, 0);
     sccb_delay();
-    sccb_set_scl(0);
+    gpio_set_level(GPIO_SCL, 0);
+}
+
+static void sccb_stop() {
+    gpio_set_level(GPIO_SDA, 0);
+    gpio_set_level(GPIO_SCL, 1);
+    sccb_delay();
+    gpio_set_level(GPIO_SDA, 1);
     sccb_delay();
 }
 
-static void sccb_stop(){
-    sccb_set_sda(0);
+static bool sccb_write_byte(uint8_t data) {
+    for (int i = 0; i < 8; i++) {
+        gpio_set_level(GPIO_SDA, (data >> (7 - i)) & 0x01);
+        sccb_delay();
+        gpio_set_level(GPIO_SCL, 1);
+        sccb_delay();
+        gpio_set_level(GPIO_SCL, 0);
+    }
+
+    // ACK bit
+    gpio_set_direction(GPIO_SDA, GPIO_MODE_INPUT);
+    gpio_set_level(GPIO_SCL, 1);
     sccb_delay();
-    sccb_set_scl(1);
-    sccb_delay();
-    sccb_set_sda(1);
-    sccb_delay();
+    bool ack = !gpio_get_level(GPIO_SDA);
+    gpio_set_level(GPIO_SCL, 0);
+    gpio_set_direction(GPIO_SDA, GPIO_MODE_OUTPUT);
+    return ack;
+}
+
+bool sccb_write(uint8_t reg_addr, uint8_t data) {
+    sccb_start();
+    if (!sccb_write_byte(0x42)) return false;  // OV7670 write address
+    if (!sccb_write_byte(reg_addr)) return false;
+    if (!sccb_write_byte(data)) return false;
+    sccb_stop();
+    return true;
+}
+
+bool sccb_init(void) {
+    // GPIO 已在 global_gpio_init() 中初始化
+    return true;
 }
