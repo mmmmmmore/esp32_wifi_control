@@ -38,8 +38,6 @@ static esp_err_t toggle_handler(httpd_req_t *req) {
 }
 
 
-#include "jpeg.h"  // 引入你刚创建的 JPEG 编码模块
-
 static esp_err_t image_handler(httpd_req_t *req) {
     if (!capture_control_get()) {
         httpd_resp_sendstr(req, "Capture disabled");
@@ -48,7 +46,7 @@ static esp_err_t image_handler(httpd_req_t *req) {
 
     size_t width = 320;
     size_t height = 240;
-    size_t frame_size = width * height * 2;  // RGB565 = 2 bytes per像素
+    size_t frame_size = width * height * 2;  // RGB565 每像素2字节
 
     uint8_t *frame_buffer = heap_caps_malloc(frame_size, MALLOC_CAP_SPIRAM);
     if (!frame_buffer) {
@@ -59,13 +57,12 @@ static esp_err_t image_handler(httpd_req_t *req) {
 
     fifo_read_frame(frame_buffer, frame_size);  // 从 OV7670 读取图像数据
 
-    // 调用 JPEG 编码模块
-    uint8_t *jpeg_buf = NULL;
+    // 使用 TinyJPEG 编码
     size_t jpeg_size = 0;
-    esp_err_t ret = encode_rgb565_to_jpeg(frame_buffer, width, height, &jpeg_buf, &jpeg_size);
+    uint8_t *jpeg_buf = jpeg_encode_rgb565(frame_buffer, frame_size, width, height, &jpeg_size);
     free(frame_buffer);
 
-    if (ret != ESP_OK) {
+    if (!jpeg_buf || jpeg_size == 0) {
         ESP_LOGE("image_handler", "JPEG encoding failed");
         httpd_resp_send_500(req);
         return ESP_FAIL;
@@ -77,6 +74,46 @@ static esp_err_t image_handler(httpd_req_t *req) {
 
     return ESP_OK;
 }
+
+
+
+//static esp_err_t image_handler(httpd_req_t *req) {
+//    if (!capture_control_get()) {
+//        httpd_resp_sendstr(req, "Capture disabled");
+//        return ESP_OK;
+//    }
+//
+//    size_t width = 320;
+//    size_t height = 240;
+//    size_t frame_size = width * height * 2;  // RGB565 = 2 bytes per像素
+
+//    uint8_t *frame_buffer = heap_caps_malloc(frame_size, MALLOC_CAP_SPIRAM);
+ //   if (!frame_buffer) {
+  //      ESP_LOGE("image_handler", "Failed to allocate frame buffer");
+   //     httpd_resp_send_500(req);
+    //    return ESP_FAIL;
+   // }
+
+//    fifo_read_frame(frame_buffer, frame_size);  // 从 OV7670 读取图像数据//
+//
+    // 调用 JPEG 编码模块
+//    uint8_t *jpeg_buf = NULL;
+ //   size_t jpeg_size = 0;
+  //  esp_err_t ret = encode_rgb565_to_jpeg(frame_buffer, width, height, &jpeg_buf, &jpeg_size);
+   // free(frame_buffer);
+
+//    if (ret != ESP_OK) {
+//        ESP_LOGE("image_handler", "JPEG encoding failed");
+ //       httpd_resp_send_500(req);
+  //      return ESP_FAIL;
+   // }
+
+//    httpd_resp_set_type(req, "image/jpeg");
+ //   httpd_resp_send(req, (const char *)jpeg_buf, jpeg_size);
+  //  free(jpeg_buf);
+
+//    return ESP_OK;
+//}
 
 
     fifo_read_frame(frame_buffer, frame_size);  // 从 OV7670 读取图像
@@ -253,6 +290,7 @@ void register_static_handlers(httpd_handle_t server) {
     };
     httpd_register_uri_handler(server, &index_uri);
 }
+
 
 
 
