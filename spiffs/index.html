@@ -16,27 +16,17 @@
             .then(response => response.text())
             .then(data => {
                 alert(data);
-                refreshImage();
             })
             .catch(error => {
                 alert('Error toggling capture: ' + error);
             });
         }
-
-        function refreshImage() {
-            const img = document.getElementById('cameraImage');
-            img.src = '/image?' + new Date().getTime(); // 防止缓存
-        }
-
-        window.onload = function() {
-            refreshImage();
-        };
     </script>
 </head>
 <body>
     <h1>ESP32 Camera Interface</h1>
     <button onclick="toggleCapture()">Toggle Capture</button>
     <br>
-    /image
+    /stream
 </body>
 </html>
