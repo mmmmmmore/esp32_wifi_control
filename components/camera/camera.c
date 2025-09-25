@@ -70,7 +70,7 @@ void ov7670_init_qvga_rgb565() {
 bool camera_init(void) {
     ESP_LOGI("camera: ", "Initializing camera sensor...");
 
-    global_gpio_init();  // Initialize all GPIOs
+    fifo_gpio_init();      // Initialize all GPIOs
     sccb_init();         // Initialize SCCB communication
 
     if (!ov7670_config()) {
