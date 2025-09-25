@@ -38,3 +38,6 @@ void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
 
+//init all gpio
+void global_gpio_iniit(void);
+
