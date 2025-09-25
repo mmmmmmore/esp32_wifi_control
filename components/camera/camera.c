@@ -5,8 +5,10 @@
 #include "freertos/task.h"
 #include "camera_reg.h"
 #include "driver/i2c.h"
+#include "i2c_config.h"
 
-static const char *TAG = "camera";
+
+// static const char *TAG = "camera";
 
 void i2c_master_init() {
     i2c_config_t conf = {
@@ -24,7 +26,12 @@ void i2c_master_init() {
 
 esp_err_t write_register(uint8_t reg, uint8_t val) {
     uint8_t data[2] = { reg, val };
-    return i2c_master_write_to_device(I2C_MASTER_NUM, OV7670_I2C_ADDR, data, sizeof(data), 1000 / portTICK_PERIOD_MS);
+    return i2c_master_write_to_device(
+        I2C_MASTER_NUM, 
+        OV7670_I2C_ADDR, 
+        data, sizeof(data), 
+        1000 / portTICK_PERIOD_MS
+    );
 }
 
 
@@ -55,27 +62,26 @@ const struct regval_list ov7670_qvga_rgb565[] = {
 void ov7670_init_qvga_rgb565() {
     for (int i = 0; i < sizeof(ov7670_qvga_rgb565)/sizeof(ov7670_qvga_rgb565[0]); i++) {
         write_register(ov7670_qvga_rgb565[i].reg, ov7670_qvga_rgb565[i].val);
-        //by cycle write the register value setup the init status
     }
 }
 
 
 bool camera_init(void) {
-    ESP_LOGI(TAG, "Initializing camera sensor...");
+    ESP_LOGI("camera: ", "Initializing camera sensor...");
 
     global_gpio_init();  // Initialize all GPIOs
     sccb_init();         // Initialize SCCB communication
 
     if (!ov7670_config()) {
-        ESP_LOGE(TAG, "Failed to configure OV7670 registers");
+        ESP_LOGE("camera: ", "Failed to configure OV7670 registers");
         return false;
     }
 
     // Optional: check VSYNC signal
-    if (gpio_get_level(GPIO_VSYNC) == 0) {
-        ESP_LOGW(TAG, "VSYNC signal not detected");
+    if (gpio_get_level(PIN_VSYNC) == 0) {
+        ESP_LOGW("camera: ", "VSYNC signal not detected");
     }
 
-    ESP_LOGI(TAG, "Camera sensor initialization complete.");
+    ESP_LOGI("camera: ", "Camera sensor initialization complete.");
     return true;
 }

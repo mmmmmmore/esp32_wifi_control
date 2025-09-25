@@ -5,6 +5,6 @@ idf_component_register(
         "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
-        sccb camera global_gpio jpeg 
+        sccb camera common_gpio jpeg 
         webserver wifi_ap
         )

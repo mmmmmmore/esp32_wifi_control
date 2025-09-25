@@ -9,6 +9,7 @@
 #define OV7670_I2C_ADDR 0x21  // 7-bit address
 
 
+
 // OV7670 Register Addresses
 #define REG_GAIN        0x00
 #define REG_BLUE        0x01
@@ -100,10 +101,10 @@
 #define REG_AWBCTR2     0x6D
 #define REG_AWBCTR1     0x6E
 #define REG_AWBCTR0     0x6F
-#define REG_SCALING_XSC 0x70
-#define REG_SCALING_YSC 0x71
-#define REG_SCALING_DCWCTR 0x72
-#define REG_SCALING_PCLK 0x73
+#define REG_SCALING_XSC     0x70
+#define REG_SCALING_YSC     0x71
+#define REG_SCALING_DCWCTR  0x72
+#define REG_SCALING_PCLK    0x73
 #define REG_REG74       0x74
 #define REG_REG75       0x75
 #define REG_REG76       0x76

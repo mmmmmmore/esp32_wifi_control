@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "stream_control.c"
+    SRCS "sccb.c"
     INCLUDE_DIRS "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 

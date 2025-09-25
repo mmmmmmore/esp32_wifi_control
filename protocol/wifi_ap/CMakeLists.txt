@@ -1,4 +1,4 @@
 idf_component_register(
-    SRCS "wifiap.c"
+    SRCS "wifi_ap.c"
     INCLUDE_DIRS "."
     REQUIRES esp_wifi esp_http_server nvs_flash driver )
