@@ -2,6 +2,7 @@
 #include "common_gpio.h"
 #include "sccb.h"
 #include "esp_log.h"
+#include "freertos/fressRTOS.h"
 #include "freertos/task.h"
 #include "camera_reg.h"
 #include "driver/i2c.h"
