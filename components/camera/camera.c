@@ -67,6 +67,12 @@ void ov7670_init_qvga_rgb565() {
 }
 
 
+bool ov7670_config(void){
+    ov7670_init_qvga_rgb565()
+    return true;
+}
+
+
 bool camera_init(void) {
     ESP_LOGI("camera: ", "Initializing camera sensor...");
 
