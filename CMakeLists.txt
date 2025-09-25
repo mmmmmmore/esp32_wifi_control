@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 # 添加额外组件目录
-set(EXTRA_COMPONENT_DIRS protocol/fifo protocol/sccb protocol/webserver handler protocol/wifi_ap spiffs)
+set(EXTRA_COMPONENT_DIRS protocol/webserver protocol/wifi_ap handler/ov7670_handler spiffs)
 
 project(esp32_wifi_control)
 
