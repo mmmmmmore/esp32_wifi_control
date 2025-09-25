@@ -23,8 +23,8 @@
 #define PIN_VSYNC  GPIO_NUM_15
 
 // SCCB 通信引脚（用于 OV7670 寄存器配置）
-#define PIN_SCL    GPIO_NUM_18
-#define PIN_SDA    GPIO_NUM_19
+#define PIN_SCL    GPIO_NUM_22
+#define PIN_SDA    GPIO_NUM_21
 
 // GPIO 初始化函数
 void fifo_gpio_init(void);
@@ -36,3 +36,4 @@ uint8_t fifo_read_byte(void);
 void fifo_set_rclk(bool level);
 void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
+
