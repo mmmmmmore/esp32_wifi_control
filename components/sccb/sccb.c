@@ -4,6 +4,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "camera_reg.h"
+#include "esp_rom_sys.h"
 
 
 #define SCCB_DELAY_US 5
@@ -11,7 +12,7 @@
 #define SCCB_ID_READ  (OV7670_I2C_ADDR << 1 | 1)        //0x43
 
 static void sccb_delay() {
-    ets_delay_us(SCCB_DELAY_US);
+    esp_rom_delay_us(SCCB_DELAY_US);
 }
 
 static void sccb_start() {
