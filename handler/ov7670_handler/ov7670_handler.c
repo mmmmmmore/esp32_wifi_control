@@ -55,7 +55,8 @@ static void fifo_enable_output(bool enable) {
     gpio_set_level(PIN_OE, enable ? 0 : 1); // OE低电平使能
 }
 
-static uint8_t fifo_read_byte() {
+//use same read byte function 
+uint8_t fifo_read_byte() {
     gpio_set_level(PIN_RCLK, 0);
     ets_delay_us(1); // 可调节
     uint8_t data = 0;
@@ -98,6 +99,7 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     *out_len = buffer_size;
     return image_buffer;
 }
+
 
 
 
