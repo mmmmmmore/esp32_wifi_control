@@ -11,7 +11,7 @@ struct regval_list {
 };
 
 extern const struct regval_list ov7670_qvga_rgb565[];
-
+bool ov7670_config(void);
 
 // OV7670 initialization function for QVGA + RGB565
 void ov7670_init_qvga_rgb565();
