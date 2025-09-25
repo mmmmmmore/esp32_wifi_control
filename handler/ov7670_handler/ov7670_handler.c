@@ -5,6 +5,7 @@
 #include "freertos/task.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 
 
 
@@ -97,6 +98,7 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     *out_len = buffer_size;
     return image_buffer;
 }
+
 
 
 
