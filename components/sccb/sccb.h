@@ -1,3 +1,6 @@
+#ifndef SCCB_H
+#define SCCB_H
+
 #pragma once
 
 #include <stdint.h>
@@ -11,3 +14,6 @@ bool sccb_write(uint8_t reg_addr, uint8_t data);
 
 // 从摄像头寄存器读取数据
 bool sccb_read(uint8_t reg_addr, uint8_t *data);
+
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef COMMON_GPIO_H
+#define COMMON_GPIO_H
+
 #pragma once
 
 #include "driver/gpio.h"
@@ -37,7 +40,4 @@ void fifo_set_rclk(bool level);
 void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
-
-
-
-
+#endif

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
+#include "esp_rom_sys.h"
 
 
 
@@ -46,7 +47,7 @@ static void fifo_reset_read_pointer() {
 void fifo_reset_write_pointer() {
     gpio_set_level(PIN_WRST, 0);
     gpio_set_level(PIN_WEN, 0);
-    ets_delay_us(1);
+    esp_rom_delay_us(1);
     gpio_set_level(PIN_WRST, 1);
 }
 
@@ -58,7 +59,7 @@ static void fifo_enable_output(bool enable) {
 //use same read byte function 
 uint8_t fifo_read_byte() {
     gpio_set_level(PIN_RCLK, 0);
-    ets_delay_us(1); // 可调节
+    esp_rom_delay_us(1); // 可调节
     uint8_t data = 0;
     data |= gpio_get_level(PIN_D0) << 0;
     data |= gpio_get_level(PIN_D1) << 1;
