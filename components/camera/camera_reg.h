@@ -4,14 +4,14 @@
 //init I2C default addr definition
 #define I2C_MASTER_NUM I2C_NUM_0
 
-#ifndef I2C_MASTER_SCL_IO 18
+#ifndef I2C_MASTER_SCL_IO 
 #define I2C_MASTER_SCL_IO 18
 #endif
-#ifndef I2C_MASTER_SDA_IO 19
+#ifndef I2C_MASTER_SDA_IO 
 #define I2C_MASTER_SDA_IO 19
 #endif
 
-#ifndef I2C_MASTER_FREQ_HZ 100000
+#ifndef I2C_MASTER_FREQ_HZ 
 #define I2C_MASTER_FREQ_HZ 100000
 #endif
 #define OV7670_I2C_ADDR 0x21  // 7-bit address

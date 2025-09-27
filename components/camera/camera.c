@@ -68,7 +68,7 @@ void ov7670_init_qvga_rgb565() {
 
 
 bool ov7670_config(void){
-    ov7670_init_qvga_rgb565()
+    ov7670_init_qvga_rgb565();
     return true;
 }
 
