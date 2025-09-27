@@ -30,18 +30,18 @@ void fifo_gpio_init(void) {
 }
 
 // 示例：读取一字节数据
-uint8_t fifo_read_byte(void) {
-    uint8_t data = 0;
-    data |= gpio_get_level(PIN_D0) << 0;
-    data |= gpio_get_level(PIN_D1) << 1;
-    data |= gpio_get_level(PIN_D2) << 2;
-    data |= gpio_get_level(PIN_D3) << 3;
-    data |= gpio_get_level(PIN_D4) << 4;
-    data |= gpio_get_level(PIN_D5) << 5;
-    data |= gpio_get_level(PIN_D6) << 6;
-    data |= gpio_get_level(PIN_D7) << 7;
-    return data;
-}
+//uint8_t fifo_read_byte(void) {
+//    uint8_t data = 0;
+//    data |= gpio_get_level(PIN_D0) << 0;
+//    data |= gpio_get_level(PIN_D1) << 1;
+//    data |= gpio_get_level(PIN_D2) << 2;
+//    data |= gpio_get_level(PIN_D3) << 3;
+//    data |= gpio_get_level(PIN_D4) << 4;
+//    data |= gpio_get_level(PIN_D5) << 5;
+//    data |= gpio_get_level(PIN_D6) << 6;
+//   data |= gpio_get_level(PIN_D7) << 7;
+//    return data;
+//}
 
 // 示例：控制引脚设置
 void fifo_set_rclk(bool level) {

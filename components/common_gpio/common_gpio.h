@@ -33,7 +33,7 @@
 void fifo_gpio_init(void);
 
 // 数据读取函数（可选）
-uint8_t fifo_read_byte(void);
+//uint8_t fifo_read_byte(void);
 
 // 控制引脚设置函数（可选）
 void fifo_set_rclk(bool level);

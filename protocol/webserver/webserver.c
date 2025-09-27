@@ -1,4 +1,4 @@
-
+#include "capture_control.h"
 #include "webserver.h"
 #include "esp_http_server.h"
 #include "ov7670_handler.h"
