@@ -48,7 +48,7 @@ void app_main(void) {
 
     
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）
-    ov7670_init();
+    ov7670_config();
 
     init_spiffs();
     // 启动 HTTP 服务器
