@@ -136,6 +136,15 @@ static esp_err_t index_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
+
+static esp_err_t favicon_handler(httpd_req_t *req) {
+    httpd_resp_set_type(req, "image/x-icon");
+    httpd_resp_send(req, NULL, 0);  // 返回空内容
+    return ESP_OK;
+}
+
+
+
 httpd_handle_t start_webserver(void) {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     httpd_handle_t server = NULL;
@@ -163,6 +172,14 @@ httpd_handle_t start_webserver(void) {
         httpd_register_uri_handler(server, &stream_uri);
     }
 
+    httpd_uri_t favicon_uri = {
+    .uri = "/favicon.ico",
+    .method = HTTP_GET,
+    .handler = favicon_handler
+    };
+    httpd_register_uri_handler(server, &favicon_uri);
+
+    
     httpd_uri_t index_uri = {
     .uri = "/",
     .method = HTTP_GET,
@@ -173,6 +190,7 @@ httpd_handle_t start_webserver(void) {
     
     return server;
 }
+
 
 
 
