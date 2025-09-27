@@ -5,4 +5,4 @@ idf_component_register(
         esp_wifi esp_http_server nvs_flash driver 
         esp_jpeg jpeg 
         ov7670_handler
-        sccb camera jpeg ov7670 common_gpio)
+        sccb camera jpeg common_gpio)

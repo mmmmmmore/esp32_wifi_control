@@ -5,5 +5,5 @@ idf_component_register(
         "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
-        common_gpio sccb jpeg ov7670
+        common_gpio sccb jpeg 
     )
