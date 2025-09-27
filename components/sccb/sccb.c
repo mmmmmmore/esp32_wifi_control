@@ -5,7 +5,14 @@
 #include "freertos/task.h"
 #include "camera_reg.h"
 #include "esp_rom_sys.h"
+#include "driver/i2c.h"
 
+#define I2C_MASTER_NUM I2C_NUM_0
+#define I2C_MASTER_SCL_IO PIN_SCL
+#define I2C_MASTER_SDA_IO PIN_SDA
+#define I2C_MASTER_FREQ_HZ 100000
+#define I2C_MASTER_TX_BUF_DISABLE 0
+#define I2C_MASTER_RX_BUF_DISABLE 0
 
 #define SCCB_DELAY_US 5
 #define SCCB_ID_WRITE (OV7670_I2C_ADDR << 1 | 0)        //0x42
@@ -95,11 +102,37 @@ bool sccb_read(uint8_t reg_addr, uint8_t *data) {
     return true;
 }
 
+
+
 bool sccb_init(void) {
-    // GPIO 已在 global_gpio_init() 中初始化
+    // 初始化 GPIO（如果未在其他地方初始化）
     gpio_set_direction(PIN_SCL, GPIO_MODE_OUTPUT);
     gpio_set_direction(PIN_SDA, GPIO_MODE_OUTPUT);
     gpio_set_level(PIN_SCL, 1);
     gpio_set_level(PIN_SDA, 1);
+
+    // 配置 I2C 参数
+    i2c_config_t conf = {
+        .mode = I2C_MODE_MASTER,
+        .sda_io_num = I2C_MASTER_SDA_IO,
+        .scl_io_num = I2C_MASTER_SCL_IO,
+        .sda_pullup_en = GPIO_PULLUP_ENABLE,
+        .scl_pullup_en = GPIO_PULLUP_ENABLE,
+        .master.clk_speed = I2C_MASTER_FREQ_HZ,
+    };
+    esp_err_t err = i2c_param_config(I2C_MASTER_NUM, &conf);
+    if (err != ESP_OK) {
+        return false;
+    }
+
+    // 安装 I2C 驱动
+    err = i2c_driver_install(I2C_MASTER_NUM, conf.mode,
+                             I2C_MASTER_RX_BUF_DISABLE,
+                             I2C_MASTER_TX_BUF_DISABLE, 0);
+    if (err != ESP_OK) {
+        return false;
+    }
+
     return true;
 }
+
