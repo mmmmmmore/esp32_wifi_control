@@ -1,5 +1,8 @@
 #include "common_gpio.h"
 
+
+
+
 void fifo_gpio_init(void) {
     gpio_config_t io_conf = {0};
 
