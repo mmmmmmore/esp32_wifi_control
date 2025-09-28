@@ -5,7 +5,7 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
         img { width: 640px; height: 480px; border: 1px solid #ccc; margin-top: 20px; }
-        button { padding: 10px 20px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
     </style>
     <script>
         function toggleCapture() {
@@ -21,12 +21,27 @@
                 alert('Error toggling capture: ' + error);
             });
         }
+
+        function captureImage() {
+            const img = document.getElementById("image");
+            img.src = "/image?" + new Date().getTime(); // 防止缓存
+        }
     </script>
 </head>
 <body>
     <h1>ESP32 Camera Interface</h1>
+
+    <!-- 控制按钮 -->
     <button onclick="toggleCapture()">Toggle Capture</button>
-    <br>
+    <button onclick="captureImage()">Capture Image</button>
+
+    <!-- 静态图像显示 -->
+    <h3>Captured Image</h3>
+    <img id="image" src="" alt="Captured Image" />
+
+    <!-- 视频流显示 -->
+    <h3>Live Stream</h3>
     /stream
+
 </body>
 </html>
