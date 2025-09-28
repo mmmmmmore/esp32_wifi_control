@@ -17,9 +17,22 @@ typedef struct {
 static void jpeg_mem_writer(void* context, void* data, int size) {
     jpeg_mem_context* ctx = (jpeg_mem_context*)context;
     if (ctx->size + size > ctx->capacity) {
-        ESP_LOGE(TAG, "JPEG buffer overflow: size=%d, capacity=%d", ctx->size + size, ctx->capacity);
-        return;
+        size_t new_capacity = ctx->capacity * 2;
+        while (ctx->size + size > new_capacity) {
+            new_capacity *= 2;
+        }
+
+        uint8_t* new_buffer = realloc(ctx->buffer, new_capacity);
+        if (!new_buffer) {
+            ESP_LOGE(TAG, "Failed to realloc JPEG buffer");
+            return;
+        }
+
+        ctx->buffer = new_buffer;
+        ctx->capacity = new_capacity;
+        ESP_LOGW(TAG, "JPEG buffer expanded to %d bytes", new_capacity);
     }
+
     memcpy(ctx->buffer + ctx->size, data, size);
     ctx->size += size;
 }
@@ -31,13 +44,13 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
     }
 
     size_t pixel_count = width * height;
-    size_t max_jpeg_size = width * height * 3;  // 扩大缓冲区容量
-    ESP_LOGI(TAG, "Allocating JPEG buffer: %d bytes", max_jpeg_size);
+    size_t initial_jpeg_size = pixel_count;  // 初始分配较小，后续可扩容
+    ESP_LOGI(TAG, "Allocating initial JPEG buffer: %d bytes", initial_jpeg_size);
 
-    uint8_t* jpeg_buffer = heap_caps_malloc(max_jpeg_size, MALLOC_CAP_SPIRAM);
+    uint8_t* jpeg_buffer = heap_caps_malloc(initial_jpeg_size, MALLOC_CAP_SPIRAM);
     if (!jpeg_buffer) {
         ESP_LOGW(TAG, "SPIRAM alloc failed for JPEG buffer, trying internal RAM...");
-        jpeg_buffer = heap_caps_malloc(max_jpeg_size, MALLOC_CAP_8BIT);
+        jpeg_buffer = heap_caps_malloc(initial_jpeg_size, MALLOC_CAP_8BIT);
     }
     if (!jpeg_buffer) {
         ESP_LOGE(TAG, "Failed to allocate JPEG buffer");
@@ -78,7 +91,7 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
     jpeg_mem_context ctx = {
         .buffer = jpeg_buffer,
         .size = 0,
-        .capacity = max_jpeg_size
+        .capacity = initial_jpeg_size
     };
 
     ESP_LOGI(TAG, "Starting JPEG encoding...");
@@ -88,11 +101,11 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
 
     if (ctx.size == 0) {
         ESP_LOGE(TAG, "JPEG encoding returned size 0");
-        free(jpeg_buffer);
+        free(ctx.buffer);
         return NULL;
     }
 
     ESP_LOGI(TAG, "JPEG encoding successful: %d bytes", ctx.size);
     *jpeg_len = ctx.size;
-    return jpeg_buffer;
+    return ctx.buffer;
 }
