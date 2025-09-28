@@ -31,7 +31,7 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
     }
 
     size_t pixel_count = width * height;
-    size_t max_jpeg_size = width * height * 2;  // 扩大缓冲区容量
+    size_t max_jpeg_size = width * height * 3;  // 扩大缓冲区容量
     ESP_LOGI(TAG, "Allocating JPEG buffer: %d bytes", max_jpeg_size);
 
     uint8_t* jpeg_buffer = heap_caps_malloc(max_jpeg_size, MALLOC_CAP_SPIRAM);
