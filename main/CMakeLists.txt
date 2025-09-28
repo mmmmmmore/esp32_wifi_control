@@ -7,4 +7,5 @@ idf_component_register(
         ov7670_handler
         webserver wifi_ap 
         spiffs 
+        esp_system esp_psram
 )

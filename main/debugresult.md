@@ -1,3 +1,15 @@
+2025-9-28:
+I (17956) jpeg: Allocating JPEG buffer: 76800 bytes
+I (17956) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (17956) jpeg: Converting RGB565 to RGB888...
+I (17956) jpeg: First pixel RGB565: 0xE8E8 → RGB888: R=232 G=28 B=64
+I (17976) jpeg: Starting JPEG encoding...
+E (17976) jpeg: JPEG buffer overflow: size=230420, capacity=76800
+I (17976) jpeg: JPEG encoding successful: 22 bytes
+I (17986) webserver: JPEG encoded size: 22 bytes
+
+
+2025-09-27
 /Users/maochun/esp32prj/Motor/motor_wifi/esp32_wifi_control/components/camera/camera.c:41:7: note: in expansion of macro 'REG_COM7'
    41 |     { REG_COM7, 0x80 },     //reverse
       |       ^~~~~~~~
