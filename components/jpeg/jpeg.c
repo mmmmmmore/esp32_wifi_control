@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stddef.h>
 #include "esp_log.h"
+#include "esp_heap_caps.h"
 
 static const char *TAG = "jpeg";
 
@@ -32,14 +33,25 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
     size_t pixel_count = width * height;
     size_t max_jpeg_size = pixel_count;  // 保守估计
     ESP_LOGI(TAG, "Allocating JPEG buffer: %d bytes", max_jpeg_size);
-    uint8_t* jpeg_buffer = malloc(max_jpeg_size);
+
+    uint8_t* jpeg_buffer = heap_caps_malloc(max_jpeg_size, MALLOC_CAP_SPIRAM);
+    if (!jpeg_buffer) {
+        ESP_LOGW(TAG, "SPIRAM alloc failed for JPEG buffer, trying internal RAM...");
+        jpeg_buffer = heap_caps_malloc(max_jpeg_size, MALLOC_CAP_8BIT);
+    }
     if (!jpeg_buffer) {
         ESP_LOGE(TAG, "Failed to allocate JPEG buffer");
         return NULL;
     }
 
-    ESP_LOGI(TAG, "Allocating RGB888 buffer: %d bytes", pixel_count * 3);
-    uint8_t* rgb888 = malloc(pixel_count * 3);
+    size_t rgb888_size = pixel_count * 3;
+    ESP_LOGI(TAG, "Allocating RGB888 buffer: %d bytes", rgb888_size);
+
+    uint8_t* rgb888 = heap_caps_malloc(rgb888_size, MALLOC_CAP_SPIRAM);
+    if (!rgb888) {
+        ESP_LOGW(TAG, "SPIRAM alloc failed for RGB888 buffer, trying internal RAM...");
+        rgb888 = heap_caps_malloc(rgb888_size, MALLOC_CAP_8BIT);
+    }
     if (!rgb888) {
         ESP_LOGE(TAG, "Failed to allocate RGB888 buffer");
         free(jpeg_buffer);
