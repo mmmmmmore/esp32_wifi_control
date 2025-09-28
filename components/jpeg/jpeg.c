@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
+#include "esp_log.h"
+
+static const char *TAG = "jpeg";
 
 typedef struct {
     uint8_t* buffer;
@@ -12,29 +15,39 @@ typedef struct {
 
 static void jpeg_mem_writer(void* context, void* data, int size) {
     jpeg_mem_context* ctx = (jpeg_mem_context*)context;
-    if (ctx->size + size > ctx->capacity) return;
+    if (ctx->size + size > ctx->capacity) {
+        ESP_LOGE(TAG, "JPEG buffer overflow: size=%d, capacity=%d", ctx->size + size, ctx->capacity);
+        return;
+    }
     memcpy(ctx->buffer + ctx->size, data, size);
     ctx->size += size;
 }
 
 uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t width, uint16_t height, size_t* jpeg_len) {
     if (!rgb_data || rgb_len == 0 || width == 0 || height == 0 || !jpeg_len) {
+        ESP_LOGE(TAG, "Invalid input parameters");
         return NULL;
     }
 
-    size_t max_jpeg_size = rgb_len / 2;
+    size_t pixel_count = width * height;
+    size_t max_jpeg_size = pixel_count;  // 保守估计
+    ESP_LOGI(TAG, "Allocating JPEG buffer: %d bytes", max_jpeg_size);
     uint8_t* jpeg_buffer = malloc(max_jpeg_size);
     if (!jpeg_buffer) {
+        ESP_LOGE(TAG, "Failed to allocate JPEG buffer");
         return NULL;
     }
 
-    uint8_t* rgb888 = malloc(width * height * 3);
+    ESP_LOGI(TAG, "Allocating RGB888 buffer: %d bytes", pixel_count * 3);
+    uint8_t* rgb888 = malloc(pixel_count * 3);
     if (!rgb888) {
+        ESP_LOGE(TAG, "Failed to allocate RGB888 buffer");
         free(jpeg_buffer);
         return NULL;
     }
 
-    for (size_t i = 0; i < width * height; i++) {
+    ESP_LOGI(TAG, "Converting RGB565 to RGB888...");
+    for (size_t i = 0; i < pixel_count; i++) {
         uint16_t pixel = ((uint16_t*)rgb_data)[i];
         uint8_t r = (pixel >> 11) & 0x1F;
         uint8_t g = (pixel >> 5) & 0x3F;
@@ -43,6 +56,11 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
         rgb888[i * 3 + 0] = r << 3;
         rgb888[i * 3 + 1] = g << 2;
         rgb888[i * 3 + 2] = b << 3;
+
+        if (i == 0) {
+            ESP_LOGI(TAG, "First pixel RGB565: 0x%04X → RGB888: R=%d G=%d B=%d",
+                     pixel, rgb888[0], rgb888[1], rgb888[2]);
+        }
     }
 
     jpeg_mem_context ctx = {
@@ -51,15 +69,18 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
         .capacity = max_jpeg_size
     };
 
+    ESP_LOGI(TAG, "Starting JPEG encoding...");
     tje_encode_with_func(jpeg_mem_writer, &ctx, 3, width, height, 3, rgb888);
 
     free(rgb888);
 
     if (ctx.size == 0) {
+        ESP_LOGE(TAG, "JPEG encoding returned size 0");
         free(jpeg_buffer);
         return NULL;
     }
 
+    ESP_LOGI(TAG, "JPEG encoding successful: %d bytes", ctx.size);
     *jpeg_len = ctx.size;
     return jpeg_buffer;
 }
