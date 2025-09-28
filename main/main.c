@@ -45,7 +45,7 @@ void app_main(void) {
     //ESP_ERROR_CHECK(esp_netif_init());
     //ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    
+    sccb_init();
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）
     ov7670_config();
 
