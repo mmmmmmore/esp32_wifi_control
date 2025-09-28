@@ -1,4 +1,17 @@
 2025-9-28:
+I (24556) webserver: HTTP GET /image
+I (24556) webserver: Allocating frame buffer (153600 bytes)
+I (24556) webserver: Free heap before alloc: 8650740
+I (25146) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (25146) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (25146) jpeg: Converting RGB565 to RGB888...
+I (25146) jpeg: First pixel RGB565: 0x0000 → RGB888: R=0 G=0 B=0
+I (25166) jpeg: Starting JPEG encoding...
+W (25176) jpeg: JPEG buffer expanded to 307200 bytes
+I (25186) jpeg: JPEG encoding successful: 230422 bytes
+I (25186) webserver: JPEG encoded size: 230422 bytes
+
+
 I (12166) webserver: HTTP GET /
 I (12176) webserver: HTTP POST /toggle
 I (12176) webserver: Received toggle command: ON
