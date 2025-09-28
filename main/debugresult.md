@@ -1,4 +1,18 @@
 2025-9-28:
+I (12166) webserver: HTTP GET /
+I (12176) webserver: HTTP POST /toggle
+I (12176) webserver: Received toggle command: ON
+I (13086) webserver: HTTP GET /favicon.ico
+I (13776) webserver: HTTP GET /image
+I (13776) webserver: Allocating frame buffer (153600 bytes)
+I (13776) webserver: Free heap before alloc: 8650728
+I (14356) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (14356) jpeg: Allocating RGB888 buffer: 230400 bytes
+E (14356) jpeg: Failed to allocate RGB888 buffer
+E (14366) webserver: JPEG encoding failed
+W (14366) httpd_txrx: httpd_resp_send_err: 500 Internal Server Error - Server has encountered an unexpected error
+W (14376) httpd_uri: httpd_uri: uri handler execution failed
+
 I (11696) webserver: HTTP GET /
 I (11806) webserver: HTTP GET /favicon.ico
 I (14696) webserver: HTTP POST /toggle
