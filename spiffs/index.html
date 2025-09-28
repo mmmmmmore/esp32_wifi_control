@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ESP32 Camera Preview</title>
+    <title>ESP32 Camera Interface</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
         img { width: 320px; height: 240px; border: 1px solid #ccc; margin-top: 20px; }
-        button { padding: 10px 20px; font-size: 16px; margin-top: 20px; }
-        #log { margin-top: 20px; color: #555; font-size: 14px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+        #log { margin-top: 20px; font-size: 14px; color: #555; }
     </style>
     <script>
+        function toggleCapture() {
+            fetch('/toggle', {
+                method: 'POST',
+                body: 'ON'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("log").innerText = "✅ 采集已开启：" + data;
+            })
+            .catch(error => {
+                document.getElementById("log").innerText = "❌ 采集开启失败：" + error;
+            });
+        }
+
         function loadImage() {
             const img = document.getElementById("image");
             const log = document.getElementById("log");
 
-            // 加时间戳防止缓存
-            const url = "/image?" + new Date().getTime();
-
+            const url = "/image?" + new Date().getTime(); // 防止缓存
             img.src = url;
             log.innerText = "请求图像中：" + url;
 
             img.onerror = function() {
-                log.innerText = "❌ 图像加载失败，请检查 ESP32 是否正常响应 /image 接口。";
+                log.innerText = "❌ 图像加载失败，请确认采集已开启。";
             };
 
             img.onload = function() {
@@ -30,10 +42,20 @@
     </script>
 </head>
 <body>
-    <h1>ESP32 Camera Preview</h1>
+    <h1>ESP32 Camera Interface</h1>
+
+    <!-- 控制按钮 -->
+    <button onclick="toggleCapture()">开启采集</button>
     <button onclick="loadImage()">获取图像</button>
-    <br>
+
+    <!-- 静态图像显示 -->
+    <h3>Captured Image</h3>
     <img id="image" src="" alt="Captured Image" />
-    <div id="log">点击按钮以获取图像。</div>
+
+    <!-- 视频流显示 -->
+    <h3>Live Stream</h3>
+    /stream
+
+    <div id="log">点击按钮以控制采集并预览图像。</div>
 </body>
 </html>
