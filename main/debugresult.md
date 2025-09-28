@@ -1,4 +1,22 @@
 2025-9-28:
+I (11696) webserver: HTTP GET /
+I (11806) webserver: HTTP GET /favicon.ico
+I (14696) webserver: HTTP POST /toggle
+I (14696) webserver: Received toggle command: ON
+I (16096) webserver: HTTP GET /image
+I (16096) webserver: Allocating frame buffer (153600 bytes)
+I (16096) webserver: Free heap before alloc: 8650412
+I (16676) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (16676) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (16676) jpeg: Converting RGB565 to RGB888...
+I (16686) jpeg: First pixel RGB565: 0x0000 → RGB888: R=0 G=0 B=0
+I (16706) jpeg: Starting JPEG encoding...
+E (16706) jpeg: Failed to realloc JPEG buffer
+I (16706) jpeg: JPEG encoding successful: 22 bytes
+I (16706) webserver: JPEG encoded size: 22 bytes
+
+
+
 I (17956) jpeg: Allocating JPEG buffer: 76800 bytes
 I (17956) jpeg: Allocating RGB888 buffer: 230400 bytes
 I (17956) jpeg: Converting RGB565 to RGB888...
