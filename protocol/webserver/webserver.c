@@ -13,6 +13,28 @@ static esp_err_t favicon_handler(httpd_req_t *req) {
 }
 
 
+static esp_err_t index_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "HTTP GET /");
+
+    FILE *f = fopen("/spiffs/index.html", "r");
+    if (!f) {
+        ESP_LOGE(TAG, "Failed to open index.html");
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+    }
+
+    char buf[1024];
+    size_t read_bytes;
+    httpd_resp_set_type(req, "text/html");
+
+    while ((read_bytes = fread(buf, 1, sizeof(buf), f)) > 0) {
+        httpd_resp_send_chunk(req, buf, read_bytes);
+    }
+    fclose(f);
+    httpd_resp_send_chunk(req, NULL, 0);  // 结束响应
+    return ESP_OK;
+}
+
 httpd_handle_t start_webserver(void) {
     ESP_LOGI(TAG, "Starting webserver...");
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
@@ -48,5 +70,6 @@ httpd_handle_t start_webserver(void) {
 
     return server;
 }
+
 
 
