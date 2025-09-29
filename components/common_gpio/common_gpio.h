@@ -23,7 +23,7 @@
 #define PIN_D7     GPIO_NUM_18
 
 // OV7670 同步信号
-#define PIN_VSYNC  GPIO_NUM_9
+#define PIN_VSYNC  GPIO_NUM_21
 
 // SCCB 通信引脚（用于 OV7670 寄存器配置）
 #define PIN_SCL    GPIO_NUM_3
@@ -52,6 +52,7 @@ void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
 #endif
+
 
 
 
