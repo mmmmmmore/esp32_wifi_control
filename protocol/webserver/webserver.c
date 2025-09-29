@@ -21,19 +21,32 @@ httpd_handle_t start_webserver(void) {
     if (httpd_start(&server, &config) == ESP_OK) {
         ESP_LOGI(TAG, "Webserver started");
 
-        httpd_uri_t favicon_uri = {
+       
+        
+        register_camera_routes(server);
+        register_control_routes(server);
+
+         httpd_uri_t favicon_uri = {
             .uri = "/favicon.ico",
             .method = HTTP_GET,
             .handler = favicon_handler
         };
         httpd_register_uri_handler(server, &favicon_uri);
         
-        register_camera_routes(server);
-        register_control_routes(server);
+        httpd_uri_t index_uri = {
+            .uri = "/",
+            .method = HTTP_GET,
+            .handler = index_handler
+        };
+        httpd_register_uri_handler(server, &index_uri);
+
+
+        
     } else {
         ESP_LOGE(TAG, "Failed to start webserver");
     }
 
     return server;
 }
+
 
