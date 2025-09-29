@@ -6,7 +6,7 @@
 #include "freertos/task.h"
 #include "camera_reg.h"
 #include "driver/i2c.h"
-#include "i2c_config.h"
+//#include "i2c_config.h"
 
 #include "driver/gpio.h"
 // static const char *TAG = "camera";
