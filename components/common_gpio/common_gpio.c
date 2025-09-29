@@ -25,7 +25,10 @@ void fifo_gpio_init(void) {
 
     // VSYNC 配置为输入（可用于中断）
     gpio_set_direction(PIN_VSYNC, GPIO_MODE_INPUT);
+    int vsync_level = gpio_get_level(PIN_VSYNC);
+    ESP_LOGI("VSYNC_CHECK", "GPIO%d level: %d", PIN_VSYNC, vsync_level);
 
+    
     // SCCB 引脚配置为输入输出（开漏）
     io_conf.mode = GPIO_MODE_INPUT_OUTPUT_OD;
     io_conf.pin_bit_mask = (1ULL << PIN_SCL) | (1ULL << PIN_SDA);
