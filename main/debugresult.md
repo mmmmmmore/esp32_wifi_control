@@ -1,4 +1,96 @@
 2025-09-29:
+系统初始化完成，等待客户端连接...
+I (1186) main_task: Returned from app_main()
+I (6066) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (6066) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (6096) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (9696) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:55, winSize:64
+I (12896) webserver: HTTP POST /toggle
+I (12896) webserver: Received toggle command: ON
+I (15876) webserver: HTTP GET /image
+I (15876) webserver: Allocating frame buffer (153600 bytes)
+I (15876) webserver: Free heap before alloc: 8650740
+I (15876) OV7670_HANDLER: Reading raw frame of size: 153600
+I (15886) OV7670_HANDLER: Resetting FIFO read pointer...
+I (15886) OV7670_HANDLER: Enabling FIFO output...
+I (15896) OV7670_HANDLER: Byte[0] = 0xE8
+I (15896) OV7670_HANDLER: Byte[1] = 0x40
+I (15906) OV7670_HANDLER: Byte[2] = 0x00
+I (15906) OV7670_HANDLER: Byte[3] = 0x00
+I (16486) OV7670_HANDLER: Disabling FIFO output...
+I (16486) OV7670_HANDLER: Raw frame read complete
+I (16496) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (16496) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (16496) jpeg: Converting RGB565 to RGB888...
+I (16506) jpeg: First pixel RGB565: 0x40E8 → RGB888: R=64 G=28 B=64
+I (16526) jpeg: Starting JPEG encoding...
+W (16526) jpeg: JPEG buffer expanded to 307200 bytes
+I (16546) jpeg: JPEG encoding successful: 230422 bytes
+I (16546) webserver: JPEG encoded size: 230422 bytes
+I (26636) webserver: HTTP GET /image
+I (26636) webserver: Allocating frame buffer (153600 bytes)
+I (26636) webserver: Free heap before alloc: 8650740
+I (26636) OV7670_HANDLER: Reading raw frame of size: 153600
+I (26636) OV7670_HANDLER: Resetting FIFO read pointer...
+I (26646) OV7670_HANDLER: Enabling FIFO output...
+I (26646) OV7670_HANDLER: Byte[0] = 0xE8
+I (26656) OV7670_HANDLER: Byte[1] = 0xE8
+I (26656) OV7670_HANDLER: Byte[2] = 0x00
+I (26656) OV7670_HANDLER: Byte[3] = 0x00
+I (27246) OV7670_HANDLER: Disabling FIFO output...
+I (27246) OV7670_HANDLER: Raw frame read complete
+I (27246) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (27246) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (27256) jpeg: Converting RGB565 to RGB888...
+I (27256) jpeg: First pixel RGB565: 0xE8E8 → RGB888: R=232 G=28 B=64
+I (27276) jpeg: Starting JPEG encoding...
+W (27286) jpeg: JPEG buffer expanded to 307200 bytes
+I (27296) jpeg: JPEG encoding successful: 230422 bytes
+I (27296) webserver: JPEG encoded size: 230422 bytes
+I (33706) webserver: HTTP GET /image
+I (33706) webserver: Allocating frame buffer (153600 bytes)
+I (33706) webserver: Free heap before alloc: 8650740
+I (33716) OV7670_HANDLER: Reading raw frame of size: 153600
+I (33716) OV7670_HANDLER: Resetting FIFO read pointer...
+I (33726) OV7670_HANDLER: Enabling FIFO output...
+I (33726) OV7670_HANDLER: Byte[0] = 0xE8
+I (33726) OV7670_HANDLER: Byte[1] = 0xE8
+I (33736) OV7670_HANDLER: Byte[2] = 0xE8
+I (33736) OV7670_HANDLER: Byte[3] = 0x00
+I (34326) OV7670_HANDLER: Disabling FIFO output...
+I (34326) OV7670_HANDLER: Raw frame read complete
+I (34326) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (34326) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (34336) jpeg: Converting RGB565 to RGB888...
+I (34336) jpeg: First pixel RGB565: 0xE8E8 → RGB888: R=232 G=28 B=64
+I (34356) jpeg: Starting JPEG encoding...
+W (34366) jpeg: JPEG buffer expanded to 307200 bytes
+I (34376) jpeg: JPEG encoding successful: 230422 bytes
+I (34376) webserver: JPEG encoded size: 230422 bytes
+I (37976) webserver: HTTP GET /image
+I (37976) webserver: Allocating frame buffer (153600 bytes)
+I (37976) webserver: Free heap before alloc: 8650740
+I (37976) OV7670_HANDLER: Reading raw frame of size: 153600
+I (37986) OV7670_HANDLER: Resetting FIFO read pointer...
+I (37986) OV7670_HANDLER: Enabling FIFO output...
+I (37996) OV7670_HANDLER: Byte[0] = 0xE8
+I (37996) OV7670_HANDLER: Byte[1] = 0x00
+I (37996) OV7670_HANDLER: Byte[2] = 0x00
+I (38006) OV7670_HANDLER: Byte[3] = 0x00
+I (38596) OV7670_HANDLER: Disabling FIFO output...
+I (38596) OV7670_HANDLER: Raw frame read complete
+I (38596) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (38596) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (38596) jpeg: Converting RGB565 to RGB888...
+I (38606) jpeg: First pixel RGB565: 0x00E8 → RGB888: R=0 G=28 B=64
+I (38626) jpeg: Starting JPEG encoding...
+W (38626) jpeg: JPEG buffer expanded to 307200 bytes
+I (38646) jpeg: JPEG encoding successful: 230422 bytes
+I (38646) webserver: JPEG encoded size: 230422 bytes
+
+
+
+
 I (24696) webserver: HTTP GET /image
 I (24696) webserver: Allocating frame buffer (153600 bytes)
 I (24696) webserver: Free heap before alloc: 8650752
