@@ -1,4 +1,92 @@
 2025-09-29:
+
+I (1067) PSRAM: PSRAM size: 8388608 bytes
+I (1077) PSRAM: Free heap: 8660428 bytes
+I (1077) PSRAM: PSRAM is initialized and ready.
+I (1087) PSRAM: Successfully allocated 1KB from PSRAM.
+I (1087) camera: : Initializing camera sensor...
+I (1087) VSYNC_CHECK: GPIO21 level: 0
+I (1097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+W (1107) camera: : VSYNC signal not detected
+I (1107) camera: : Camera sensor initialization complete.
+I (1197) SPIFFS:: SPIFFS mounted successfully
+I (1207) webserver: Starting webserver...
+I (1207) webserver: Webserver started
+系统初始化完成，等待客户端连接...
+I (1207) main_task: Returned from app_main()
+I (2097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (3097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (4097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (5097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (6097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (6777) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (6777) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (6827) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (7097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (8097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (8537) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (9097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (10097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (11097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (12097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (13097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (14097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (14847) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:76, winSize:64
+I (15097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (16097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (17097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (18097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (19097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (20097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (21097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (22097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (23097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (24097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (25097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (26097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (27097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (27837) webserver_control: HTTP POST /toggle
+I (27837) webserver_control: Received toggle command: ON
+I (28097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (29097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (30097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (30627) webserver_camera: HTTP GET /image
+I (30627) webserver_camera: Allocating frame buffer (153600 bytes)
+I (30637) webserver_camera: Free heap before alloc: 8648272
+I (30637) OV7670_HANDLER: Reading raw frame of size: 153600
+I (30637) OV7670_HANDLER: Resetting FIFO read pointer...
+I (30647) OV7670_HANDLER: Enabling FIFO output...
+I (30647) OV7670_HANDLER: Byte[0] = 0xEF
+I (30657) OV7670_HANDLER: Byte[1] = 0x89
+I (30657) OV7670_HANDLER: Byte[2] = 0xF3
+I (30657) OV7670_HANDLER: Byte[3] = 0x86
+I (31097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (31247) OV7670_HANDLER: Disabling FIFO output...
+I (31247) OV7670_HANDLER: Raw frame read complete
+I (31247) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (31247) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (31257) jpeg: Converting RGB565 to RGB888...
+I (31257) jpeg: First pixel RGB565: 0x89EF → RGB888: R=136 G=60 B=120
+I (31277) jpeg: Starting JPEG encoding...
+W (31287) jpeg: JPEG buffer expanded to 307200 bytes
+I (31297) jpeg: JPEG encoding successful: 230422 bytes
+I (31297) webserver_camera: JPEG encoded size: 230422 bytes
+I (32097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (33097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (34097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (35097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (36097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (37097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (38097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (39097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (40097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (41097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (42097) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+
+
+
+
+
 update web structure, VSYNC still not 
 ESP32S3 Boot Success...
 I (916) pp: pp rom version: e7ae62f
