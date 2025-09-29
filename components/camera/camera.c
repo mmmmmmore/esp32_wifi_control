@@ -35,19 +35,6 @@ void vsync_debug_task(void *arg) {
     }
 }
 
-// SCCB initialization
-void sccb_init() {
-    i2c_config_t conf = {
-        .mode = I2C_MODE_MASTER,
-        .sda_io_num = PIN_SDA,
-        .scl_io_num = PIN_SCL,
-        .sda_pullup_en = GPIO_PULLUP_ENABLE,
-        .scl_pullup_en = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = I2C_MASTER_FREQ_HZ,
-    };
-    i2c_param_config(I2C_MASTER_NUM, &conf);
-    i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
-}
 
 // OV7670 register configuration
 const struct regval_list ov7670_qvga_rgb565[] = {
