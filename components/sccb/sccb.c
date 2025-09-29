@@ -102,6 +102,15 @@ bool sccb_read(uint8_t reg_addr, uint8_t *data) {
     return true;
 }
 
+uint8_t sccb_read_register(uint8_t reg_addr) {
+    uint8_t data = 0;
+    if (i2c_master_read_slave(SCCB_ADDR, reg_addr, &data, 1) == ESP_OK) {
+        return data;
+    } else {
+        ESP_LOGE("SCCB", "Failed to read register 0x%02X", reg_addr);
+        return 0xFF;  // 或其他错误标志
+    }
+}
 
 
 bool sccb_init(void) {
