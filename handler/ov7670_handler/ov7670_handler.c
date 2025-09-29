@@ -82,6 +82,7 @@ uint8_t fifo_read_byte() {
     return data;
 }
 
+
 uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     if (!size || size->width == 0 || size->height == 0) return NULL;
 
@@ -96,10 +97,18 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
     }
 
     ESP_LOGI(TAG, "Capturing frame: %dx%d", size->width, size->height);
-    fifo_capture_frame_start();     // 新增：采集一帧图像
+    fifo_capture_frame_start();     // 采集一帧图像
     fifo_reset_read_pointer();      // 准备读取
     fifo_enable_output(true);       // 启用输出
 
+    // ✅ 添加调试代码：采样前10个字节
+    ESP_LOGI(TAG, "Sampling first 10 bytes from FIFO...");
+    for (int i = 0; i < 10; i++) {
+        uint8_t byte = fifo_read_byte();
+        ESP_LOGI(TAG, "Byte[%d] = 0x%02X", i, byte);
+    }
+
+    // ✅ 正式读取图像数据
     for (size_t i = 0; i < pixel_count; i++) {
         uint8_t high = fifo_read_byte();  // 高字节
         uint8_t low  = fifo_read_byte();  // 低字节
@@ -111,7 +120,7 @@ uint8_t* ov7670_capture_frame(const image_size_t* size, size_t* out_len) {
         }
     }
 
-    fifo_enable_output(false);
+    fifo_enable_output(false);  // 关闭输出
 
     *out_len = buffer_size;
     ESP_LOGI(TAG, "Frame capture complete, size: %d bytes", buffer_size);
@@ -135,3 +144,4 @@ void ov7670_read_frame(uint8_t *buffer, size_t size) {
     fifo_enable_output(false);  // 关闭输出
     ESP_LOGI(TAG, "Raw frame read complete");
 }
+
