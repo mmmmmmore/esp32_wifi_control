@@ -42,11 +42,16 @@ void fifo_gpio_init(void);
 // 数据读取函数（可选）
 //uint8_t fifo_read_byte(void);
 
+esp_err_t sccb_read_register(uint8_t reg_addr, uint8_t *data);
+esp_err_t sccb_write_register(uint8_t reg_addr, uint8_t data);
+
+
 // 控制引脚设置函数（可选）
 void fifo_set_rclk(bool level);
 void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
 #endif
+
 
 
