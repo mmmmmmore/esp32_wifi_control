@@ -1,4 +1,101 @@
 2025-09-29:
+change VSYNC to GPIO21, no warning print:
+ESP32S3 Boot Success...
+I (917) pp: pp rom version: e7ae62f
+I (917) net80211: net80211 rom version: e7ae62f
+I (927) wifi:wifi driver task: 3fca7fa0, prio:23, stack:6656, core=0
+I (927) wifi:wifi firmware version: df85326
+I (927) wifi:wifi certification version: v7.0
+I (927) wifi:config NVS flash: enabled
+I (927) wifi:config nano formatting: disabled
+I (937) wifi:Init data frame dynamic rx buffer num: 32
+I (937) wifi:Init static rx mgmt buffer num: 5
+I (947) wifi:Init management short buffer num: 32
+I (947) wifi:Init dynamic tx buffer num: 32
+I (957) wifi:Init static tx FG buffer num: 2
+I (957) wifi:Init static rx buffer size: 1600
+I (957) wifi:Init static rx buffer num: 10
+I (967) wifi:Init dynamic rx buffer num: 32
+I (967) wifi_init: rx ba win: 6
+I (967) wifi_init: accept mbox: 6
+I (977) wifi_init: tcpip mbox: 32
+I (977) wifi_init: udp mbox: 6
+I (977) wifi_init: tcp mbox: 6
+I (987) wifi_init: tcp tx win: 5760
+I (987) wifi_init: tcp rx win: 5760
+I (987) wifi_init: tcp mss: 1440
+I (997) wifi_init: WiFi IRAM OP enabled
+I (997) wifi_init: WiFi RX IRAM OP enabled
+I (1007) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10
+I (1047) wifi:mode : softAP (dc:b4:d9:04:7c:05)
+I (1057) wifi:Total power save buffer number: 16
+I (1057) wifi:Init max length of beacon: 752/752
+I (1057) wifi:Init max length of beacon: 752/752
+I (1057) wifi_ap: WiFi SoftAP started. SSID: ESP32-TEST, Password: niwenwoa
+I (1057) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1
+I (1067) wifi_ap: DHCP server is running.
+I (1077) PSRAM: PSRAM size: 8388608 bytes
+I (1077) PSRAM: Free heap: 8660224 bytes
+I (1087) PSRAM: PSRAM is initialized and ready.
+I (1087) PSRAM: Successfully allocated 1KB from PSRAM.
+I (1087) camera: : Initializing camera sensor...
+I (1097) camera: : Camera sensor initialization complete.
+I (1187) SPIFFS:: SPIFFS mounted successfully
+I (1187) webserver: Starting webserver...
+I (1197) webserver: Webserver started
+系统初始化完成，等待客户端连接...
+I (1197) main_task: Returned from app_main()
+I (6617) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (6617) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (6667) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (9637) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (9727) webserver: HTTP GET /
+I (9787) webserver: HTTP GET /favicon.ico
+I (12767) webserver: HTTP POST /toggle
+I (12767) webserver: Received toggle command: ON
+I (15987) webserver: HTTP GET /image
+I (15987) webserver: Allocating frame buffer (153600 bytes)
+I (15987) webserver: Free heap before alloc: 8650924
+I (15987) OV7670_HANDLER: Reading raw frame of size: 153600
+I (15987) OV7670_HANDLER: Resetting FIFO read pointer...
+I (15997) OV7670_HANDLER: Enabling FIFO output...
+I (15997) OV7670_HANDLER: Byte[0] = 0x62
+I (16007) OV7670_HANDLER: Byte[1] = 0x02
+I (16007) OV7670_HANDLER: Byte[2] = 0x02
+I (16007) OV7670_HANDLER: Byte[3] = 0xEE
+I (16597) OV7670_HANDLER: Disabling FIFO output...
+I (16597) OV7670_HANDLER: Raw frame read complete
+I (16597) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (16597) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (16607) jpeg: Converting RGB565 to RGB888...
+I (16607) jpeg: First pixel RGB565: 0x0262 → RGB888: R=0 G=76 B=16
+I (16637) jpeg: Starting JPEG encoding...
+W (16637) jpeg: JPEG buffer expanded to 307200 bytes
+I (16647) jpeg: JPEG encoding successful: 230422 bytes
+I (16647) webserver: JPEG encoded size: 230422 bytes
+I (16817) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:145, winSize:64
+I (63027) webserver: HTTP GET /image
+I (63027) webserver: Allocating frame buffer (153600 bytes)
+I (63027) webserver: Free heap before alloc: 8650844
+I (63037) OV7670_HANDLER: Reading raw frame of size: 153600
+I (63037) OV7670_HANDLER: Resetting FIFO read pointer...
+I (63047) OV7670_HANDLER: Enabling FIFO output...
+I (63047) OV7670_HANDLER: Byte[0] = 0x02
+I (63047) OV7670_HANDLER: Byte[1] = 0xED
+I (63057) OV7670_HANDLER: Byte[2] = 0xED
+I (63057) OV7670_HANDLER: Byte[3] = 0x01
+I (63647) OV7670_HANDLER: Disabling FIFO output...
+I (63647) OV7670_HANDLER: Raw frame read complete
+I (63647) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (63647) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (63657) jpeg: Converting RGB565 to RGB888...
+I (63657) jpeg: First pixel RGB565: 0xED02 → RGB888: R=232 G=160 B=16
+I (63677) jpeg: Starting JPEG encoding...
+W (63687) jpeg: JPEG buffer expanded to 307200 bytes
+I (63697) jpeg: JPEG encoding successful: 230422 bytes
+I (63697) webserver: JPEG encoded size: 230422 bytes
+
+
 update init sequence
 I (848) spi_flash: flash io: dio
 W (851) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.

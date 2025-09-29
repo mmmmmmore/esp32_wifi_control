@@ -16,10 +16,10 @@
             })
             .then(response => response.text())
             .then(data => {
-                document.getElementById("log").innerText = "✅ 采集已开启：" + data;
+                document.getElementById("log").innerText = "Capture Open：" + data;
             })
             .catch(error => {
-                document.getElementById("log").innerText = "❌ 采集开启失败：" + error;
+                document.getElementById("log").innerText = "Capture Failure：" + error;
             });
         }
 
@@ -32,11 +32,11 @@
             log.innerText = "请求图像中：" + url;
 
             img.onerror = function() {
-                log.innerText = "❌ 图像加载失败，请确认采集已开启。";
+                log.innerText = "Image Load Fail，请确认采集已开启。";
             };
 
             img.onload = function() {
-                log.innerText = "✅ 图像加载成功。";
+                log.innerText = "Image Load Success。";
             };
         }
     </script>

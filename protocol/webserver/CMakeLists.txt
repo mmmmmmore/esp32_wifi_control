@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "webserver.c"
+    SRCS "webserver_control.c" "webserver_camera.c" "webserver.c"
     INCLUDE_DIRS "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
