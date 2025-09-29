@@ -110,7 +110,12 @@ bool camera_init(void) {
     fifo_gpio_init();      // Initialize all GPIOs
     sccb_init();         // Initialize SCCB communication
 
-     xTaskCreate(vsync_debug_task, "vsync_debug_task", 2048, NULL, 5, NULL);
+
+    sccb_write_register(0x12, 0x80);
+    xTaskDelay(pdMS_TO_TICKS(10));
+    uint8_t com10 = sccb_read_register(0x15);
+    ESP_LOGI("CAMERA", "COM10 = 0x %02X", com10);
+    // xTaskCreate(vsync_debug_task, "vsync_debug_task", 2048, NULL, 5, NULL);
     
     if (!ov7670_config()) {
         ESP_LOGE("camera: ", "Failed to configure OV7670 registers");
