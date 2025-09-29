@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stddef.h>
 #include "esp_rom_sys.h"
+#include "esp_log.h"
 
 static const char *TAG = "OV7670_HANDLER";
 

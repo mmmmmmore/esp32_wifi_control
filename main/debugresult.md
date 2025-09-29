@@ -1,3 +1,26 @@
+2025-09-29:
+I (24696) webserver: HTTP GET /image
+I (24696) webserver: Allocating frame buffer (153600 bytes)
+I (24696) webserver: Free heap before alloc: 8650752
+I (24696) OV7670_HANDLER: Reading raw frame of size: 153600
+I (24706) OV7670_HANDLER: Resetting FIFO read pointer...
+I (24706) OV7670_HANDLER: Enabling FIFO output...
+I (24716) OV7670_HANDLER: Byte[0] = 0x00
+I (24716) OV7670_HANDLER: Byte[1] = 0xE8
+I (24716) OV7670_HANDLER: Byte[2] = 0xE8
+I (24726) OV7670_HANDLER: Byte[3] = 0x60
+I (25306) OV7670_HANDLER: Disabling FIFO output...
+I (25306) OV7670_HANDLER: Raw frame read complete
+I (25316) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (25316) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (25316) jpeg: Converting RGB565 to RGB888...
+I (25326) jpeg: First pixel RGB565: 0xE800 → RGB888: R=232 G=0 B=0
+I (25346) jpeg: Starting JPEG encoding...
+W (25346) jpeg: JPEG buffer expanded to 307200 bytes
+I (25356) jpeg: JPEG encoding successful: 230422 bytes
+I (25356) webserver: JPEG encoded size: 230422 bytes
+
+
 2025-9-28:
 I (24556) webserver: HTTP GET /image
 I (24556) webserver: Allocating frame buffer (153600 bytes)
