@@ -8,8 +8,39 @@
 #include "driver/i2c.h"
 #include "i2c_config.h"
 
-
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
 // static const char *TAG = "camera";
+
+
+
+#define VSYNC_GPIO GPIO_NUM_21  // 根据你的定义修改
+
+static const char *TAG = "VSYNC_DEBUG";
+
+void vsync_debug_task(void *arg) {
+    gpio_set_direction(VSYNC_GPIO, GPIO_MODE_INPUT);
+
+    while (1) {
+        int high_count = 0;
+        int low_count = 0;
+
+        for (int i = 0; i < 100; i++) {
+            int level = gpio_get_level(VSYNC_GPIO);
+            if (level) high_count++;
+            else low_count++;
+            vTaskDelay(pdMS_TO_TICKS(1));  // 每次采样间隔 1ms
+        }
+
+        ESP_LOGI(TAG, "VSYNC GPIO%d: High=%d, Low=%d", VSYNC_GPIO, high_count, low_count);
+
+        vTaskDelay(pdMS_TO_TICKS(1000));  // 每秒打印一次
+    }
+}
+
+
+
 
 void i2c_master_init() {
     i2c_config_t conf = {
@@ -79,6 +110,8 @@ bool camera_init(void) {
     fifo_gpio_init();      // Initialize all GPIOs
     sccb_init();         // Initialize SCCB communication
 
+     xTaskCreate(vsync_debug_task, "vsync_debug_task", 2048, NULL, 5, NULL);
+    
     if (!ov7670_config()) {
         ESP_LOGE("camera: ", "Failed to configure OV7670 registers");
         return false;
