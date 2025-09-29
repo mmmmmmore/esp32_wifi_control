@@ -1,4 +1,132 @@
 2025-09-29:
+update web structure, VSYNC still not 
+ESP32S3 Boot Success...
+I (916) pp: pp rom version: e7ae62f
+I (916) net80211: net80211 rom version: e7ae62f
+I (926) wifi:wifi driver task: 3fca7fa0, prio:23, stack:6656, core=0
+I (926) wifi:wifi firmware version: df85326
+I (926) wifi:wifi certification version: v7.0
+I (936) wifi:config NVS flash: enabled
+I (936) wifi:config nano formatting: disabled
+I (936) wifi:Init data frame dynamic rx buffer num: 32
+I (936) wifi:Init static rx mgmt buffer num: 5
+I (946) wifi:Init management short buffer num: 32
+I (946) wifi:Init dynamic tx buffer num: 32
+I (956) wifi:Init static tx FG buffer num: 2
+I (956) wifi:Init static rx buffer size: 1600
+I (956) wifi:Init static rx buffer num: 10
+I (966) wifi:Init dynamic rx buffer num: 32
+I (966) wifi_init: rx ba win: 6
+I (976) wifi_init: accept mbox: 6
+I (976) wifi_init: tcpip mbox: 32
+I (976) wifi_init: udp mbox: 6
+I (976) wifi_init: tcp mbox: 6
+I (986) wifi_init: tcp tx win: 5760
+I (986) wifi_init: tcp rx win: 5760
+I (986) wifi_init: tcp mss: 1440
+I (996) wifi_init: WiFi IRAM OP enabled
+I (996) wifi_init: WiFi RX IRAM OP enabled
+I (1006) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10
+I (1046) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)
+I (1106) wifi:mode : softAP (dc:b4:d9:04:7c:05)
+I (1106) wifi:Total power save buffer number: 16
+I (1106) wifi:Init max length of beacon: 752/752
+I (1106) wifi:Init max length of beacon: 752/752
+I (1106) wifi_ap: WiFi SoftAP started. SSID: ESP32-TEST, Password: niwenwoa
+I (1106) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1
+I (1126) wifi_ap: DHCP server is running.
+I (1126) PSRAM: PSRAM size: 8388608 bytes
+I (1126) PSRAM: Free heap: 8660428 bytes
+I (1136) PSRAM: PSRAM is initialized and ready.
+I (1136) PSRAM: Successfully allocated 1KB from PSRAM.
+I (1146) camera: : Initializing camera sensor...
+W (1186) camera: : VSYNC signal not detected
+I (1186) camera: : Camera sensor initialization complete.
+I (1276) SPIFFS:: SPIFFS mounted successfully
+I (1276) webserver: Starting webserver...
+I (1276) webserver: Webserver started
+系统初始化完成，等待客户端连接...
+I (1276) main_task: Returned from app_main()
+I (6386) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (6386) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (6416) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (7736) webserver: HTTP GET /
+I (9536) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:71, winSize:64
+I (13196) webserver_control: HTTP POST /toggle
+I (13196) webserver_control: Received toggle command: ON
+I (14756) webserver_control: HTTP POST /toggle
+I (14756) webserver_control: Received toggle command: ON
+I (17026) webserver_camera: HTTP GET /image
+I (17026) webserver_camera: Allocating frame buffer (153600 bytes)
+I (17026) webserver_camera: Free heap before alloc: 8650680
+I (17026) OV7670_HANDLER: Reading raw frame of size: 153600
+I (17036) OV7670_HANDLER: Resetting FIFO read pointer...
+I (17036) OV7670_HANDLER: Enabling FIFO output...
+I (17046) OV7670_HANDLER: Byte[0] = 0xED
+I (17046) OV7670_HANDLER: Byte[1] = 0xED
+I (17046) OV7670_HANDLER: Byte[2] = 0xED
+I (17056) OV7670_HANDLER: Byte[3] = 0x01
+I (17636) OV7670_HANDLER: Disabling FIFO output...
+I (17636) OV7670_HANDLER: Raw frame read complete
+I (17636) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (17646) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (17646) jpeg: Converting RGB565 to RGB888...
+I (17646) jpeg: First pixel RGB565: 0xEDED → RGB888: R=232 G=188 B=104
+I (17676) jpeg: Starting JPEG encoding...
+W (17676) jpeg: JPEG buffer expanded to 307200 bytes
+I (17686) jpeg: JPEG encoding successful: 230422 bytes
+I (17686) webserver_camera: JPEG encoded size: 230422 bytes
+I (30236) webserver_control: HTTP GET /control
+I (30236) webserver_control: Direction: forward, State: 1
+I (30376) webserver_control: HTTP GET /control
+I (30376) webserver_control: Direction: forward, State: 0
+I (32966) webserver_control: HTTP GET /control
+I (32966) webserver_control: Direction: forward, State: 1
+I (33886) webserver_control: HTTP GET /control
+I (33896) webserver_control: Direction: forward, State: 0
+I (34676) webserver_control: HTTP GET /control
+I (34686) webserver_control: Direction: forward, State: 1
+I (34816) webserver_control: HTTP GET /control
+I (34816) webserver_control: Direction: forward, State: 0
+I (37096) webserver_control: HTTP GET /control
+I (37096) webserver_control: Direction: forward, State: 1
+I (37256) webserver_control: HTTP GET /control
+I (37256) webserver_control: Direction: forward, State: 0
+I (39206) webserver_control: HTTP GET /control
+I (39206) webserver_control: Direction: left, State: 1
+I (39346) webserver_control: HTTP GET /control
+I (39346) webserver_control: Direction: left, State: 0
+I (40086) webserver_control: HTTP GET /control
+I (40086) webserver_control: Direction: left, State: 1
+I (40266) webserver_control: HTTP GET /control
+I (40266) webserver_control: Direction: left, State: 0
+I (42966) webserver_control: HTTP GET /control
+I (42966) webserver_control: Direction: right, State: 1
+I (43036) webserver_control: HTTP GET /control
+I (43036) webserver_control: Direction: right, State: 0
+I (43686) webserver_control: HTTP GET /control
+I (43686) webserver_control: Direction: right, State: 1
+I (43806) webserver_control: HTTP GET /control
+I (43806) webserver_control: Direction: right, State: 0
+I (44026) webserver_control: HTTP GET /control
+I (44026) webserver_control: Direction: right, State: 1
+I (44126) webserver_control: HTTP GET /control
+I (44126) webserver_control: Direction: right, State: 0
+I (44256) webserver_control: HTTP GET /control
+I (44256) webserver_control: Direction: right, State: 1
+I (44326) webserver_control: HTTP GET /control
+I (44336) webserver_control: Direction: right, State: 0
+I (46076) webserver_control: HTTP GET /control
+I (46076) webserver_control: Direction: backward, State: 1
+I (46636) webserver_control: HTTP GET /control
+I (46636) webserver_control: Direction: backward, State: 0
+I (47486) webserver_control: HTTP GET /control
+I (47486) webserver_control: Direction: backward, State: 1
+I (48456) webserver_control: HTTP GET /control
+I (48466) webserver_control: Direction: backward, State: 0
+
+
+
 change VSYNC to GPIO21, no warning print:
 ESP32S3 Boot Success...
 I (917) pp: pp rom version: e7ae62f
