@@ -6,13 +6,15 @@
 #include "camera_reg.h"
 #include "esp_rom_sys.h"
 #include "driver/i2c.h"
+#include "esp_log.h"
 
 #define I2C_MASTER_NUM I2C_NUM_0
-#define I2C_MASTER_SCL_IO PIN_SCL
-#define I2C_MASTER_SDA_IO PIN_SDA
+//#define I2C_MASTER_SCL_IO PIN_SCL
+//#define I2C_MASTER_SDA_IO PIN_SDA
 #define I2C_MASTER_FREQ_HZ 100000
 #define I2C_MASTER_TX_BUF_DISABLE 0
 #define I2C_MASTER_RX_BUF_DISABLE 0
+
 
 #define SCCB_DELAY_US 5
 #define SCCB_ID_WRITE (OV7670_I2C_ADDR << 1 | 0)        //0x42
@@ -102,14 +104,55 @@ bool sccb_read(uint8_t reg_addr, uint8_t *data) {
     return true;
 }
 
-uint8_t sccb_read_register(uint8_t reg_addr) {
-    uint8_t data = 0;
-    if (i2c_master_read_slave(SCCB_ADDR, reg_addr, &data, 1) == ESP_OK) {
-        return data;
-    } else {
-        ESP_LOGE("SCCB", "Failed to read register 0x%02X", reg_addr);
-        return 0xFF;  // 或其他错误标志
+esp_err_t sccb_read_register(uint8_t reg_addr, uint8_t *data) {
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    esp_err_t ret;
+
+    // 写入寄存器地址
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, SCCB_ID_WRITE, true);
+    i2c_master_write_byte(cmd, reg_addr, true);
+    i2c_master_stop(cmd);
+    ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
+    i2c_cmd_link_delete(cmd);
+    if (ret != ESP_OK) return ret;
+
+    // 读取数据
+    cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, SCCB_ID_WRITE | 0x01, true);  // 读地址
+    i2c_master_read_byte(cmd, data, I2C_MASTER_NACK);
+    i2c_master_stop(cmd);
+    ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
+    i2c_cmd_link_delete(cmd);
+
+    if (ret != ESP_OK) {
+        ESP_LOGE("SCCB", "Read failed: reg=0x%02X", reg_addr);
     }
+
+    return ret;
+}
+
+
+
+esp_err_t sccb_write_register(uint8_t reg_addr, uint8_t data) {
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    esp_err_t ret;
+
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, SCCB_ID_WRITE, true);         // 写地址
+    i2c_master_write_byte(cmd, reg_addr, true);          // 寄存器地址
+    i2c_master_write_byte(cmd, data, true);              // 写入数据
+    i2c_master_stop(cmd);
+
+    ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
+    i2c_cmd_link_delete(cmd);
+
+    if (ret != ESP_OK) {
+        ESP_LOGE("SCCB", "Write failed: reg=0x%02X, data=0x%02X", reg_addr, data);
+    }
+
+    return ret;
 }
 
 
@@ -123,8 +166,8 @@ bool sccb_init(void) {
     // 配置 I2C 参数
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = I2C_MASTER_SDA_IO,
-        .scl_io_num = I2C_MASTER_SCL_IO,
+        .sda_io_num = PIN_SDA,
+        .scl_io_num = PIN_SCL,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
         .master.clk_speed = I2C_MASTER_FREQ_HZ,
