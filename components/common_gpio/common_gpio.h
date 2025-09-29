@@ -29,6 +29,13 @@
 #define PIN_SCL    GPIO_NUM_3
 #define PIN_SDA    GPIO_NUM_8
 
+#define I2C_MASTER_NUM I2C_NUM_0
+//#define I2C_MASTER_SCL_IO PIN_SCL
+//#define I2C_MASTER_SDA_IO PIN_SDA
+#define I2C_MASTER_FREQ_HZ 100000
+#define I2C_MASTER_TX_BUF_DISABLE 0
+#define I2C_MASTER_RX_BUF_DISABLE 0
+
 // GPIO 初始化函数
 void fifo_gpio_init(void);
 
@@ -41,4 +48,5 @@ void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
 #endif
+
 
