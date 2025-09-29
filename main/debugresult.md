@@ -1,4 +1,32 @@
 2025-09-29:
+sccb protocol issue
+I (1136) CAMERA: Initializing camera sensor...
+I (1146) VSYNC_CHECK: GPIO21 level: 0
+I (1156) CAMERA: COM10 = 0x00
+I (1156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+E (1156) SCCB: Write failed: reg=0x11, data=0x80
+E (1156) CAMERA: Failed to write register 0x11
+E (1166) CAMERA: Failed to configure OV7670 registers
+E (1166) SCCB: Write failed: reg=0x11, data=0x80
+E (1176) CAMERA: Failed to write register 0x11
+I (1266) SPIFFS:: SPIFFS mounted successfully
+I (1266) webserver: Starting webserver...
+I (1266) webserver: Webserver started
+系统初始化完成，等待客户端连接...
+I (1266) main_task: Returned from app_main()
+I (2156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (3156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (4156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (5156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (6156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (7156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+I (7186) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (7196) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (7226) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (8156) VSYNC_DEBUG: VSYNC GPIO21: High=0, Low=100
+
+
+
 
 I (1067) PSRAM: PSRAM size: 8388608 bytes
 I (1077) PSRAM: Free heap: 8660428 bytes
