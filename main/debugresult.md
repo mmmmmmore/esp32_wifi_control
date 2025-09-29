@@ -1,4 +1,87 @@
 2025-09-29:
+update init sequence
+I (848) spi_flash: flash io: dio
+W (851) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+W (864) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`
+I (873) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (880) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (887) main_task: Started on CPU0
+I (897) main_task: Calling app_main()
+ESP32S3 Boot Success...
+I (917) pp: pp rom version: e7ae62f
+I (917) net80211: net80211 rom version: e7ae62f
+I (927) wifi:wifi driver task: 3fca7fa0, prio:23, stack:6656, core=0
+I (927) wifi:wifi firmware version: df85326
+I (927) wifi:wifi certification version: v7.0
+I (927) wifi:config NVS flash: enabled
+I (927) wifi:config nano formatting: disabled
+I (937) wifi:Init data frame dynamic rx buffer num: 32
+I (937) wifi:Init static rx mgmt buffer num: 5
+I (947) wifi:Init management short buffer num: 32
+I (947) wifi:Init dynamic tx buffer num: 32
+I (957) wifi:Init static tx FG buffer num: 2
+I (957) wifi:Init static rx buffer size: 1600
+I (957) wifi:Init static rx buffer num: 10
+I (967) wifi:Init dynamic rx buffer num: 32
+I (967) wifi_init: rx ba win: 6
+I (967) wifi_init: accept mbox: 6
+I (977) wifi_init: tcpip mbox: 32
+I (977) wifi_init: udp mbox: 6
+I (977) wifi_init: tcp mbox: 6
+I (987) wifi_init: tcp tx win: 5760
+I (987) wifi_init: tcp rx win: 5760
+I (987) wifi_init: tcp mss: 1440
+I (997) wifi_init: WiFi IRAM OP enabled
+I (997) wifi_init: WiFi RX IRAM OP enabled
+I (1007) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10
+I (1047) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)
+I (1107) wifi:mode : softAP (dc:b4:d9:04:7c:05)
+I (1117) wifi:Total power save buffer number: 16
+I (1117) wifi:Init max length of beacon: 752/752
+I (1117) wifi:Init max length of beacon: 752/752
+I (1117) wifi_ap: WiFi SoftAP started. SSID: ESP32-TEST, Password: niwenwoa
+I (1117) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1
+I (1137) wifi_ap: DHCP server is running.
+I (1137) PSRAM: PSRAM size: 8388608 bytes
+I (1137) PSRAM: Free heap: 8660424 bytes
+I (1147) PSRAM: PSRAM is initialized and ready.
+I (1147) PSRAM: Successfully allocated 1KB from PSRAM.
+I (1157) camera: : Initializing camera sensor...
+W (1197) camera: : VSYNC signal not detected
+I (1197) camera: : Camera sensor initialization complete.
+I (1287) SPIFFS:: SPIFFS mounted successfully
+I (1287) webserver: Starting webserver...
+I (1287) webserver: Webserver started
+系统初始化完成，等待客户端连接...
+I (1287) main_task: Returned from app_main()
+I (6157) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0
+I (6157) wifi:station: 5c:5f:67:ed:16:1a join, AID=1, bgn, 40U
+I (6187) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2
+I (9497) webserver: HTTP POST /toggle
+I (9507) webserver: Received toggle command: ON
+I (9567) wifi:<ba-add>idx:2 (ifx:1, 5c:5f:67:ed:16:1a), tid:0, ssn:53, winSize:64
+I (11597) webserver: HTTP GET /image
+I (11597) webserver: Allocating frame buffer (153600 bytes)
+I (11597) webserver: Free heap before alloc: 8650364
+I (11607) OV7670_HANDLER: Reading raw frame of size: 153600
+I (11607) OV7670_HANDLER: Resetting FIFO read pointer...
+I (11617) OV7670_HANDLER: Enabling FIFO output...
+I (11617) OV7670_HANDLER: Byte[0] = 0x00
+I (11617) OV7670_HANDLER: Byte[1] = 0x00
+I (11627) OV7670_HANDLER: Byte[2] = 0x0C
+I (11627) OV7670_HANDLER: Byte[3] = 0xEC
+I (12217) OV7670_HANDLER: Disabling FIFO output...
+I (12217) OV7670_HANDLER: Raw frame read complete
+I (12217) jpeg: Allocating initial JPEG buffer: 76800 bytes
+I (12217) jpeg: Allocating RGB888 buffer: 230400 bytes
+I (12227) jpeg: Converting RGB565 to RGB888...
+I (12227) jpeg: First pixel RGB565: 0x0000 → RGB888: R=0 G=0 B=0
+I (12247) jpeg: Starting JPEG encoding...
+W (12257) jpeg: JPEG buffer expanded to 307200 bytes
+I (12267) jpeg: JPEG encoding successful: 230422 bytes
+I (12267) webserver: JPEG encoded size: 230422 bytes
+
+
 系统初始化完成，等待客户端连接...
 I (1186) main_task: Returned from app_main()
 I (6066) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0

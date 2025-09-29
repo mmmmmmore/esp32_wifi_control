@@ -66,7 +66,7 @@ void app_main(void) {
 
     check_psram_status();
     
-    sccb_init();
+    camera_init();
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）
     ov7670_config();
 
