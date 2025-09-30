@@ -1,5 +1,5 @@
-#ifndef PWM_H
-#define PWM_H
+#ifndef MOTOR_PWM_H
+#define MOTOR_PWM_H
 
 #pragma once
 

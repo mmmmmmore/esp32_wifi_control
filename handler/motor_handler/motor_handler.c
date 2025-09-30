@@ -1,3 +1,13 @@
+#include "driver/gpio.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stddef.h>
+#include "esp_rom_sys.h"
+#include "esp_log.h"
+
+
 static esp_err_t control_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /control");
 

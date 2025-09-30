@@ -49,9 +49,9 @@ void vsync_debug_task(void *arg) {
             else low_count++;
             vTaskDelay(pdMS_TO_TICKS(1));
         }
-
-        ESP_LOGI("VSYNC_DEBUG", "VSYNC GPIO%d: High=%d, Low=%d", PIN_VSYNC, high_count, low_count);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        // temp close the log print in uart: 2025-09-30 1120    
+        //ESP_LOGI("VSYNC_DEBUG", "VSYNC GPIO%d: High=%d, Low=%d", PIN_VSYNC, high_count, low_count);
+        //vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
