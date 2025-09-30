@@ -15,6 +15,26 @@
 
 static const char *TAG = "CAMERA";
 
+
+void camera_check_id() {
+    uint8_t id_high = 0, id_low = 0;
+    esp_err_t err1 = sccb_read_register(0x0A, &id_high);
+    esp_err_t err2 = sccb_read_register(0x0B, &id_low);
+
+    if (err1 == ESP_OK && err2 == ESP_OK) {
+        ESP_LOGI("CAMERA_ID", "OV7670 ID: 0x%02X%02X", id_high, id_low);
+        if (id_high == 0x76) {
+            ESP_LOGI("CAMERA_ID", "Camera ID matched: OV7670 detected.");
+        } else {
+            ESP_LOGW("CAMERA_ID", "Unexpected camera ID: 0x%02X%02X", id_high, id_low);
+        }
+    } else {
+        ESP_LOGE("CAMERA_ID", "Failed to read camera ID. err1=%d, err2=%d", err1, err2);
+    }
+}
+
+
+
 // VSYNC debug task
 void vsync_debug_task(void *arg) {
     gpio_set_direction(PIN_VSYNC, GPIO_MODE_INPUT);
@@ -75,6 +95,8 @@ bool camera_init(void) {
     fifo_gpio_init();
     sccb_init();
 
+    camera_check_id();
+    
     // Reset OV7670
     sccb_write_register(0x12, 0x80);
     vTaskDelay(pdMS_TO_TICKS(10));
