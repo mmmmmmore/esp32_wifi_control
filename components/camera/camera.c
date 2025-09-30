@@ -11,7 +11,7 @@
 
 //#define I2C_MASTER_NUM I2C_NUM_0
 //#define I2C_MASTER_FREQ_HZ 100000
-#define OV7670_I2C_ADDR 0x42  // OV7670 write address
+//#define OV7670_I2C_ADDR 0x42  // OV7670 write address
 
 static const char *TAG = "CAMERA";
 

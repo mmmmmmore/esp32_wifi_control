@@ -14,7 +14,7 @@
 //#ifndef I2C_MASTER_FREQ_HZ 
 //#define I2C_MASTER_FREQ_HZ 100000
 //#endif
-#define OV7670_I2C_ADDR 0x21  // 7-bit address
+//#define OV7670_I2C_ADDR 0x21  // 7-bit address
 
 
 

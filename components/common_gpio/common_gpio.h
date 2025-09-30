@@ -5,6 +5,9 @@
 
 #include "driver/gpio.h"
 
+
+#define OV7670_I2C_ADDR 0x21  // OV7670 write address
+
 // FIFO 控制引脚
 #define PIN_WRST   GPIO_NUM_12
 #define PIN_WEN    GPIO_NUM_13
@@ -23,7 +26,7 @@
 #define PIN_D7     GPIO_NUM_18
 
 // OV7670 同步信号
-#define PIN_VSYNC  GPIO_NUM_21
+#define PIN_VSYNC  GPIO_NUM_9
 
 // SCCB 通信引脚（用于 OV7670 寄存器配置）
 #define PIN_SCL    GPIO_NUM_3
