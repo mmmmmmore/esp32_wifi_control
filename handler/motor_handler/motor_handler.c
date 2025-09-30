@@ -35,7 +35,8 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
-// 根据方向状态更新电机控制逻辑void motor_handler_update(const motor_command_t *cmd) {
+// 根据方向状态更新电机控制逻辑
+void motor_handler_update(const motor_command_t *cmd) {
     pwm_stop_all_motors();
 
     // 前进：1-4 正转
