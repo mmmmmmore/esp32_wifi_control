@@ -2,13 +2,16 @@
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "capture_control.h"
+#include "motor_handler.h"
 #include <string.h>
 #include <stdlib.h>
 
 static const char *TAG = "webserver_control";
 
+// 图像采集控制：POST /toggle
 static esp_err_t toggle_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP POST /toggle");
+
     char buf[8] = {0};
     int ret = httpd_req_recv(req, buf, sizeof(buf) - 1);
     if (ret <= 0) {
@@ -26,9 +29,11 @@ static esp_err_t toggle_handler(httpd_req_t *req) {
         capture_control_set(false);
         httpd_resp_sendstr(req, "Capture OFF");
     }
+
     return ESP_OK;
 }
 
+// 电机控制：GET /control?dir=forward&state=1
 static esp_err_t control_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /control");
 
@@ -38,17 +43,42 @@ static esp_err_t control_handler(httpd_req_t *req) {
     int state = 0;
 
     if (httpd_req_get_url_query_str(req, query, sizeof(query)) == ESP_OK) {
-        httpd_query_key_value(query, "dir", dir, sizeof(dir));
-        httpd_query_key_value(query, "state", state_str, sizeof(state_str));
-        state = atoi(state_str);
+        ESP_LOGI(TAG, "Query string: %s", query);
+
+        if (httpd_query_key_value(query, "dir", dir, sizeof(dir)) == ESP_OK) {
+            ESP_LOGI(TAG, "Parsed dir: %s", dir);
+        } else {
+            ESP_LOGW(TAG, "Failed to parse 'dir'");
+        }
+
+        if (httpd_query_key_value(query, "state", state_str, sizeof(state_str)) == ESP_OK) {
+            state = atoi(state_str);
+            ESP_LOGI(TAG, "Parsed state: %d", state);
+        } else {
+            ESP_LOGW(TAG, "Failed to parse 'state'");
+        }
+
         ESP_LOGI(TAG, "Direction: %s, State: %d", dir, state);
-        // TODO: update control state
+
+        motor_command_t cmd = {0};
+
+        if (strcmp(dir, "forward") == 0) cmd.forward = state;
+        else if (strcmp(dir, "backward") == 0) cmd.backward = state;
+        else if (strcmp(dir, "left") == 0) cmd.left = state;
+        else if (strcmp(dir, "right") == 0) cmd.right = state;
+        else if (strcmp(dir, "crotator") == 0) cmd.crotator = state;
+        else if (strcmp(dir, "acrotator") == 0) cmd.acrotator = state;
+
+        motor_handler_update(&cmd);
+    } else {
+        ESP_LOGW(TAG, "No query string found");
     }
 
     httpd_resp_sendstr(req, "OK");
     return ESP_OK;
 }
 
+// 注册路由
 void register_control_routes(httpd_handle_t server) {
     httpd_uri_t toggle_uri = {
         .uri = "/toggle",
