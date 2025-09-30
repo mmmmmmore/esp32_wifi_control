@@ -40,6 +40,7 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
 
     // 前进：1-4 正转
     if (cmd->forward) {
+        ESP_LOGI(TAG, "Action: FORWARD   _-||-_");
         for (int i = 1; i <= 4; i++) {
             pwm_set_motor_direction(i, true);
             pwm_set_motor_speed(i, 80);
@@ -47,6 +48,7 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
     }
     // 后退：1-4 反转
     else if (cmd->backward) {
+        ESP_LOGI(TAG, "Action: BACKWARD  ##||## ");
         for (int i = 1; i <= 4; i++) {
             pwm_set_motor_direction(i, false);
             pwm_set_motor_speed(i, 80);
@@ -54,6 +56,7 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
     }
     // 右移：1-4 反转，2-3 正转
     else if (cmd->right) {
+        ESP_LOGI(TAG, "Action: RIGHT >>>");
         pwm_set_motor_direction(1, false);
         pwm_set_motor_direction(2, true);
         pwm_set_motor_direction(3, true);
@@ -64,6 +67,7 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
     }
     // 左移：1-4 正转，2-3 反转
     else if (cmd->left) {
+        ESP_LOGI(TAG, "Action: LEFT<<<");
         pwm_set_motor_direction(1, true);
         pwm_set_motor_direction(2, false);
         pwm_set_motor_direction(3, false);
@@ -75,6 +79,7 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
 
     // 顺时针旋转：1-3 反转，2-4 正转
     if (cmd->crotator) {
+        ESP_LOGI(TAG, "Action: Clock_Rotor");
         pwm_set_motor_direction(1, false);
         pwm_set_motor_direction(2, true);
         pwm_set_motor_direction(3, false);
@@ -85,6 +90,7 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
     }
     // 逆时针旋转：1-3 正转，2-4 反转
     else if (cmd->acrotator) {
+        ESP_LOGI(TAG, "Action: Wise-Clock_Rotor");
         pwm_set_motor_direction(1, true);
         pwm_set_motor_direction(2, false);
         pwm_set_motor_direction(3, true);
@@ -94,3 +100,4 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
         }
     }
 }
+
