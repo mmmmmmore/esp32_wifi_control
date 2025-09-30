@@ -1,5 +1,28 @@
 2025-09-30
 
+only have web control log
+I (29127) webserver_control: Direction: , State: 0
+I (29187) webserver_control: HTTP GET /control
+I (29187) webserver_control: Direction: , State: 0
+I (29247) webserver_control: HTTP GET /control
+I (29247) webserver_control: Direction: , State: 0
+I (29307) webserver_control: HTTP GET /control
+I (29307) webserver_control: Direction: , State: 0
+I (29377) webserver_control: HTTP GET /control
+I (29377) webserver_control: Direction: , State: 0
+I (29437) webserver_control: HTTP GET /control
+I (29437) webserver_control: Direction: , State: 0
+I (29497) webserver_control: HTTP GET /control
+I (29497) webserver_control: Direction: , State: 0
+I (29557) webserver_control: HTTP GET /control
+I (29557) webserver_control: Direction: , State: 0
+I (29627) webserver_control: HTTP GET /control
+I (29627) webserver_control: Direction: , State: 0
+I (29687) webserver_control: HTTP GET /control
+I (29687) webserver_control: Direction: , State: 0
+I (29757) webserver_control: HTTP GET /control
+
+
 I (1066) wifi_ap: DHCP server is running.
 I (1066) PSRAM: PSRAM size: 8388608 bytes
 I (1076) PSRAM: Free heap: 8660428 bytes

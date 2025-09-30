@@ -60,6 +60,26 @@ void fifo_set_rclk(bool level);
 void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
+
+#define M1_HBH GPIO_NUM_19
+#define M1_HBL GPIO_NUM_20
+#define M1_PWM GPIO_NUM_21
+#define M2_HBH GPIO_NUM_46
+#define M2_HBL GPIO_NUM_47
+#define M2_PWM GPIO_NUM_45
+#define M3_HBH GPIO_NUM_35
+#define M3_HBL GPIO_NUM_36
+#define M3_PWM GPIO_NUM_36
+#define M4_HBH GPIO_NUM_38
+#define M4_HBL GPIO_NUM_39
+#define M4_PWM GPIO_NUM_40
+
+
+
+
+
+
+
 #endif
 
 

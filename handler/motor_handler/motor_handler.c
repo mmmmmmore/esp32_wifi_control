@@ -2,7 +2,7 @@
 #include "motor_handler.h"
 #include "esp_http_server.h"
 #include "esp_log.h"
-#include "pwm.h"
+#include "motor_pwm.h"
 #include <string.h>
 #include <stdlib.h>
 

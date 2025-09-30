@@ -1,14 +1,15 @@
-#include "pwm.h"
+#include "motor_pwm.h"
 #include "esp_log.h"
+#include "common_gpio.h"
 
 static const char *TAG = "pwm";
 
 // 电机 GPIO 配置（根据实际连接修改）
 static motor_gpio_config_t motor_config[MOTOR_COUNT] = {
-    { .in1_gpio = GPIO_NUM_2,  .in2_gpio = GPIO_NUM_4,  .pwm_gpio = GPIO_NUM_5,  .pwm_channel = LEDC_CHANNEL_0 },
-    { .in1_gpio = GPIO_NUM_18, .in2_gpio = GPIO_NUM_19, .pwm_gpio = GPIO_NUM_21, .pwm_channel = LEDC_CHANNEL_1 },
-    { .in1_gpio = GPIO_NUM_22, .in2_gpio = GPIO_NUM_23, .pwm_gpio = GPIO_NUM_25, .pwm_channel = LEDC_CHANNEL_2 },
-    { .in1_gpio = GPIO_NUM_26, .in2_gpio = GPIO_NUM_27, .pwm_gpio = GPIO_NUM_32, .pwm_channel = LEDC_CHANNEL_3 },
+    { .in1_gpio = M1_HBH, .in2_gpio = M1_HBL, .pwm_gpio = M1_PWM, .pwm_channel = LEDC_CHANNEL_0 },
+    { .in1_gpio = M2_HBH, .in2_gpio = M2_HBL, .pwm_gpio = M2_PWM, .pwm_channel = LEDC_CHANNEL_1 },
+    { .in1_gpio = M3_HBH, .in2_gpio = M3_HBL, .pwm_gpio = M3_PWM, .pwm_channel = LEDC_CHANNEL_2 },
+    { .in1_gpio = M4_HBH, .in2_gpio = M4_HBL, .pwm_gpio = M4_PWM, .pwm_channel = LEDC_CHANNEL_3 },
 };
 
 esp_err_t pwm_init_all_motors(void) {
