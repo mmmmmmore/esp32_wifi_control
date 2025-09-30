@@ -29,16 +29,22 @@
 #define PIN_VSYNC  GPIO_NUM_9
 
 // SCCB 通信引脚（用于 OV7670 寄存器配置）
-#define PIN_SCL    GPIO_NUM_3
-#define PIN_SDA    GPIO_NUM_8
+#define PIN_SCL    GPIO_NUM_20
+#define PIN_SDA    GPIO_NUM_21
 
 #define I2C_MASTER_NUM I2C_NUM_0
 //#define I2C_MASTER_SCL_IO PIN_SCL
 //#define I2C_MASTER_SDA_IO PIN_SDA
-#define I2C_MASTER_FREQ_HZ 100000
+#define I2C_MASTER_FREQ_HZ 50000
 #define I2C_MASTER_TX_BUF_DISABLE 0
 #define I2C_MASTER_RX_BUF_DISABLE 0
 
+
+//cut from sccb.c
+//#define I2C_MASTER_NUM I2C_NUM_0
+//#define I2C_MASTER_FREQ_HZ 100000
+//#define I2C_MASTER_TX_BUF_DISABLE 0
+//#define I2C_MASTER_RX_BUF_DISABLE 0
 // GPIO 初始化函数
 void fifo_gpio_init(void);
 

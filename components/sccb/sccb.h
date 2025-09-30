@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "common_gpio.h"
 
 // 初始化 SCCB 通信接口
 bool sccb_init(void);
