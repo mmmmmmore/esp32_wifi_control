@@ -35,53 +35,62 @@ esp_err_t motor_control_http_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
-// 根据方向状态更新电机控制逻辑
-void motor_handler_update(const motor_command_t *cmd) {
+// 根据方向状态更新电机控制逻辑void motor_handler_update(const motor_command_t *cmd) {
     pwm_stop_all_motors();
 
+    // 前进：1-4 正转
     if (cmd->forward) {
-        pwm_set_motor_direction(1, true);
-        pwm_set_motor_direction(2, true);
-        pwm_set_motor_direction(3, true);
-        pwm_set_motor_direction(4, true);
-        pwm_set_motor_speed(1, 80);
-        pwm_set_motor_speed(2, 80);
-        pwm_set_motor_speed(3, 80);
-        pwm_set_motor_speed(4, 80);
-    } else if (cmd->backward) {
-        pwm_set_motor_direction(1, false);
-        pwm_set_motor_direction(2, false);
-        pwm_set_motor_direction(3, false);
-        pwm_set_motor_direction(4, false);
-        pwm_set_motor_speed(1, 80);
-        pwm_set_motor_speed(2, 80);
-        pwm_set_motor_speed(3, 80);
-        pwm_set_motor_speed(4, 80);
-    } else if (cmd->left) {
-        pwm_set_motor_direction(1, true);
-        pwm_set_motor_direction(2, false);
-        pwm_set_motor_direction(3, true);
-        pwm_set_motor_direction(4, false);
-        pwm_set_motor_speed(1, 80);
-        pwm_set_motor_speed(2, 80);
-        pwm_set_motor_speed(3, 80);
-        pwm_set_motor_speed(4, 80);
-    } else if (cmd->right) {
+        for (int i = 1; i <= 4; i++) {
+            pwm_set_motor_direction(i, true);
+            pwm_set_motor_speed(i, 80);
+        }
+    }
+    // 后退：1-4 反转
+    else if (cmd->backward) {
+        for (int i = 1; i <= 4; i++) {
+            pwm_set_motor_direction(i, false);
+            pwm_set_motor_speed(i, 80);
+        }
+    }
+    // 右移：1-4 反转，2-3 正转
+    else if (cmd->right) {
         pwm_set_motor_direction(1, false);
         pwm_set_motor_direction(2, true);
+        pwm_set_motor_direction(3, true);
+        pwm_set_motor_direction(4, false);
+        for (int i = 1; i <= 4; i++) {
+            pwm_set_motor_speed(i, 80);
+        }
+    }
+    // 左移：1-4 正转，2-3 反转
+    else if (cmd->left) {
+        pwm_set_motor_direction(1, true);
+        pwm_set_motor_direction(2, false);
         pwm_set_motor_direction(3, false);
         pwm_set_motor_direction(4, true);
-        pwm_set_motor_speed(1, 80);
-        pwm_set_motor_speed(2, 80);
-        pwm_set_motor_speed(3, 80);
-        pwm_set_motor_speed(4, 80);
+        for (int i = 1; i <= 4; i++) {
+            pwm_set_motor_speed(i, 80);
+        }
     }
 
+    // 顺时针旋转：1-3 反转，2-4 正转
     if (cmd->crotator) {
-        pwm_set_motor_direction(5, true);
-        pwm_set_motor_speed(5, 80);
-    } else if (cmd->acrotator) {
-        pwm_set_motor_direction(5, false);
-        pwm_set_motor_speed(5, 80);
+        pwm_set_motor_direction(1, false);
+        pwm_set_motor_direction(2, true);
+        pwm_set_motor_direction(3, false);
+        pwm_set_motor_direction(4, true);
+        for (int i = 1; i <= 4; i++) {
+            pwm_set_motor_speed(i, 80);
+        }
+    }
+    // 逆时针旋转：1-3 正转，2-4 反转
+    else if (cmd->acrotator) {
+        pwm_set_motor_direction(1, true);
+        pwm_set_motor_direction(2, false);
+        pwm_set_motor_direction(3, true);
+        pwm_set_motor_direction(4, false);
+        for (int i = 1; i <= 4; i++) {
+            pwm_set_motor_speed(i, 80);
+        }
     }
 }
