@@ -1,5 +1,66 @@
 2025-09-30
 
+
+motor_handler.c error
+ndler.dir/motor_handler.c.obj.d -o esp-idf/motor_handler/CMakeFiles/__idf_motor_handler.dir/motor_handler.c.obj -c /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:39:5: warning: data definition has no type or storage class
+   39 |     pwm_stop_all_motors();
+      |     ^~~~~~~~~~~~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:39:5: error: type defaults to 'int' in declaration of 'pwm_stop_all_motors' [-Wimplicit-int]
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:39:5: error: conflicting types for 'pwm_stop_all_motors'; have 'int(void)'
+In file included from /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:5:
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/components/motor_pwm/motor_pwm.h:30:6: note: previous declaration of 'pwm_stop_all_motors' with type 'void(void)'
+   30 | void pwm_stop_all_motors(void);
+      |      ^~~~~~~~~~~~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:42:5: error: expected identifier or '(' before 'if'
+   42 |     if (cmd->forward) {
+      |     ^~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:50:5: error: expected identifier or '(' before 'else'
+   50 |     else if (cmd->backward) {
+      |     ^~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:58:5: error: expected identifier or '(' before 'else'
+   58 |     else if (cmd->right) {
+      |     ^~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:69:5: error: expected identifier or '(' before 'else'
+   69 |     else if (cmd->left) {
+      |     ^~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:81:5: error: expected identifier or '(' before 'if'
+   81 |     if (cmd->crotator) {
+      |     ^~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:92:5: error: expected identifier or '(' before 'else'
+   92 |     else if (cmd->acrotator) {
+      |     ^~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:102:1: error: expected identifier or '(' before '}' token
+  102 | }
+      | ^
+[909/1093] Performing configure step for 'bootloader'
+-- Found Git: /usr/bin/git (found version "2.37.1 (Apple Git-137.1)")
+-- Minimal build - OFF
+-- The C compiler identification is GNU 15.1.0
+-- The CXX compiler identification is GNU 15.1.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/xtensa-esp32s3-elf-g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Building ESP-IDF components for target esp32s3
+-- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
+-- Project sdkconfig file /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/sdkconfig
+-- Compiler supported targets: xtensa-esp-elf
+-- Adding linker script /Users/maochun/esp32prj/esp-idf/components/soc/esp32s3/ld/esp32s3.peripherals.ld
+-- Bootloader project name: "bootloader" version: 1
+-- Adding linker script /Users/maochun/esp32prj/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.ld
+-- Adding linker script /Users/maochun/esp32prj/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.api.ld
+-- Adding linker script /Users
+
+
 only have web control log
 I (29127) webserver_control: Direction: , State: 0
 I (29187) webserver_control: HTTP GET /control

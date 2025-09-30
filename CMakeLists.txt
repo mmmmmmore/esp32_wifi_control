@@ -7,8 +7,10 @@ set(EXTRA_COMPONENT_DIRS
         protocol/webserver 
         protocol/wifi_ap 
         handler/ov7670_handler 
+        handler/motor_handler
         spiffs 
-        protocol/capture_control)
+        protocol/capture_control
+        protocol/webserver_control)
 
 project(esp32_wifi_control)
 
