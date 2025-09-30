@@ -1,3 +1,42 @@
+2025-09-30
+
+I (1066) wifi_ap: DHCP server is running.
+I (1066) PSRAM: PSRAM size: 8388608 bytes
+I (1076) PSRAM: Free heap: 8660428 bytes
+I (1076) PSRAM: PSRAM is initialized and ready.
+I (1076) PSRAM: Successfully allocated 1KB from PSRAM.
+I (1086) CAMERA: Initializing camera sensor...
+I (1086) VSYNC_CHECK: GPIO9 level: 0
+I (1096) SCCB: i2c_param_config returned: 0 (ESP_OK)
+I (1096) SCCB: i2c_driver_install returned: 0 (ESP_OK)
+E (1106) SCCB: Write failed: reg=0x12, data=0x80
+I (1116) CAMERA: COM10 = 0x00
+I (1116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+E (1116) SCCB: Write failed: reg=0x11, data=0x80
+E (1116) CAMERA: Failed to write register 0x11
+E (1126) CAMERA: Failed to configure OV7670 registers
+E (1126) SCCB: Write failed: reg=0x11, data=0x80
+E (1136) CAMERA: Failed to write register 0x11
+I (1226) SPIFFS:: SPIFFS mounted successfully
+I (1226) webserver: Starting webserver...
+I (1226) webserver: Webserver started
+系统初始化完成，等待客户端连接...
+I (1226) main_task: Returned from app_main()
+I (2116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (3116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (4116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (5116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (6116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (7116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (8116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (9116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+I (10116) VSYNC_DEBUG: VSYNC GPIO9: High=0, Low=100
+
+Done
+MMMBP:esp32_wifi_control maochun$ 
+
+
+
 2025-09-29:
 sccb protocol issue
 I (1136) CAMERA: Initializing camera sensor...
