@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ESP32 Camera Interface</title>
+    <title>Camera Interface</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
         img { width: 320px; height: 240px; border: 1px solid #ccc; margin-top: 20px; }
@@ -17,10 +17,10 @@
             })
             .then(response => response.text())
             .then(data => {
-                document.getElementById("log").innerText = "Capture Open：" + data;
+                document.getElementById("log").innerText = "Capture Open:" + data;
             })
             .catch(error => {
-                document.getElementById("log").innerText = "Capture Failure：" + error;
+                document.getElementById("log").innerText = "Capture Failure:" + error;
             });
         }
 
@@ -33,7 +33,7 @@
             log.innerText = "请求图像中：" + url;
 
             img.onerror = function() {
-                log.innerText = "Image Load Fail，请确认采集已开启。";
+                log.innerText = "Image Load Fail: Please_check_Open_Toggle。";
             };
 
             img.onload = function() {
@@ -47,15 +47,25 @@
             })
             .then(response => response.text())
             .then(data => {
-                document.getElementById("log").innerText = `控制指令已发送：${direction} = ${state}`;
+                document.getElementById("log").innerText = `CMD_Tx:${direction} = ${state}`;
             })
             .catch(error => {
-                document.getElementById("log").innerText = "控制指令发送失败：" + error;
+                document.getElementById("log").innerText = "CMD_TX_Err: " + error;
             });
         }
 
+
+        const controlStatus = {
+                    forward: 0,
+                    left: 0,
+                    right: 0,
+                    backward: 0,
+                    crotator: 0,
+                    acrotator: 0
+                };
+
         function setupControlButtons() {
-            const directions = ['forward', 'left', 'right', 'backward'];
+            const directions = Object.keys(controlStatus);
             directions.forEach(dir => {
                 const btn = document.getElementById(`btn-${dir}`);
                 btn.addEventListener('mousedown', () => sendControl(dir, 1));
@@ -64,16 +74,33 @@
                 btn.addEventListener('touchend', () => sendControl(dir, 0));
             });
         }
+        
 
-        window.onload = setupControlButtons;
+        function sendControlStates() {
+            const params = new URLSearchParams(controlStatus).toString() ;
+            fetch('/control?${params}',{method:'GET' })
+                .then (response => response.text())
+                .then (data => {
+                    document.getElementById("log").innerText = `State_Changed:${JSON.stringify(controlStates)}`;
+                })
+                .catch(error => {
+                    document.getElementById("log").innerText = "State_change_fail: " + error;
+                });
+        }
+
+
+        window.onload =() =>{ 
+            setupControlButtons;
+            setInterval(sendControlStates, 100);        //send state each 100ms
+        }
     </script>
 </head>
 <body>
     <h1>ESP32 Camera Interface</h1>
 
     <!-- 控制按钮 -->
-    <button onclick="toggleCapture()">开启采集</button>
-    <button onclick="loadImage()">获取图像</button>
+    <button onclick="toggleCapture()">Start_Capture</button>
+    <button onclick="loadImage()">Load_Image</button>
 
     <!-- 静态图像显示 -->
     <h3>Captured Image</h3>
@@ -81,17 +108,20 @@
 
     <!-- 视频流显示 -->
     <h3>Live Stream</h3>
-    <p>/stream点击打开视频流</a></p>
+    <p>/stream_Click_Open</a></p>
 
     <!-- 方向控制按钮 -->
     <div class="control-panel">
-        <h3>方向控制</h3>
+        <h3>Direction_Control</h3>
         <button id="btn-forward">Forward</button><br>
         <button id="btn-left">Left</button>
         <button id="btn-right">Right</button><br>
         <button id="btn-backward">Backward</button>
+        <button id="btn-crotator">crotator</button>
+        <button id="btn-acrotator">acrotator</button>
     </div>
 
-    <div id="log">点击按钮以控制采集并预览图像。</div>
+    <div id="log">Click_Review_Image。</div>
 </body>
 </html>
+
