@@ -1,127 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Camera Interface</title>
+    <meta charset="UTF-8">
+    <title>ESP32 Camera & Motor Control</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
-        img { width: 320px; height: 240px; border: 1px solid #ccc; margin-top: 20px; }
-        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-        .control-panel { margin-top: 30px; }
-        #log { margin-top: 20px; font-size: 14px; color: #555; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        img {
+            width: 320px;
+            height: 240px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        h2, h3 {
+            margin-top: 20px;
+        }
     </style>
     <script>
-        function toggleCapture() {
+        function sendControlCommand(dir) {
+            const url = `/control?dir=${dir}&state=1`;
+            fetch(url)
+                .then(response => response.text())
+                .then(data => console.log("Motor Response:", data))
+                .catch(error => console.error("Motor Error:", error));
+        }
+
+        function toggleCapture(state) {
             fetch('/toggle', {
                 method: 'POST',
-                body: 'ON'
+                body: state ? 'ON' : 'OFF'
             })
             .then(response => response.text())
-            .then(data => {
-                document.getElementById("log").innerText = "Capture Open:" + data;
-            })
-            .catch(error => {
-                document.getElementById("log").innerText = "Capture Failure:" + error;
-            });
-        }
-
-        function loadImage() {
-            const img = document.getElementById("image");
-            const log = document.getElementById("log");
-
-            const url = "/image?" + new Date().getTime(); // 防止缓存
-            img.src = url;
-            log.innerText = "请求图像中：" + url;
-
-            img.onerror = function() {
-                log.innerText = "Image Load Fail: Please_check_Open_Toggle。";
-            };
-
-            img.onload = function() {
-                log.innerText = "Image Load Success。";
-            };
-        }
-
-        function sendControl(direction, state) {
-            fetch(`/control?dir=${direction}&state=${state}`, {
-                method: 'GET'
-            })
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("log").innerText = `CMD_Tx:${direction} = ${state}`;
-            })
-            .catch(error => {
-                document.getElementById("log").innerText = "CMD_TX_Err: " + error;
-            });
-        }
-
-
-        const controlStatus = {
-                    forward: 0,
-                    left: 0,
-                    right: 0,
-                    backward: 0,
-                    crotator: 0,
-                    acrotator: 0
-                };
-
-        function setupControlButtons() {
-            const directions = Object.keys(controlStatus);
-            directions.forEach(dir => {
-                const btn = document.getElementById(`btn-${dir}`);
-                btn.addEventListener('mousedown', () => sendControl(dir, 1));
-                btn.addEventListener('mouseup', () => sendControl(dir, 0));
-                btn.addEventListener('touchstart', () => sendControl(dir, 1));
-                btn.addEventListener('touchend', () => sendControl(dir, 0));
-            });
-        }
-        
-
-        function sendControlStates() {
-            const params = new URLSearchParams(controlStatus).toString() ;
-            fetch('/control?${params}',{method:'GET' })
-                .then (response => response.text())
-                .then (data => {
-                    document.getElementById("log").innerText = `State_Changed:${JSON.stringify(controlStates)}`;
-                })
-                .catch(error => {
-                    document.getElementById("log").innerText = "State_change_fail: " + error;
-                });
-        }
-
-
-        window.onload =() =>{ 
-            setupControlButtons;
-            setInterval(sendControlStates, 500);        //send state each 100ms
+            .then(data => console.log("Capture Response:", data))
+            .catch(error => console.error("Capture Error:", error));
         }
     </script>
 </head>
 <body>
-    <h1>ESP32 Camera Interface</h1>
+    <h2>Camera_Section</h2>
+    /stream
 
-    <!-- 控制按钮 -->
-    <button onclick="toggleCapture()">Start_Capture</button>
-    <button onclick="loadImage()">Load_Image</button>
+    <h3>Image_Capture</h3>
+    <button onclick="toggleCapture(true)">Start_Capture</button>
+    <button onclick="toggleCapture(false)">Stop_Capture</button>
 
-    <!-- 静态图像显示 -->
-    <h3>Captured Image</h3>
-    <img id="image" src="" alt="Captured Image" />
-
-    <!-- 视频流显示 -->
-    <h3>Live Stream</h3>
-    <p>/stream_Click_Open</a></p>
-
-    <!-- 方向控制按钮 -->
-    <div class="control-panel">
-        <h3>Direction_Control</h3>
-        <button id="btn-forward">Forward</button><br>
-        <button id="btn-left">Left</button>
-        <button id="btn-right">Right</button><br>
-        <button id="btn-backward">Backward</button>
-        <button id="btn-crotator">crotator</button>
-        <button id="btn-acrotator">acrotator</button>
-    </div>
-
-    <div id="log">Click_Review_Image。</div>
+    <h3>Wheel_Control</h3>
+    <button onclick="sendControlCommand('forward')">Forward</button>
+    <button onclick="sendControlCommand('backward')">BackWard</button>
+    <button onclick="sendControlCommand('left')">Left</button>
+    <button onclick="sendControlCommand('right')">Right</button>
+    <button onclick="sendControlCommand('crotator')">Clk_Rotor</button>
+    <button onclick="sendControlCommand('acrotator')">AClk_Rotor</button>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
