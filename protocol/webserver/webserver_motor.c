@@ -30,8 +30,9 @@ esp_err_t joystick_post_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
-// 注册 URI 处理器
-static esp_err_t register_uri_handlers(httpd_handle_t server) {
+// 注册 URI 处理器 register motor control relate uri of joystick handler
+
+static esp_err_t register_motor_routes(httpd_handle_t server) {
     httpd_uri_t joystick_uri = {
         .uri       = "/joystick",
         .method    = HTTP_POST,
@@ -41,22 +42,4 @@ static esp_err_t register_uri_handlers(httpd_handle_t server) {
     return httpd_register_uri_handler(server, &joystick_uri);
 }
 
-// 初始化 WebServer
-esp_err_t webserver_control_init(void) {
-    ESP_LOGI(TAG, "Initializing webserver_control...");
 
-    // 初始化 GPIO
-    common_gpio_init();
-
-    // 配置 WebServer
-    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    httpd_handle_t server = NULL;
-
-    if (httpd_start(&server, &config) == ESP_OK) {
-        ESP_LOGI(TAG, "WebServer started");
-        return register_uri_handlers(server);
-    }
-
-    ESP_LOGE(TAG, "Failed to start WebServer");
-    return ESP_FAIL;
-}
