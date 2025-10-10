@@ -1,78 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>ESP32 Camera & Motor Control</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
-        img {
-            width: 320px;
-            height: 240px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-        }
-        button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        h2, h3 {
-            margin-top: 20px;
-        }
-    </style>
-    <script>
-        function sendControlCommand(dir) {
-            const url = `/control?dir=${dir}&state=1`;
-            fetch(url)
-                .then(response => response.text())
-                .then(data => console.log("Motor Response:", data))
-                .catch(error => console.error("Motor Error:", error));
-        }
+  <meta charset="UTF-8">
+  <title>Smart_Vehicle_Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 20px;
+    }
 
-        function toggleCapture(state) {
-            fetch('/toggle', {
-                method: 'POST',
-                body: state ? 'ON' : 'OFF'
-            })
-            .then(response => response.text())
-            .then(data => console.log("Capture Response:", data))
-            .catch(error => console.error("Capture Error:", error));
-        }
-    </script>
+    #video-container {
+      width: 320px;
+      height: 240px;
+      background-color: #ccc;
+      margin: 0 auto;
+      border: 2px solid #333;
+    }
+
+    #controls {
+      margin: 10px;
+    }
+
+    #joystick {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      background-color: #eee;
+      border: 2px solid #333;
+      border-radius: 50%;
+    }
+
+    #knob {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      border-radius: 50%;
+      top: 90px;
+      left: 90px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h2>Camera_Section</h2>
-    /stream
 
-    <h3>Image_Capture</h3>
-    <button onclick="toggleCapture(true)">Start_Capture</button>
-    <button onclick="toggleCapture(false)">Stop_Capture</button>
+  <h2>Camera_Zone</h2>
+  <div id="video-container">
+    <img id="video" src="" width="320" height="240" alt="Camera Feed" />
+  </div>
 
-    <h3>Wheel_Control</h3>
-    <button onclick="sendControlCommand('forward')">Forward</button>
-    <button onclick="sendControlCommand('backward')">BackWard</button>
-    <button onclick="sendControlCommand('left')">Left</button>
-    <button onclick="sendControlCommand('right')">Right</button>
-    <button onclick="sendControlCommand('crotator')">Clk_Rotor</button>
-    <button onclick="sendControlCommand('acrotator')">AClk_Rotor</button>
+  <div id="controls">
+    <button onclick="startStream()">Start</button>
+    <button onclick="stopStream()">Stop</button>
+  </div>
+
+  <h2>Direction_Ctrl</h2>
+  <div id="joystick">
+    <div id="knob"></div>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    let streamActive = false;
+
+    function startStream() {
+      fetch('/start').then(() => {
+        video.src = '/stream';
+        streamActive = true;
+      });
+    }
+
+    function stopStream() {
+      fetch('/stop').then(() => {
+        video.src = '';
+        streamActive = false;
+      });
+    }
+
+    // 摇杆控制逻辑
+    const joystick = document.getElementById('joystick');
+    const knob = document.getElementById('knob');
+    const radius = 100;
+    const knobRadius = 10;
+
+    knob.onmousedown = function (e) {
+      e.preventDefault();
+      document.onmousemove = function (eMove) {
+        const rect = joystick.getBoundingClientRect();
+        const centerX = rect.left + radius;
+        const centerY = rect.top + radius;
+        const dx = eMove.clientX - centerX;
+        const dy = eMove.clientY - centerY;
+        const distance = Math.min(Math.sqrt(dx * dx + dy * dy), radius - knobRadius);
+        const angle = Math.atan2(dy, dx); // 弧度
+
+        const x = radius + distance * Math.cos(angle) - knobRadius;
+        const y = radius + distance * Math.sin(angle) - knobRadius;
+
+        knob.style.left = `${x}px`;
+        knob.style.top = `${y}px`;
+
+        // 计算角度（度）和距离（0~100）
+        const degree = Math.round(angle * (180 / Math.PI));
+        const normalizedDistance = Math.round((distance / (radius - knobRadius)) * 100);
+
+        // 发送到 WebServer
+        fetch('/joystick', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ angle: degree, distance: normalizedDistance })
+        });
+      };
+
+      document.onmouseup = function () {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    };
+  </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
