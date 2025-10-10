@@ -1,28 +1,14 @@
-#ifndef MOTOR_HANDLER_H
-#define MOTOR_HANDLER_H
-
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct {
-    int forward;
-    int backward;
-    int left;
-    int right;
-    int crotator;
-    int acrotator;
-} motor_command_t;
+#include "esp_err.h"
 
-void motor_handler_update(const motor_command_t *cmd);
+// 接收角度和距离参数，控制电机
+esp_err_t motor_handler_update(int angle, int distance);
 
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
-#endif   //
