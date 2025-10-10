@@ -1,96 +1,62 @@
 #include "webserver_control.h"
-#include "esp_http_server.h"
 #include "esp_log.h"
-#include "capture_control.h"
+#include "esp_http_server.h"
+#include "common_gpio.h"
 #include "motor_handler.h"
-#include <string.h>
-#include <stdlib.h>
 
 static const char *TAG = "webserver_control";
 
-// 图像采集控制：POST /toggle
-static esp_err_t toggle_handler(httpd_req_t *req) {
-    ESP_LOGI(TAG, "HTTP POST /toggle");
-
-    char buf[8] = {0};
-    int ret = httpd_req_recv(req, buf, sizeof(buf) - 1);
+// HTTP POST 处理函数
+esp_err_t joystick_post_handler(httpd_req_t *req) {
+    char content[100];
+    int ret = httpd_req_recv(req, content, sizeof(content));
     if (ret <= 0) {
-        ESP_LOGE(TAG, "Failed to receive toggle command");
-        httpd_resp_send_500(req);
+        ESP_LOGE(TAG, "Failed to receive post data");
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to receive data");
         return ESP_FAIL;
     }
-    buf[ret] = '\0';
-    ESP_LOGI(TAG, "Received toggle command: %s", buf);
 
-    if (strncmp(buf, "ON", 2) == 0) {
-        capture_control_set(true);
-        httpd_resp_sendstr(req, "Capture ON");
-    } else {
-        capture_control_set(false);
-        httpd_resp_sendstr(req, "Capture OFF");
-    }
+    content[ret] = '\0';
+    ESP_LOGI(TAG, "Received joystick data: %s", content);
 
-    return ESP_OK;
-}
+    // 解析 JSON 数据
+    int angle = 0, distance = 0;
+    sscanf(content, "{\"angle\":%d,\"distance\":%d}", &angle, &distance);
 
-// 电机控制：GET /control?dir=forward&state=1
-static esp_err_t control_handler(httpd_req_t *req) {
-    ESP_LOGI(TAG, "HTTP GET /control");
-
-    char query[64];
-    char dir[16] = {0};
-    char state_str[8] = {0};
-    int state = 0;
-
-    if (httpd_req_get_url_query_str(req, query, sizeof(query)) == ESP_OK) {
-        ESP_LOGI(TAG, "Query string: %s", query);
-
-        if (httpd_query_key_value(query, "dir", dir, sizeof(dir)) == ESP_OK) {
-            ESP_LOGI(TAG, "Parsed dir: %s", dir);
-        } else {
-            ESP_LOGW(TAG, "Failed to parse 'dir'");
-        }
-
-        if (httpd_query_key_value(query, "state", state_str, sizeof(state_str)) == ESP_OK) {
-            state = atoi(state_str);
-            ESP_LOGI(TAG, "Parsed state: %d", state);
-        } else {
-            ESP_LOGW(TAG, "Failed to parse 'state'");
-        }
-
-        ESP_LOGI(TAG, "Direction: %s, State: %d", dir, state);
-
-        motor_command_t cmd = {0};
-
-        if (strcmp(dir, "forward") == 0) cmd.forward = state;
-        else if (strcmp(dir, "backward") == 0) cmd.backward = state;
-        else if (strcmp(dir, "left") == 0) cmd.left = state;
-        else if (strcmp(dir, "right") == 0) cmd.right = state;
-        else if (strcmp(dir, "crotator") == 0) cmd.crotator = state;
-        else if (strcmp(dir, "acrotator") == 0) cmd.acrotator = state;
-
-        motor_handler_update(&cmd);
-    } else {
-        ESP_LOGW(TAG, "No query string found");
-    }
+    // 传递给 motor_handler
+    motor_handler_update(angle, distance);
 
     httpd_resp_sendstr(req, "OK");
     return ESP_OK;
 }
 
-// 注册路由
-void register_control_routes(httpd_handle_t server) {
-    httpd_uri_t toggle_uri = {
-        .uri = "/toggle",
-        .method = HTTP_POST,
-        .handler = toggle_handler
+// 注册 URI 处理器
+static esp_err_t register_uri_handlers(httpd_handle_t server) {
+    httpd_uri_t joystick_uri = {
+        .uri       = "/joystick",
+        .method    = HTTP_POST,
+        .handler   = joystick_post_handler,
+        .user_ctx  = NULL
     };
-    httpd_register_uri_handler(server, &toggle_uri);
+    return httpd_register_uri_handler(server, &joystick_uri);
+}
 
-    httpd_uri_t control_uri = {
-        .uri = "/control",
-        .method = HTTP_GET,
-        .handler = control_handler
-    };
-    httpd_register_uri_handler(server, &control_uri);
+// 初始化 WebServer
+esp_err_t webserver_control_init(void) {
+    ESP_LOGI(TAG, "Initializing webserver_control...");
+
+    // 初始化 GPIO
+    common_gpio_init();
+
+    // 配置 WebServer
+    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    httpd_handle_t server = NULL;
+
+    if (httpd_start(&server, &config) == ESP_OK) {
+        ESP_LOGI(TAG, "WebServer started");
+        return register_uri_handlers(server);
+    }
+
+    ESP_LOGE(TAG, "Failed to start WebServer");
+    return ESP_FAIL;
 }
