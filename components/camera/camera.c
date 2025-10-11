@@ -1,137 +1,80 @@
-
 #include "camera.h"
 #include "common_gpio.h"
-#include "sccb.h"
-#include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "camera_reg.h"
-#include "driver/i2c.h"
 #include "driver/gpio.h"
-
-//#define I2C_MASTER_NUM I2C_NUM_0
-//#define I2C_MASTER_FREQ_HZ 100000
-//#define OV7670_I2C_ADDR 0x42  // OV7670 write address
-
-static const char *TAG = "CAMERA";
+#include "esp_log.h"
+#include <stdlib.h>
 
 
-void camera_check_id() {
-    uint8_t id_high = 0, id_low = 0;
-    esp_err_t err1 = sccb_read_register(0x0A, &id_high);
-    esp_err_t err2 = sccb_read_register(0x0B, &id_low);
+static const char *TAG = "camera";
 
-    if (err1 == ESP_OK && err2 == ESP_OK) {
-        ESP_LOGI("CAMERA_ID", "OV7670 ID: 0x%02X%02X", id_high, id_low);
-        if (id_high == 0x76) {
-            ESP_LOGI("CAMERA_ID", "Camera ID matched: OV7670 detected.");
-        } else {
-            ESP_LOGW("CAMERA_ID", "Unexpected camera ID: 0x%02X%02X", id_high, id_low);
-        }
-    } else {
-        ESP_LOGE("CAMERA_ID", "Failed to read camera ID. err1=%d, err2=%d", err1, err2);
+static uint8_t *frame_buffer = NULL;
+static bool camera_running = false;
+
+esp_err_t camera_init(void) {
+    ESP_LOGI(TAG, "Initializing camera module...");
+    frame_buffer = (uint8_t *)malloc(CAMERA_FRAME_SIZE);
+    if (!frame_buffer) {
+        ESP_LOGE(TAG, "Failed to allocate frame buffer");
+        return ESP_ERR_NO_MEM;
+    }
+    camera_running = true;
+    return ESP_OK;
+}
+
+void camera_stop(void) {
+    camera_running = false;
+    if (frame_buffer) {
+        free(frame_buffer);
+        frame_buffer = NULL;
     }
 }
 
+uint8_t* camera_capture_frame(void) {
+    if (!camera_running || !frame_buffer) {
+        ESP_LOGW(TAG, "Camera not running or buffer not allocated");
+        return NULL;
+    }
 
+    // Reset FIFO read pointer
+    gpio_set_level(GPIO_RRST, 0);
+    gpio_set_level(GPIO_RCLK, 0);
+    ets_delay_us(1);
+    gpio_set_level(GPIO_RCLK, 1);
+    ets_delay_us(1);
+    gpio_set_level(GPIO_RRST, 1);
 
-// VSYNC debug task
-void vsync_debug_task(void *arg) {
-    gpio_set_direction(PIN_VSYNC, GPIO_MODE_INPUT);
+    // Enable FIFO output
+    gpio_set_level(GPIO_OE, 0);
 
-    while (1) {
-        int high_count = 0;
-        int low_count = 0;
+    // Read RGB565 pixels (2 bytes per pixel)
+    for (int i = 0; i < CAMERA_FRAME_WIDTH * CAMERA_FRAME_HEIGHT; i++) {
+        uint16_t pixel = 0;
 
-        for (int i = 0; i < 100; i++) {
-            int level = gpio_get_level(PIN_VSYNC);
-            if (level) high_count++;
-            else low_count++;
-            vTaskDelay(pdMS_TO_TICKS(1));
+        for (int byte_index = 0; byte_index < 2; byte_index++) {
+            gpio_set_level(GPIO_RCLK, 1);
+            ets_delay_us(1);
+            gpio_set_level(GPIO_RCLK, 0);
+            ets_delay_us(1);
+
+            uint8_t byte = 0;
+            for (int bit = 0; bit < 8; bit++) {
+                byte |= (gpio_get_level(GPIO_D0 + bit) << bit);
+            }
+
+            if (byte_index == 0) {
+                pixel = byte << 8;  // High byte
+            } else {
+                pixel |= byte;      // Low byte
+            }
         }
-        // temp close the log print in uart: 2025-09-30 1120    
-        //ESP_LOGI("VSYNC_DEBUG", "VSYNC GPIO%d: High=%d, Low=%d", PIN_VSYNC, high_count, low_count);
-        //vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
 
-
-// OV7670 register configuration
-const struct regval_list ov7670_qvga_rgb565[] = {
-    { REG_COM7, 0x80 },
-    { REG_CLKRC, 0x80 },
-    { REG_COM11, 0x0A },
-    { REG_COM7, 0x04 },
-    { REG_RGB444, 0x00 },
-    { REG_COM15, 0xD0 },
-    { REG_COM1, 0x00 },
-    { REG_COM9, 0x6A },
-    { REG_COM3, 0x04 },
-    { REG_COM14, 0x19 },
-    { REG_SCALING_XSC, 0x3A },
-    { REG_SCALING_YSC, 0x35 },
-    { REG_SCALING_DCWCTR, 0x03 },
-    { REG_HSTART, 0x16 },
-    { REG_HSTOP, 0x04 },
-    { REG_HREF, 0x24 },
-    { REG_VSTART, 0x02 },
-    { REG_VSTOP, 0x7A },
-    { REG_VREF, 0x0A },
-};
-
-bool ov7670_config(void) {
-    for (int i = 0; i < sizeof(ov7670_qvga_rgb565)/sizeof(ov7670_qvga_rgb565[0]); i++) {
-        if (sccb_write_register(ov7670_qvga_rgb565[i].reg, ov7670_qvga_rgb565[i].val) != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to write register 0x%02X", ov7670_qvga_rgb565[i].reg);
-            return false;
-        }
-    }
-    return true;
-}
-
-bool camera_init(void) {
-    ESP_LOGI(TAG, "Initializing camera sensor...");
-
-    fifo_gpio_init();
-    sccb_init();
-
-    camera_check_id();
-    
-    // Reset OV7670
-    sccb_write_register(0x12, 0x80);
-    vTaskDelay(pdMS_TO_TICKS(10));
-
-    // Read COM10 register
-    uint8_t com10 = 0;
-    if (sccb_read_register(0x15, &com10) == ESP_OK) {
-        ESP_LOGI(TAG, "COM10 = 0x%02X", com10);
-    } else {
-        ESP_LOGE(TAG, "Failed to read COM10 register");
+        frame_buffer[i * 2]     = (pixel >> 8) & 0xFF;
+        frame_buffer[i * 2 + 1] = pixel & 0xFF;
     }
 
-    // Start VSYNC debug task
-    xTaskCreate(vsync_debug_task, "vsync_debug_task", 2048, NULL, 5, NULL);
+    // Disable FIFO output
+    gpio_set_level(GPIO_OE, 1);
 
-    // Configure OV7670 registers
-    if (!ov7670_config()) {
-        ESP_LOGE(TAG, "Failed to configure OV7670 registers");
-        return false;
-    }
-
-    // Sample VSYNC signal
-    int high_count = 0, low_count = 0;
-    for (int i = 0; i < 100; i++) {
-        int level = gpio_get_level(PIN_VSYNC);
-        if (level) high_count++;
-        else low_count++;
-        vTaskDelay(pdMS_TO_TICKS(1));
-    }
-    if (high_count == 0) {
-        ESP_LOGW(TAG, "VSYNC signal not detected");
-    } else {
-        ESP_LOGI(TAG, "VSYNC signal detected");
-    }
-
-    ESP_LOGI(TAG, "Camera sensor initialization complete.");
-    return true;
+    ESP_LOGI(TAG, "RGB565 frame captured.");
+    return frame_buffer;
 }
