@@ -29,7 +29,6 @@
 #define GPIO_RRST            17    // 读复位
 #define GPIO_WEN             18    // 写使能
 
-#define OV7670_I2C_ADDR 0x21    // ov7670 write address
 
 // ======================= TB6612FNG 电机驱动模块 =======================
 // TB6612FNG #1
