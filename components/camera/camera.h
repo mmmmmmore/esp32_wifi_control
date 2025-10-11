@@ -1,24 +1,25 @@
 #pragma once
-#include <stdbool.h>
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#include "esp_err.h"
+#include <stdint.h>
 
-// Structure for register-value pair
-struct regval_list {
-    unsigned char reg;
-    unsigned char val;
-};
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-extern const struct regval_list ov7670_qvga_rgb565[];
-bool ov7670_config(void);
+#define CAMERA_FRAME_WIDTH   320
+#define CAMERA_FRAME_HEIGHT  240
+#define CAMERA_FRAME_SIZE    (CAMERA_FRAME_WIDTH * CAMERA_FRAME_HEIGHT)
 
-// OV7670 initialization function for QVGA + RGB565
-void ov7670_init_qvga_rgb565();
+// 初始化摄像头模块
+esp_err_t camera_init(void);
 
+// 采集一帧图像，返回指向缓冲区的指针
+uint8_t* camera_capture_frame(void);
 
-// Initialize the OV7670 camera sensor
-bool camera_init(void);
+// 停止图像采集
+void camera_stop(void);
 
-
-#endif // CAMERA_H
+#ifdef __cplusplus
+}
+#endif
