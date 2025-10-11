@@ -1,5 +1,5 @@
 #include "sccb.h"
-#include "common_gpio.h"
+#include "camera_reg.h"
 
 esp_err_t sccb_write(uint8_t reg_addr, uint8_t data) {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -33,20 +33,33 @@ esp_err_t sccb_read(uint8_t reg_addr, uint8_t *data) {
     return ret;
 }
 
-
 esp_err_t ov7670_init(void) {
     esp_err_t ret;
 
-    // 示例：设置 COM7 寄存器为复位
-    ret = sccb_write(0x12, 0x80);  // COM7: Reset
+    // Reset camera
+    ret = sccb_write(REG_COM7, COM7_RESET);
     if (ret != ESP_OK) return ret;
-    vTaskDelay(pdMS_TO_TICKS(100));  // 等待复位完成
+    vTaskDelay(pdMS_TO_TICKS(100));
 
-    // 设置输出格式为 RGB565
-    ret = sccb_write(0x12, 0x04);  // COM7: RGB
+    // Set RGB output format
+    ret = sccb_write(REG_COM7, COM7_RGB | COM7_FMT_QVGA);
     if (ret != ESP_OK) return ret;
 
-    // 更多寄存器配置（分辨率、颜色格式、时序等）可根据 OV7670 datasheet 添加
+    // Set RGB565 format
+    ret = sccb_write(REG_COM15, COM15_RGB565 | COM15_R00FF);
+    if (ret != ESP_OK) return ret;
+
+    // Set scaling and resolution for QVGA
+    ret = sccb_write(REG_SCALING_DCWCTR, 0x22); // Downsample by 2
+    if (ret != ESP_OK) return ret;
+    ret = sccb_write(REG_SCALING_PCLK, 0xF2);   // PCLK settings
+    if (ret != ESP_OK) return ret;
+    ret = sccb_write(REG_SCALING_XSC, 0x3A);    // Horizontal scaling
+    if (ret != ESP_OK) return ret;
+    ret = sccb_write(REG_SCALING_YSC, 0x35);    // Vertical scaling
+    if (ret != ESP_OK) return ret;
+
+    // Additional recommended settings can be added here
 
     return ESP_OK;
 }
