@@ -37,14 +37,19 @@ static void jpeg_mem_writer(void* context, void* data, int size) {
     ctx->size += size;
 }
 
-uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t width, uint16_t height, size_t* jpeg_len) {
-    if (!rgb_data || rgb_len == 0 || width == 0 || height == 0 || !jpeg_len) {
+uint8_t* jpeg_encode_rgb565(const uint8_t* rgb565_data, size_t rgb565_len, uint16_t width, uint16_t height, size_t* jpeg_len) {
+    if (!rgb565_data || rgb565_len == 0 || width == 0 || height == 0 || !jpeg_len) {
         ESP_LOGE(TAG, "Invalid input parameters");
         return NULL;
     }
 
     size_t pixel_count = width * height;
-    size_t initial_jpeg_size = pixel_count;  // 初始分配较小，后续可扩容
+    if (rgb565_len < pixel_count * 2) {
+        ESP_LOGE(TAG, "RGB565 data length too small");
+        return NULL;
+    }
+
+    size_t initial_jpeg_size = pixel_count;
     ESP_LOGI(TAG, "Allocating initial JPEG buffer: %d bytes", initial_jpeg_size);
 
     uint8_t* jpeg_buffer = heap_caps_malloc(initial_jpeg_size, MALLOC_CAP_SPIRAM);
@@ -65,7 +70,7 @@ uint8_t* jpeg_encode_rgb565(const uint8_t* rgb_data, size_t rgb_len, uint16_t wi
 
     ESP_LOGI(TAG, "Converting RGB565 to RGB888...");
     for (size_t i = 0; i < pixel_count; i++) {
-        uint16_t pixel = ((uint16_t*)rgb_data)[i];
+        uint16_t pixel = ((uint16_t*)rgb565_data)[i];
         uint8_t r = (pixel >> 11) & 0x1F;
         uint8_t g = (pixel >> 5) & 0x3F;
         uint8_t b = pixel & 0x1F;
