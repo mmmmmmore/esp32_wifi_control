@@ -3,18 +3,15 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "common_gpio.h"
+#include "driver/i2c.h"
+#include "esp_err.h"
 
-// 初始化 SCCB 通信接口
-bool sccb_init(void);
+// OV7670 默认地址（7位地址为 0x21，8位地址为 0x42）
+#define OV7670_ADDR         0x21
 
-// 向摄像头寄存器写入数据
-bool sccb_write(uint8_t reg_addr, uint8_t data);
-
-// 从摄像头寄存器读取数据
-bool sccb_read(uint8_t reg_addr, uint8_t *data);
+esp_err_t sccb_write(uint8_t reg_addr, uint8_t data);
+esp_err_t sccb_read(uint8_t reg_addr, uint8_t *data);
+esp_err_t ov7670_init(void);
 
 
 #endif
