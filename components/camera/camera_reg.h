@@ -1,5 +1,5 @@
-#ifndef CAMERA_REGS_H
-#define CAMERA_REGS_H
+#ifndef CAMERA_REG_H
+#define CAMERA_REG_H
 
 //init I2C default addr definition
 #define I2C_MASTER_NUM I2C_NUM_0
