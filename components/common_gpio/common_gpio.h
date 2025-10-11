@@ -22,12 +22,12 @@
 #define GPIO_D6              12    // 图像数据位 6
 #define GPIO_D7              13    // 图像数据位 7
 
-#define GPIO_VSYNC           21    // 同步信号
-#define GPIO_WR              14    // 写入控制
-#define GPIO_OE              15    // 输出使能
-#define GPIO_RST             16    // FIFO 复位
-#define GPIO_RRST            17    // 读复位
-#define GPIO_WEN             18    // 写使能
+#define GPIO_VSYNC           21    // frame sync control signal
+#define GPIO_RCLK            14    // FIFO clock 
+#define GPIO_OE              15    // FIFO output enable
+#define GPIO_WRST            16    // FIFO write reset
+#define GPIO_RRST            17    // FIFO read reset
+#define GPIO_WEN             18    // FIFO write enable
 
 
 // ======================= TB6612FNG 电机驱动模块 =======================
