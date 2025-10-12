@@ -3,6 +3,7 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include <stdlib.h>
+#include "esp_rom_sys.h"
 
 
 static const char *TAG = "camera";
@@ -38,9 +39,9 @@ uint8_t* camera_capture_frame(void) {
     // Reset FIFO read pointer
     gpio_set_level(GPIO_RRST, 0);
     gpio_set_level(GPIO_RCLK, 0);
-    ets_delay_us(1);
+    esp_rom_delay_us(1);
     gpio_set_level(GPIO_RCLK, 1);
-    ets_delay_us(1);
+    esp_rom_delay_us(1);
     gpio_set_level(GPIO_RRST, 1);
 
     // Enable FIFO output
@@ -52,9 +53,9 @@ uint8_t* camera_capture_frame(void) {
 
         for (int byte_index = 0; byte_index < 2; byte_index++) {
             gpio_set_level(GPIO_RCLK, 1);
-            ets_delay_us(1);
+            esp_rom_delay_us(1);
             gpio_set_level(GPIO_RCLK, 0);
-            ets_delay_us(1);
+            esp_rom_delay_us(1);
 
             uint8_t byte = 0;
             for (int bit = 0; bit < 8; bit++) {
