@@ -17,12 +17,12 @@ static int map_speed_to_pwm(float speed) {
 }
 
 // 设置单个电机的方向和 PWM
-static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
-    gpio_set_level(gpio_dir, speed >= 0 ? 1 : 0);
-
-    ledc_set_duty(LEDC_LOW_SPEED_MODE, gpio_pwm, map_speed_to_pwm(speed));
-    ledc_update_duty(LEDC_LOW_SPEED_MODE, gpio_pwm);
+static void set_motor(const motor_gpio_t *motor, float speed) {
+    gpio_set_level(motor->dir_gpio, speed >= 0 ? 1 : 0);
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel, map_speed_to_pwm(speed));
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel);
 }
+
 
 esp_err_t motor_handler_update(int angle_deg, int distance_percent) {
     ESP_LOGI(TAG, "Motor update: angle=%d°, distance=%d%%", angle_deg, distance_percent);
@@ -49,3 +49,4 @@ esp_err_t motor_handler_update(int angle_deg, int distance_percent) {
 
     return ESP_OK;
 }
+
