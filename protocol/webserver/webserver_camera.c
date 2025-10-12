@@ -13,14 +13,6 @@ static const char *TAG = "webserver_camera";
 static esp_err_t image_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /image");
 
-    /*
-    if (false) {
-        ESP_LOGW(TAG, "Capture is disabled");
-        httpd_resp_sendstr(req, "Capture disabled");
-        return ESP_OK;
-    }
-    */
-
     size_t width = 320;
     size_t height = 240;
     size_t frame_size = width * height * 2;
@@ -58,14 +50,6 @@ static esp_err_t image_handler(httpd_req_t *req) {
 static esp_err_t stream_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /stream");
 
-    /*
-    if (false) {
-        ESP_LOGW(TAG, "Capture is disabled");
-        httpd_resp_sendstr(req, "Capture disabled");
-        return ESP_OK;
-    }
-    */
-
     const char *boundary = "frame";
     httpd_resp_set_type(req, "multipart/x-mixed-replace; boundary=frame");
 
@@ -73,7 +57,7 @@ static esp_err_t stream_handler(httpd_req_t *req) {
     size_t height = 240;
     size_t frame_size = width * height * 2;
 
-    while (capture_control_get()) {
+    while (true) {
         ESP_LOGI(TAG, "Allocating frame buffer for stream");
         ESP_LOGI(TAG, "Free heap before alloc: %d", esp_get_free_heap_size());
 
