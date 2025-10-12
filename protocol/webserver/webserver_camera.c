@@ -4,7 +4,6 @@
 #include "esp_heap_caps.h"
 #include "ov7670_handler.h"
 #include "jpeg.h"
-#include "capture_control.h"
 #include <string.h>
 
 #define STREAM_FRAME_INTERVAL_MS 100
@@ -14,11 +13,13 @@ static const char *TAG = "webserver_camera";
 static esp_err_t image_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /image");
 
-    if (!capture_control_get()) {
+    /*
+    if (false) {
         ESP_LOGW(TAG, "Capture is disabled");
         httpd_resp_sendstr(req, "Capture disabled");
         return ESP_OK;
     }
+    */
 
     size_t width = 320;
     size_t height = 240;
@@ -57,11 +58,13 @@ static esp_err_t image_handler(httpd_req_t *req) {
 static esp_err_t stream_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /stream");
 
-    if (!capture_control_get()) {
+    /*
+    if (false) {
         ESP_LOGW(TAG, "Capture is disabled");
         httpd_resp_sendstr(req, "Capture disabled");
         return ESP_OK;
     }
+    */
 
     const char *boundary = "frame";
     httpd_resp_set_type(req, "multipart/x-mixed-replace; boundary=frame");

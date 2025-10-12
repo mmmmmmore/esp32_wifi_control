@@ -5,6 +5,6 @@ idf_component_register(
         "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
-        common_gpio motor_pwm 
-        webserver_control
+        common_gpio  
+        webserver
         )

@@ -1,5 +1,6 @@
 #include "sccb.h"
 #include "camera_reg.h"
+#include "common_gpio.h"
 
 esp_err_t sccb_write(uint8_t reg_addr, uint8_t data) {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();

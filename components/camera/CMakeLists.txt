@@ -4,6 +4,6 @@ idf_component_register(
     INCLUDE_DIRS 
         "."
     REQUIRES 
-        esp_wifi esp_http_server nvs_flash driver 
+        nvs_flash driver 
         common_gpio sccb jpeg 
     )

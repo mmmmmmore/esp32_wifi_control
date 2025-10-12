@@ -63,7 +63,7 @@
 
 // ======================= LEDC 参数定义 =======================
 #define LEDC_TIMER           LEDC_TIMER_0       // 使用 LEDC 定时器 0
-#define LEDC_MODE            LEDC_HIGH_SPEED_MODE
+#define LEDC_MODE            LEDC_LOW_SPEED_MODE
 #define LEDC_DUTY_RES        LEDC_TIMER_10_BIT  // PWM 分辨率：10 位
 #define LEDC_FREQUENCY       5000               // PWM 频率：5kHz
 

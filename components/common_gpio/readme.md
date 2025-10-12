@@ -23,9 +23,9 @@
 #define GPIO_D7              13    // 图像数据位 7
 
 #define GPIO_VSYNC           21    // 同步信号
-#define GPIO_WR              14    // 写入控制
+#define GPIO_RCLK            14    // 写入控制
 #define GPIO_OE              15    // 输出使能
-#define GPIO_RST             16    // FIFO 复位
+#define GPIO_WRST            16    // FIFO 复位
 #define GPIO_RRST            17    // 读复位
 #define GPIO_WEN             18    // 写使能
 

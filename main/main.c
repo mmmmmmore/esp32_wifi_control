@@ -9,10 +9,13 @@
 #include "common_gpio.h"
 #include "jpeg.h"
 #include "ov7670_handler.h"
+#include "init.h"
 #include "sccb.h"
 //#include "spiffs.h"
 #include "esp_psram.h"
 #include "esp_heap_caps.h"
+
+
 
 void check_psram_status() {
     ESP_LOGI("PSRAM", "PSRAM size: %d bytes", esp_psram_get_size());
@@ -66,9 +69,11 @@ void app_main(void) {
 
     check_psram_status();
     
-    camera_init();
+
+    platform_init();
+    //camera_init();
     // 初始化摄像头（GPIO + SCCB + 寄存器配置）
-    ov7670_config();
+    //ov7670_config();
 
     init_spiffs();
     // 启动 HTTP 服务器

@@ -4,10 +4,8 @@ idf_component_register(
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
         camera jpeg sccb common_gpio
-        ov7670_handler
-        motor_handler
+        ov7670_handler motor_handler init
         webserver wifi_ap 
         spiffs 
         esp_system esp_psram
-        webserver_control
 )

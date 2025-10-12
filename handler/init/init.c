@@ -9,10 +9,16 @@
 
 void platform_init(void) {
     // 初始化 NVS 已在 app_main 中完成
-    init_gpio();               // 初始化所有 GPIO
-    init_log_handler();       // 初始化日志模块
+    
+    //initiated the GPIOs and setup default config
+    common_gpio_init();               // 初始化所有 GPIO from components/common_gpio
+    ledc_init();
+    i2c_master_init();                  
+    // above from components/common_gpio
+    //init_log_handler();       // 初始化日志模块
     camera_init();            // 初始化摄像头
-    stream_handler_init();    // 初始化图像流处理
-    joystick_handler_init();  // 初始化摇杆处理
-    webserver_control_init(); // 初始化 WebServer 控制逻辑
+    
+    //stream_handler_init();    // 初始化图像流处理
+    //joystick_handler_init();  // 初始化摇杆处理
+    //webserver_control_init(); // 初始化 WebServer 控制逻辑
 }
