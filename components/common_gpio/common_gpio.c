@@ -4,6 +4,33 @@
 #include "driver/i2c.h"
 #include "esp_err.h"
 
+
+
+const motor_gpio_t motor_fl = {
+    .dir_gpio = GPIO_MOTOR1_AIN2,
+    .pwm_gpio = GPIO_MOTOR1_PWMA,
+    .pwm_channel = LEDC_CHANNEL_MOTOR1_A
+};
+
+const motor_gpio_t motor_fr = {
+    .dir_gpio = GPIO_MOTOR1_BIN2,
+    .pwm_gpio = GPIO_MOTOR1_PWMB,
+    .pwm_channel = LEDC_CHANNEL_MOTOR1_B
+};
+
+const motor_gpio_t motor_rl = {
+    .dir_gpio = GPIO_MOTOR2_AIN2,
+    .pwm_gpio = GPIO_MOTOR2_PWMA,
+    .pwm_channel = LEDC_CHANNEL_MOTOR2_A
+};
+
+const motor_gpio_t motor_rr = {
+    .dir_gpio = GPIO_MOTOR2_BIN2,
+    .pwm_gpio = GPIO_MOTOR2_PWMB,
+    .pwm_channel = LEDC_CHANNEL_MOTOR2_B
+};
+
+
 void common_gpio_init(void) {
     gpio_config_t io_conf = {
         .mode = GPIO_MODE_OUTPUT,
