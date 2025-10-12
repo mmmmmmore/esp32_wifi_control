@@ -24,7 +24,7 @@ httpd_handle_t start_webserver(void) {
 
     if (httpd_start(&server, &config) == ESP_OK) {
         ESP_LOGI(TAG, "Webserver started");
-        webserver_init();
+        webserver_init(server);
 
     } else {
         ESP_LOGE(TAG, "Failed to start webserver");

@@ -5,7 +5,7 @@
 
 #include "esp_http_server.h"
 
-void webserver_motor_register(httpd_handle_t server);
+esp_err_t webserver_motor_register(httpd_handle_t server);
 
 
 

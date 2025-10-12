@@ -1,6 +1,66 @@
 
 2025-10-12
 
+relate to motor_handler 
+
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c: In function 'motor_handler_update':
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:45:15: error: passing argument 1 of 'set_motor' makes integer from pointer without a cast [-Wint-conversion]
+   45 |     set_motor(&motor_fl, FL);
+      |               ^~~~~~~~~
+      |               |
+      |               const motor_gpio_t *
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:27: note: expected 'int' but argument is of type 'const motor_gpio_t *'
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |                       ~~~~^~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:45:5: error: too few arguments to function 'set_motor'; expected 3, have 2
+   45 |     set_motor(&motor_fl, FL);
+      |     ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:13: note: declared here
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |             ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:46:15: error: passing argument 1 of 'set_motor' makes integer from pointer without a cast [-Wint-conversion]
+   46 |     set_motor(&motor_fr, FR);
+      |               ^~~~~~~~~
+      |               |
+      |               const motor_gpio_t *
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:27: note: expected 'int' but argument is of type 'const motor_gpio_t *'
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |                       ~~~~^~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:46:5: error: too few arguments to function 'set_motor'; expected 3, have 2
+   46 |     set_motor(&motor_fr, FR);
+      |     ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:13: note: declared here
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |             ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:47:15: error: passing argument 1 of 'set_motor' makes integer from pointer without a cast [-Wint-conversion]
+   47 |     set_motor(&motor_rl, RL);
+      |               ^~~~~~~~~
+      |               |
+      |               const motor_gpio_t *
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:27: note: expected 'int' but argument is of type 'const motor_gpio_t *'
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |                       ~~~~^~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:47:5: error: too few arguments to function 'set_motor'; expected 3, have 2
+   47 |     set_motor(&motor_rl, RL);
+      |     ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:13: note: declared here
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |             ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:48:15: error: passing argument 1 of 'set_motor' makes integer from pointer without a cast [-Wint-conversion]
+   48 |     set_motor(&motor_rr, RR);
+      |               ^~~~~~~~~
+      |               |
+      |               const motor_gpio_t *
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:27: note: expected 'int' but argument is of type 'const motor_gpio_t *'
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |                       ~~~~^~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:48:5: error: too few arguments to function 'set_motor'; expected 3, have 2
+   48 |     set_motor(&motor_rr, RR);
+      |     ^~~~~~~~~
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/motor_handler/motor_handler.c:20:13: note: declared here
+   20 | static void set_motor(int gpio_dir, int gpio_pwm, float speed) {
+      |             ^~~~~~~~~
+
 
 /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/protocol/webserver/webserver_camera.c:84:11: error: conflicting types for 'webserver_camera_register'; have 'esp_err_t(void *)' {aka 'int(void *)'}
    84 | esp_err_t webserver_camera_register(httpd_handle_t server) {
