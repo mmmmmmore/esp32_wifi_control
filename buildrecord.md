@@ -3,6 +3,16 @@
 
 build link error
 
+motor define error:
+--wrap=_Unwind_DeleteException  -Wl,--wrap=_Unwind_ForcedUnwind  -Wl,--wrap=_Unwind_Resume_or_Rethrow  -Wl,--wrap=_Unwind_Backtrace  -Wl,--wrap=__cxa_call_unexpected  -Wl,--wrap=__gxx_personality_v0  -Wl,--wrap=__cxa_throw  -Wl,--wrap=__cxa_allocate_exception  -lstdc++  esp-idf/pthread/libpthread.a  esp-idf/newlib/libnewlib.a  -u __cxa_guard_dummy  -u __cxx_init_dummy  -lgcc  esp-idf/cxx/libcxx.a  -u __cxx_fatal_exception  -u esp_timer_init_include_func  -u uart_vfs_include_dev_init  -u usb_serial_jtag_vfs_include_dev_init  -u usb_serial_jtag_connection_monitor_include  -u esp_vfs_include_console_register  -u vfs_include_syscalls_impl  -u esp_vfs_include_nullfs_register && :
+/Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.1.0/../../../../xtensa-esp-elf/bin/ld: esp-idf/motor_handler/libmotor_handler.a(motor_handler.c.obj):(.literal.motor_handler_update+0x18): undefined reference to `motor_fl'
+/Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.1.0/../../../../xtensa-esp-elf/bin/ld: esp-idf/motor_handler/libmotor_handler.a(motor_handler.c.obj):(.literal.motor_handler_update+0x1c): undefined reference to `motor_fr'
+/Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.1.0/../../../../xtensa-esp-elf/bin/ld: esp-idf/motor_handler/libmotor_handler.a(motor_handler.c.obj):(.literal.motor_handler_update+0x20): undefined reference to `motor_rl'
+/Users/maochun/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/../lib/gcc/xtensa-esp-elf/15.1.0/../../../../xtensa-esp-elf/bin/ld: esp-idf/motor_handler/libmotor_handler.a(motor_handler.c.obj):(.literal.motor_handler_update+0x24): undefined reference to `motor_rr'
+
+
+
+
 [123/123] cd /Users/maochun/esp32prj/Project_CAM/branch/esp32_wif...ect_CAM/branch/esp32_wifi_control/build/bootloader/bootloader.bin
 Bootloader binary size 0x52e0 bytes. 0x2d20 bytes (35%) free.
 [120/123] Linking CXX executable esp32_wifi_control.elf
