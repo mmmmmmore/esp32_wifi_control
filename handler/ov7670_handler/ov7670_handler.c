@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "jpeg.h"
 #include "esp_log.h"
+#include "common_gpio.h"
 #include <stdlib.h>
 
 static const char *TAG = "ov7670_handler";
@@ -20,7 +21,7 @@ esp_err_t ov7670_handler_get_jpeg(uint8_t **jpeg_data, size_t *jpeg_size) {
     }
 
     ESP_LOGI(TAG, "Encoding frame to JPEG...");
-    *jpeg_data = jpeg_encode_rgb565(raw_data, CAMERA_FRAME_SIZE, CAMERA_WIDTH, CAMERA_HEIGHT, jpeg_size);
+    *jpeg_data = jpeg_encode_rgb565(raw_data, CAMERA_FRAME_SIZE, CAMERA_FRAME_WIDTH, CAMERA_FRAME_HEIGHT, jpeg_size);
     if (!*jpeg_data || *jpeg_size == 0) {
         ESP_LOGE(TAG, "JPEG encoding failed");
         return ESP_FAIL;

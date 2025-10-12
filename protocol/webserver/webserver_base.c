@@ -60,7 +60,6 @@ esp_err_t webserver_base_register(httpd_handle_t server) {
         .uri      = "/",
         .method   = HTTP_GET,
         .handler  = index_handler
-        .user_ctx = NULL
         };
 
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &toggle_uri));
