@@ -1,6 +1,11 @@
 idf_component_register(
-    SRCS "webserver_motor.c" "webserver_camera.c" "webserver.c"
-    INCLUDE_DIRS "."
+    SRCS 
+        "webserver.c"
+        "webserver_base.c"
+        "webserver_camera.c"
+        "webserver_motor.c"
+    INCLUDE_DIRS 
+        "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
         esp_jpeg jpeg 
