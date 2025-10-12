@@ -32,7 +32,7 @@ esp_err_t joystick_post_handler(httpd_req_t *req) {
 
 // 注册 URI 处理器 register motor control relate uri of joystick handler
 
-static esp_err_t register_motor_routes(httpd_handle_t server) {
+static esp_err_t webserver_motor_register(httpd_handle_t server) {
     httpd_uri_t joystick_uri = {
         .uri       = "/joystick",
         .method    = HTTP_POST,

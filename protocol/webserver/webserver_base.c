@@ -41,6 +41,8 @@ static esp_err_t index_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
+
+
 esp_err_t webserver_base_register(httpd_handle_t server) {
     httpd_uri_t toggle_uri = {
         .uri      = "/toggle",

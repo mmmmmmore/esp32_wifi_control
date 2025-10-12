@@ -1,4 +1,7 @@
 #include "webserver.h"
+#include "webserver_base.h"
+#include "webserver_camera.h"
+#include "webserver_motor.h"
 #include "esp_http_server.h"
 #include "ov7670_handler.h"
 #include "jpeg.h"

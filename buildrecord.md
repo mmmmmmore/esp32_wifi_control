@@ -1,6 +1,20 @@
 
 2025-10-12
 
+
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/protocol/webserver/webserver_camera.c:84:11: error: conflicting types for 'webserver_camera_register'; have 'esp_err_t(void *)' {aka 'int(void *)'}
+   84 | esp_err_t webserver_camera_register(httpd_handle_t server) {
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/protocol/webserver/webserver_camera.c:1:
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/protocol/webserver/webserver_camera.h:8:6: note: previous declaration of 'webserver_camera_register' with type 'void(void *)'
+    8 | void webserver_camera_register(httpd_handle_t server);
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+[6/159] Building C object esp-idf/webserver/CMakeFiles/__idf_webserver.dir/webserver_motor.c.obj
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/protocol/webserver/webserver_motor.c:35:18: warning: 'webserver_motor_register' defined but not used [-Wunused-function]
+   35 | static esp_err_t webserver_motor_register(httpd_handle_t server) {
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~
+
+
 build log:
 
 /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/protocol/webserver/webserver.c: In function 'start_webserver':
