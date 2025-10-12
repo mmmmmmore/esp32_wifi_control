@@ -46,7 +46,7 @@ httpd_handle_t start_webserver(void) {
        
         
         register_camera_routes(server);
-        register_control_routes(server);
+        register_motor_routes(server);
 
          httpd_uri_t favicon_uri = {
             .uri = "/favicon.ico",
