@@ -1,5 +1,29 @@
 2025-10-13
 
+NOTICE: Processing 3 dependencies:
+NOTICE: [1/3] espressif/esp_jpeg (1.3.1)
+NOTICE: [2/3] espressif/esp_new_jpeg (0.6.1)
+NOTICE: [3/3] idf (6.0.0)
+CMake Error at /Users/maochun/esp32prj/esp-idf/tools/cmake/build.cmake:653 (include):
+  include could not find requested file:
+
+    /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build/managed_components_list.temp.cmake
+Call Stack (most recent call first):
+  /Users/maochun/esp32prj/esp-idf/tools/cmake/project.cmake:740 (idf_build_process)
+  CMakeLists.txt:19 (project)
+
+
+-- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
+CMake Error at /Users/maochun/esp32prj/esp-idf/tools/cmake/component.cmake:256 (message):
+  ERROR: Cannot find component list file.  Please make sure this script is
+  executed from CMake
+
+Call Stack (most recent call first):
+  /Users/maochun/esp32prj/esp-idf/tools/cmake/build.cmake:684 (__component_get_requirements)
+  /Users/maochun/esp32prj/esp-idf/tools/cmake/project.cmake:740 (idf_build_process)
+  CMakeLists.txt:19 (project)
+
+
 
 W (870) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
 W (883) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`
