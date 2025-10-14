@@ -18,7 +18,7 @@ void ov7670_gpio_init(void) {
     };
 
     gpio_num_t ov7670_gpios[] = {
-        GPIO_SCL, GPIO_SDA,
+        //GPIO_SCL, GPIO_SDA,
         GPIO_D0, GPIO_D1, GPIO_D2, GPIO_D3, GPIO_D4, GPIO_D5, GPIO_D6, GPIO_D7,
         GPIO_VSYNC, GPIO_RCLK, GPIO_OE, GPIO_WRST, GPIO_RRST, GPIO_WEN
     };
@@ -165,8 +165,22 @@ void ledc_init(void) {
     ESP_LOGI(TAG, "LEDC channels initialized");
 }
 
+
 // ======================= I2C 初始化 =======================
 void i2c_master_init(void) {
+    ESP_LOGI(TAG, "Initializing I2C master...");
+
+    // 正确配置 GPIO 模式
+    gpio_config_t i2c_gpio_conf = {
+        .mode = GPIO_MODE_INPUT_OUTPUT_OD,
+        .pull_up_en = GPIO_PULLUP_ENABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE,
+        .pin_bit_mask = (1ULL << GPIO_SCL) | (1ULL << GPIO_SDA)
+    };
+    ESP_ERROR_CHECK(gpio_config(&i2c_gpio_conf));
+
+    // 配置 I2C 控制器
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
         .sda_io_num = GPIO_SDA,
@@ -180,8 +194,10 @@ void i2c_master_init(void) {
     ESP_ERROR_CHECK(i2c_driver_install(I2C_MASTER_NUM, conf.mode,
                                        I2C_MASTER_RX_BUF_DISABLE,
                                        I2C_MASTER_TX_BUF_DISABLE, 0));
+
     ESP_LOGI(TAG, "I2C master initialized");
 }
+
 
 // ======================= 电机结构体定义 =======================
 const motor_gpio_t motor_fl = {
