@@ -4,6 +4,9 @@
 #include "driver/i2c.h"
 #include "esp_err.h"
 #include "esp_log.h"
+#include "esp_heap_caps.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static const char *TAG = "common_gpio";
 
