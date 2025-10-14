@@ -20,7 +20,7 @@ void platform_init(void) {
     //init_log_handler();       // 初始化日志模块
     camera_init();            // 初始化摄像头
     
-    sccb_init();
+    //sccb_init();
     //stream_handler_init();    // 初始化图像流处理
     //joystick_handler_init();  // 初始化摇杆处理
     //webserver_control_init(); // 初始化 WebServer 控制逻辑
