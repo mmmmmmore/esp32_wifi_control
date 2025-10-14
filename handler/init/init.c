@@ -15,7 +15,7 @@ void platform_init(void) {
     //initiated the GPIOs and setup default config
     common_gpio_init();               // 初始化所有 GPIO from components/common_gpio
     ledc_init();
-    i2c_master_init();                  
+    //i2c_master_init();                  
     // above from components/common_gpio
     //init_log_handler();       // 初始化日志模块
     camera_init();            // 初始化摄像头

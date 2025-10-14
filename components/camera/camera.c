@@ -4,7 +4,7 @@
 #include "esp_log.h"
 #include <stdlib.h>
 #include "esp_rom_sys.h"
-
+#include "esp_heap_caps.h"
 
 static const char *TAG = "camera";
 
