@@ -15,11 +15,12 @@ void platform_init(void) {
     //initiated the GPIOs and setup default config
     common_gpio_init();               // 初始化所有 GPIO from components/common_gpio
     ledc_init();
-    //i2c_master_init();                  
+    i2c_master_init();                  
     // above from components/common_gpio
     //init_log_handler();       // 初始化日志模块
     camera_init();            // 初始化摄像头
     
+    sccb_init();
     //stream_handler_init();    // 初始化图像流处理
     //joystick_handler_init();  // 初始化摇杆处理
     //webserver_control_init(); // 初始化 WebServer 控制逻辑
