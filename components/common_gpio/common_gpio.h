@@ -34,25 +34,25 @@
 // TB6612FNG #1
 #define GPIO_MOTOR1_AIN1     19
 #define GPIO_MOTOR1_AIN2     20
-#define GPIO_MOTOR1_BIN1     38
-#define GPIO_MOTOR1_BIN2     39
-#define GPIO_MOTOR1_PWMA     40
-#define GPIO_MOTOR1_PWMB     41
+#define GPIO_MOTOR1_BIN1     47
+#define GPIO_MOTOR1_BIN2     48
+#define GPIO_MOTOR1_PWMA     45
+#define GPIO_MOTOR1_PWMB     35
 
 // TB6612FNG #2
-#define GPIO_MOTOR2_AIN1     33
-#define GPIO_MOTOR2_AIN2     34
-#define GPIO_MOTOR2_BIN1     35
-#define GPIO_MOTOR2_BIN2     36
-#define GPIO_MOTOR2_PWMA     37
-#define GPIO_MOTOR2_PWMB     1
+#define GPIO_MOTOR2_AIN1     36
+#define GPIO_MOTOR2_AIN2     37
+#define GPIO_MOTOR2_BIN1     38
+#define GPIO_MOTOR2_BIN2     39
+#define GPIO_MOTOR2_PWMA     40
+#define GPIO_MOTOR2_PWMB     41
 
 // 共用 STBY 引脚（用于两个电机驱动器）
 #define GPIO_MOTOR_STBY      42
 
 // ======================= 其他功能引脚 =======================
-#define GPIO_LED_STATUS      3     // 状态指示灯
-#define GPIO_WEBSERVER_CTRL  0     // WebServer 控制信号（注意 GPIO0 启动模式影响）
+#define GPIO_LED_STATUS      43     // 状态指示灯
+#define GPIO_WEBSERVER_CTRL  44     // WebServer 控制信号（注意 GPIO0 启动模式影响）
 
 // ======================= I2C 参数定义 =======================
 #define I2C_MASTER_NUM       I2C_NUM_0          // 使用 I2C 控制器编号
