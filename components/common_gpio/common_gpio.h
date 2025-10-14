@@ -51,8 +51,8 @@
 #define GPIO_MOTOR_STBY      42
 
 // ======================= 其他功能引脚 =======================
-#define GPIO_LED_STATUS      43     // 状态指示灯
-#define GPIO_WEBSERVER_CTRL  44     // WebServer 控制信号（注意 GPIO0 启动模式影响）
+//#define GPIO_LED_STATUS      43     // 状态指示灯
+//#define GPIO_WEBSERVER_CTRL  44     // WebServer 控制信号（注意 GPIO0 启动模式影响）
 
 // ======================= I2C 参数定义 =======================
 #define I2C_MASTER_NUM       I2C_NUM_0          // 使用 I2C 控制器编号
