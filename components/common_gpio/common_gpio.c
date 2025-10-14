@@ -158,6 +158,7 @@ void common_gpio_init(void) {
 //    gpio_config(&io_conf);
 //}
 
+//new ledc print err:
 void ledc_init(void) {
     ledc_timer_config_t ledc_timer = {
         .speed_mode       = LEDC_MODE,
@@ -166,7 +167,12 @@ void ledc_init(void) {
         .freq_hz          = LEDC_FREQUENCY,
         .clk_cfg          = LEDC_AUTO_CLK
     };
-    ledc_timer_config(&ledc_timer);
+
+    esp_err_t err = ledc_timer_config(&ledc_timer);
+    if (err != ESP_OK) {
+        ESP_LOGE("LEDC", "Timer config failed: %s", esp_err_to_name(err));
+        return;
+    }
 
     ledc_channel_config_t ledc_channels[] = {
         {
@@ -210,6 +216,58 @@ void ledc_init(void) {
         }
     }
 }
+
+
+//
+//void ledc_init(void) {
+//    ledc_timer_config_t ledc_timer = {
+//        .speed_mode       = LEDC_MODE,
+//        .timer_num        = LEDC_TIMER,
+//        .duty_resolution  = LEDC_DUTY_RES,
+//        .freq_hz          = LEDC_FREQUENCY,
+//        .clk_cfg          = LEDC_AUTO_CLK
+//    };
+//    ledc_timer_config(&ledc_timer);
+//
+//    ledc_channel_config_t ledc_channels[] = {
+//        {
+//            .channel    = LEDC_CHANNEL_MOTOR1_A,
+//            .duty       = 0,
+//            .gpio_num   = GPIO_MOTOR1_PWMA,
+//            .speed_mode = LEDC_MODE,
+//            .hpoint     = 0,
+//            .timer_sel  = LEDC_TIMER
+//        },
+//        {
+//            .channel    = LEDC_CHANNEL_MOTOR1_B,
+//            .duty       = 0,
+//            .gpio_num   = GPIO_MOTOR1_PWMB,
+//            .speed_mode = LEDC_MODE,
+//            .hpoint     = 0,
+//            .timer_sel  = LEDC_TIMER
+//        },
+//        {
+//            .channel    = LEDC_CHANNEL_MOTOR2_A,
+//            .duty       = 0,
+//            .gpio_num   = GPIO_MOTOR2_PWMA,
+//            .speed_mode = LEDC_MODE,
+//            .hpoint     = 0,
+//            .timer_sel  = LEDC_TIMER
+//        },
+//        {
+//            .channel    = LEDC_CHANNEL_MOTOR2_B,
+//            .duty       = 0,
+//            .gpio_num   = GPIO_MOTOR2_PWMB,
+//            .speed_mode = LEDC_MODE,
+//            .hpoint     = 0,
+//            .timer_sel  = LEDC_TIMER
+//        }
+//    };
+//
+//    for (int i = 0; i < sizeof(ledc_channels)/sizeof(ledc_channels[0]); i++) {
+//        ledc_channel_config(&ledc_channels[i]);
+//    }
+//}
 
 void i2c_master_init(void) {
     i2c_config_t conf = {
