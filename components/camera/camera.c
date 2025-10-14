@@ -13,11 +13,14 @@ static bool camera_running = false;
 
 esp_err_t camera_init(void) {
     ESP_LOGI(TAG, "Initializing camera module...");
-    frame_buffer = (uint8_t *)malloc(CAMERA_FRAME_SIZE);
+
+    frame_buffer = (uint8_t *)heap_caps_malloc(CAMERA_FRAME_SIZE, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
     if (!frame_buffer) {
-        ESP_LOGE(TAG, "Failed to allocate frame buffer");
+        ESP_LOGE(TAG, "Failed to allocate frame buffer from PSRAM");
         return ESP_ERR_NO_MEM;
     }
+
+    ESP_LOGI(TAG, "Frame buffer allocated at: %p", frame_buffer);
     camera_running = true;
     return ESP_OK;
 }
