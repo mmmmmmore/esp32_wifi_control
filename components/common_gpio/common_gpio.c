@@ -204,7 +204,10 @@ void ledc_init(void) {
     };
 
     for (int i = 0; i < sizeof(ledc_channels)/sizeof(ledc_channels[0]); i++) {
-        ledc_channel_config(&ledc_channels[i]);
+        err = ledc_channel_config(&ledc_channels[i]);
+        if (err != ESP_OK) {
+            ESP_LOGE("LEDC", "Channel %d config failed: %s", i, esp_err_to_name(err));
+        }
     }
 }
 
