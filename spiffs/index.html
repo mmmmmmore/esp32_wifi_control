@@ -30,6 +30,7 @@
       background-color: #eee;
       border: 2px solid #333;
       border-radius: 50%;
+      touch-action: none; /* 禁止默认触控行为 */
     }
 
     #knob {
@@ -85,6 +86,27 @@
     const radius = 100;
     const knobRadius = 10;
 
+    function updateKnob(dx, dy) {
+      const distance = Math.min(Math.sqrt(dx * dx + dy * dy), radius - knobRadius);
+      const angle = Math.atan2(dy, dx);
+
+      const x = radius + distance * Math.cos(angle) - knobRadius;
+      const y = radius + distance * Math.sin(angle) - knobRadius;
+
+      knob.style.left = `${x}px`;
+      knob.style.top = `${y}px`;
+
+      const degree = Math.round(angle * (180 / Math.PI));
+      const normalizedDistance = Math.round((distance / (radius - knobRadius)) * 100);
+
+      fetch('/joystick', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ angle: degree, distance: normalizedDistance })
+      });
+    }
+
+    // 鼠标事件
     knob.onmousedown = function (e) {
       e.preventDefault();
       document.onmousemove = function (eMove) {
@@ -93,32 +115,35 @@
         const centerY = rect.top + radius;
         const dx = eMove.clientX - centerX;
         const dy = eMove.clientY - centerY;
-        const distance = Math.min(Math.sqrt(dx * dx + dy * dy), radius - knobRadius);
-        const angle = Math.atan2(dy, dx); // 弧度
-
-        const x = radius + distance * Math.cos(angle) - knobRadius;
-        const y = radius + distance * Math.sin(angle) - knobRadius;
-
-        knob.style.left = `${x}px`;
-        knob.style.top = `${y}px`;
-
-        // 计算角度（度）和距离（0~100）
-        const degree = Math.round(angle * (180 / Math.PI));
-        const normalizedDistance = Math.round((distance / (radius - knobRadius)) * 100);
-
-        // 发送到 WebServer
-        fetch('/joystick', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ angle: degree, distance: normalizedDistance })
-        });
+        updateKnob(dx, dy);
       };
-
       document.onmouseup = function () {
         document.onmousemove = null;
         document.onmouseup = null;
       };
     };
+
+    // 触控事件
+    knob.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+    }, { passive: false });
+
+    knob.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = joystick.getBoundingClientRect();
+      const centerX = rect.left + radius;
+      const centerY = rect.top + radius;
+      const dx = touch.clientX - centerX;
+      const dy = touch.clientY - centerY;
+      updateKnob(dx, dy);
+    }, { passive: false });
+
+    knob.addEventListener('touchend', function () {
+      // 可选：复位摇杆
+      knob.style.left = `${radius - knobRadius}px`;
+      knob.style.top = `${radius - knobRadius}px`;
+    }, { passive: false });
   </script>
 
 </body>
