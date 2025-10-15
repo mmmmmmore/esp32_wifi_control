@@ -9,10 +9,14 @@
 
 #pragma once
 
-// ======================= AL422B FIFO 摄像头模块 =======================
-#define GPIO_SCL             4     // SCCB 时钟线
-#define GPIO_SDA             5     // SCCB 数据线
 
+
+// ======================= AL422B FIFO 摄像头模块 =======================
+#define GPIO_SCL             19     // SCCB 时钟线
+#define GPIO_SDA             20    // SCCB 数据线
+
+
+/*
 #define GPIO_D0              6     // 图像数据位 0
 #define GPIO_D1              7     // 图像数据位 1
 #define GPIO_D2              8     // 图像数据位 2
@@ -29,29 +33,30 @@
 #define GPIO_RRST            17    // FIFO read reset
 #define GPIO_WEN             18    // FIFO write enable
 
+*/
 
 // ======================= TB6612FNG 电机驱动模块 =======================
 // TB6612FNG #1
-#define GPIO_MOTOR1_AIN1     19
-#define GPIO_MOTOR1_AIN2     20
-#define GPIO_MOTOR1_BIN1     47
-#define GPIO_MOTOR1_BIN2     48
-#define GPIO_MOTOR1_PWMA     45
-#define GPIO_MOTOR1_PWMB     35
+#define GPIO_MOTOR1_AIN1     4
+#define GPIO_MOTOR1_AIN2     5
+#define GPIO_MOTOR1_BIN1     6
+#define GPIO_MOTOR1_BIN2     7
+#define GPIO_MOTOR1_PWMA     8
+#define GPIO_MOTOR1_PWMB     9
 
 // TB6612FNG #2
-#define GPIO_MOTOR2_AIN1     36
-#define GPIO_MOTOR2_AIN2     37
-#define GPIO_MOTOR2_BIN1     38
-#define GPIO_MOTOR2_BIN2     39
-#define GPIO_MOTOR2_PWMA     40
-#define GPIO_MOTOR2_PWMB     41
+#define GPIO_MOTOR2_AIN1     11
+#define GPIO_MOTOR2_AIN2     12
+#define GPIO_MOTOR2_BIN1     13
+#define GPIO_MOTOR2_BIN2     14
+#define GPIO_MOTOR2_PWMA     15
+#define GPIO_MOTOR2_PWMB     16
 
 // 共用 STBY 引脚（用于两个电机驱动器）
-#define GPIO_MOTOR_STBY      42
+#define GPIO_MOTOR_STBY      17
 
 // ======================= 其他功能引脚 =======================
-//#define GPIO_LED_STATUS      43     // 状态指示灯
+#define GPIO_LED_STATUS      18     // 状态指示灯
 //#define GPIO_WEBSERVER_CTRL  44     // WebServer 控制信号（注意 GPIO0 启动模式影响）
 
 // ======================= I2C 参数定义 =======================

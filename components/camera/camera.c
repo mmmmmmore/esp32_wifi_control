@@ -40,6 +40,7 @@ uint8_t* camera_capture_frame(void) {
         return NULL;
     }
 
+    /*
     // 显式定义 GPIO 数据线数组，避免 GPIO_D0 + bit 越界
     gpio_num_t data_pins[8] = {
         GPIO_D0, GPIO_D1, GPIO_D2, GPIO_D3,
@@ -53,7 +54,7 @@ uint8_t* camera_capture_frame(void) {
             return NULL;
         }
     }
-
+    
     // 重置 FIFO 读指针
     gpio_set_level(GPIO_RRST, 0);
     gpio_set_level(GPIO_RCLK, 0);
@@ -95,7 +96,7 @@ uint8_t* camera_capture_frame(void) {
 
     // 禁用 FIFO 输出
     gpio_set_level(GPIO_OE, 1);
-
+    */
     ESP_LOGI(TAG, "RGB565 frame captured.");
     return frame_buffer;
 }

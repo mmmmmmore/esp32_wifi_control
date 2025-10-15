@@ -10,6 +10,7 @@
 
 static const char *TAG = "common_gpio";
 
+/*
 // ======================= 摄像头 GPIO 初始化 =======================
 void ov7670_gpio_init(void) {
     gpio_config_t io_conf = {
@@ -37,6 +38,8 @@ void ov7670_gpio_init(void) {
     ESP_ERROR_CHECK(gpio_config(&io_conf));
     ESP_LOGI(TAG, "OV7670 GPIOs initialized");
 }
+*/
+
 
 // ======================= 电机 GPIO 初始化 =======================
 void motor_gpio_init(void) {
@@ -101,7 +104,7 @@ void misc_gpio_init(void) {
 // ======================= 总入口函数 =======================
 void common_gpio_init(void) {
     ESP_LOGI(TAG, "Starting GPIO initialization...");
-    ov7670_gpio_init();
+    //ov7670_gpio_init();
     motor_gpio_init();
     //misc_gpio_init();
     ESP_LOGI(TAG, "All GPIOs initialized");

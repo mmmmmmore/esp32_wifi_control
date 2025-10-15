@@ -5,7 +5,7 @@
 #include "esp_netif.h"
 #include "esp_event.h"
 #include "esp_spiffs.h"
-#include "camera.h"
+//#include "camera.h"
 #include "common_gpio.h"
 #include "jpeg.h"
 #include "ov7670_handler.h"

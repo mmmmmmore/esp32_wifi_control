@@ -18,7 +18,7 @@ void platform_init(void) {
     i2c_master_init();                  
     // above from components/common_gpio
     //init_log_handler();       // 初始化日志模块
-    camera_init();            // 初始化摄像头
+    //camera_init();            // 初始化摄像头
     
     //sccb_init();
     //stream_handler_init();    // 初始化图像流处理

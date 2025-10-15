@@ -8,7 +8,13 @@ static const char *TAG = "webserver_camera";
 static bool stream_active = false;
 
 static esp_err_t stream_handler(httpd_req_t *req) {
-    ESP_LOGI(TAG, "HTTP GET /stream");
+    ESP_LOGI(TAG, "HTTP GET /stream only print ....");
+    return ESP_OK;
+}
+
+/*
+static esp_err_t stream_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "HTTP GET /stream only print ....");
 
     if (!stream_active) {
         ESP_LOGW(TAG, "Stream is not active");
@@ -48,7 +54,16 @@ static esp_err_t stream_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "Stream ended");
     return ESP_OK;
 }
+*/
 
+
+static esp_err_t snapshot_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "HTTP GET /snapshot");
+    return ESP_OK;
+}
+
+
+/*
 static esp_err_t snapshot_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /snapshot");
 
@@ -66,6 +81,9 @@ static esp_err_t snapshot_handler(httpd_req_t *req) {
     free(jpeg_data);
     return res;
 }
+*/
+
+
 
 static esp_err_t start_handler(httpd_req_t *req) {
     stream_active = true;
