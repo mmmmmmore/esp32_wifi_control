@@ -1,15 +1,20 @@
-#ifndef CAPTURE_CONTROL_H
-#define CAPTURE_CONTROL_H
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
 
-// 控制是否启用图像采集
-void capture_control_set(bool enable);
-bool capture_control_get(void);
+#define MAX_CLIENTS 8
+#define UUID_LEN 64
 
-// 从 FIFO 中读取一帧图像数据
-void fifo_read_frame(uint8_t *buffer, size_t size);
+void control_manager_init(void);
+bool control_request(const char *uuid);
+bool control_release(const char *uuid);
+const char *control_get_current(void);
+bool control_is_owner(const char *uuid);
 
-#endif // CAPTURE_CONTROL_H
+#ifdef __cplusplus
+}
+#endif
