@@ -11,6 +11,7 @@ idf_component_register(
         esp_jpeg jpeg 
         ov7670_handler motor_handler init
         sccb camera jpeg common_gpio
-        cjson
+        cjson control_mgmt
         )
+
 
