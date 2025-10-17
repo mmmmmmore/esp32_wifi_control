@@ -10,6 +10,7 @@ set(EXTRA_COMPONENT_DIRS
         components/sccb
         protocol/webserver
         protocol/wifi_ap 
+        protocol/control_mgmt
         handler/init
         handler/ov7670_handler 
         handler/motor_handler

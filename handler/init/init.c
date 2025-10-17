@@ -3,6 +3,7 @@
 #include "webserver.h"
 #include "sccb.h"
 #include "jpeg.h"
+#include "control_mgmt.h"
 //#include "joystick_handler.h"
 //#include "webserver_control.h"
 #include "common_gpio.h"
