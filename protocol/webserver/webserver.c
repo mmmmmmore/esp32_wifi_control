@@ -20,6 +20,7 @@ static const char *TAG = "webserver";
 httpd_handle_t start_webserver(void) {
     ESP_LOGI(TAG, "Starting webserver...");
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.max_uri_handlers = 16; //setup more uri for link
     httpd_handle_t server = NULL;
 
     if (httpd_start(&server, &config) == ESP_OK) {
