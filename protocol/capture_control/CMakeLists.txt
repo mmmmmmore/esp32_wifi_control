@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "capture_control.c"
+    SRCS "control_mgmt.c"
     INCLUDE_DIRS "."
-    REQUIRES ov7670_handler
+    REQUIRES wifi_ap
 )
