@@ -17,6 +17,8 @@ void platform_init(void) {
     ledc_init();
     i2c_master_init();                  
     // above from components/common_gpio
+
+    control_manager_init(); // init the control memory   
     //init_log_handler();       // 初始化日志模块
     //camera_init();            // 初始化摄像头
     
@@ -25,3 +27,4 @@ void platform_init(void) {
     //joystick_handler_init();  // 初始化摇杆处理
     //webserver_control_init(); // 初始化 WebServer 控制逻辑
 }
+
