@@ -1,4 +1,48 @@
 
+
+I (651308) motor_handler: Motor update: angle=-98°, distance=100%
+I (651308) motor_handler: wheel speeds: FL=-1.13, FR=-0.85, RL=-0.85, RR=-1.13
+I (651318) motor_handler: motor GPIO dir = 4, pwm_channel =0, direction =0, pwm=255
+I (651328) motor_handler: motor GPIO dir = 5, pwm_channel =1, direction =0, pwm=217
+I (651328) motor_handler: motor GPIO dir = 11, pwm_channel =2, direction =0, pwm=217
+I (651338) motor_handler: motor GPIO dir = 12, pwm_channel =3, direction =0, pwm=255
+I (651348) webserver_motor: Received joystick data: {"uuid":"6788f4e-4edf-476a-98b9-426405e944f8","angle":-98,"distance":100}
+I (651358) motor_handler: Motor update: angle=-98°, distance=100%
+I (651368) motor_handler: wheel speeds: FL=-1.13, FR=-0.85, RL=-0.85, RR=-1.13
+I (651368) motor_handler: motor GPIO dir = 4, pwm_channel =0, direction =0, pwm=255
+I (651378) motor_handler: motor GPIO dir = 5, pwm_channel =1, direction =0, pwm=217
+I (651388) motor_handler: motor GPIO dir = 11, pwm_channel =2, direction =0, pwm=217
+I (651388) motor_handler: motor GPIO dir = 12, pwm_channel =3, direction =0, pwm=255
+I (651408) webserver_motor: Received joystick data: {"uuid":"6788f4e-4edf-476a-98b9-426405e944f8","angle":-97,"distance":100}
+I (651408) motor_handler: Motor update: angle=-97°, distance=100%
+I (651418) motor_handler: wheel speeds: FL=-1.11, FR=-0.87, RL=-0.87, RR=-1.11
+I (651428) motor_handler: motor GPIO dir = 4, pwm_channel =0, direction =0, pwm=255
+I (651428) motor_handler: motor GPIO dir = 5, pwm_channel =1, direction =0, pwm=222
+I (651438) motor_handler: motor GPIO dir = 11, pwm_channel =2, direction =0, pwm=222
+I (651448) motor_handler: motor GPIO dir = 12, pwm_channel =3, direction =0, pwm=255
+I (651458) webserver_motor: Received joystick data: {"uuid":"6788f4e-4edf-476a-98b9-426405e944f8","angle":-98,"distance":100}
+I (651468) motor_handler: Motor update: angle=-98°, distance=100%
+I (651468) motor_handler: wheel speeds: FL=-1.13, FR=-0.85, RL=-0.85, RR=-1.13
+I (651478) motor_handler: motor GPIO dir = 4, pwm_channel =0, direction =0, pwm=255
+I (651488) motor_handler: motor GPIO dir = 5, pwm_channel =1, direction =0, pwm=217
+I (651488) motor_handler: motor GPIO dir = 11, pwm_channel =2, direction =0, pwm=217
+I (651498) motor_handler: motor GPIO dir = 12, pwm_channel =3, direction =0, pwm=255
+I (651508) webserver_motor: Received joystick data: {"uuid":"6788f4e-4edf-476a-98b9-426405e944f8","angle":0,"distance":0}
+I (651518) motor_handler: Motor update: angle=0°, distance=0%
+I (651528) motor_handler: wheel speeds: FL=0.00, FR=0.00, RL=0.00, RR=0.00
+I (651528) motor_handler: motor GPIO dir = 4, pwm_channel =0, direction =1, pwm=0
+I (651538) motor_handler: motor GPIO dir = 5, pwm_channel =1, direction =1, pwm=0
+I (651548) motor_handler: motor GPIO dir = 11, pwm_channel =2, direction =1, pwm=0
+I (651548) motor_handler: motor GPIO dir = 12, pwm_channel =3, direction =1, pwm=0
+I (651558) webserver_motor: Received joystick data: {"uuid":"6788f4e-4edf-476a-98b9-426405e944f8","angle":-98,"distance":100}
+I (651568) motor_handler: Motor update: angle=-98°, distance=100%
+I (651578) motor_handler: wheel speeds: FL=-1.13, FR=-0.85, RL=-0.85, RR=-1.13
+I (651578) motor_handler: motor GPIO dir = 4, pwm_channel =0, direction =0, pwm=255
+I (651588) motor_handler: motor GPIO dir = 5, pwm_channel =1, direction =0, pwm=217
+I (651598) motor_handler: motor GPIO dir = 11, pwm_channel =2, direction =0, pwm=217
+I (651608) motor_handler: motor GPIO dir = 12, pwm_channel =3, direction =0, pwm=255
+
+
 I (1203) webserver: Registering motor URI handlers...
 W (1213) httpd_uri: httpd_register_uri_handler: no slots left for registering handler
 ESP_ERROR_CHECK failed: esp_err_t 0xb001 (ESP_ERR_HTTPD_HANDLERS_FULL) at 0x4200c36d

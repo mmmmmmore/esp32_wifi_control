@@ -67,6 +67,9 @@ void motor_gpio_init(void) {
         }
     }
 
+    gpio_set_level(GPIO_MOTOR_STBY,1);  //set stdby high
+    ESP_LOGI(TAG, "STBY GPIO %d set to HIGH", GPIO_MOTOR_STBY);
+
     ESP_ERROR_CHECK(gpio_config(&io_conf));
     ESP_LOGI(TAG, "Motor GPIOs initialized");
 }
