@@ -21,19 +21,17 @@ static void set_motor(const motor_gpio_t *motor, float speed) {
     int pwm = map_speed_to_pwm(speed);
 
     if (speed >= 0) {
-        // 正转：PWM 输出到 IN1，IN2 拉低
-        gpio_set_level(motor->in2_gpio, 0);
-        ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel, pwm); // PWM 输出到 IN1
+        gpio_set_level(motor->dir_gpio, 0);  // 拉低方向引脚
+        ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel, pwm); // PWM 输出
         ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel);
-        ESP_LOGI(TAG, "DRV8833 正转: IN1(PWM)=GPIO%d, IN2=GPIO%d, pwm=%d",
-                 motor->in1_gpio, motor->in2_gpio, pwm);
+        ESP_LOGI(TAG, "DRV8833 正转: PWM_GPIO=%d, DIR_GPIO=%d, pwm=%d",
+                 motor->pwm_gpio, motor->dir_gpio, pwm);
     } else {
-        // 反转：PWM 输出到 IN2，IN1 拉低
-        gpio_set_level(motor->in1_gpio, 0);
-        ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel, pwm); // PWM 输出到 IN2
+        gpio_set_level(motor->pwm_gpio, 0);  // 拉低 PWM 引脚
+        ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel, pwm); // PWM 输出到 DIR_GPIO
         ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_channel);
-        ESP_LOGI(TAG, "DRV8833 反转: IN1=GPIO%d, IN2(PWM)=GPIO%d, pwm=%d",
-                 motor->in1_gpio, motor->in2_gpio, pwm);
+        ESP_LOGI(TAG, "DRV8833 反转: DIR_GPIO(PWM)=%d, PWM_GPIO=%d, pwm=%d",
+                 motor->dir_gpio, motor->pwm_gpio, pwm);
     }
 }
 
@@ -67,5 +65,6 @@ esp_err_t motor_handler_update(int angle_deg, int distance_percent) {
 
     return ESP_OK;
 }
+
 
 
