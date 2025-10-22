@@ -1,0 +1,26 @@
+Command: ninja all
+[1/1085] Generating project_elf_src_esp32s3.c
+[2/1085] Generating /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build/esp-idf/esp_system/ld/memory.ld linker script...
+[3/1085] Generating /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build/esp-idf/esp_system/ld/sections.ld.in linker script...
+[4/1085] cd /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build && /usr/local/bin/cmake -E echo "Failed to create SPIFFS image for partition 'spiffs'. " "Check project configuration if using the correct partition table file." && /usr/local/bin/cmake -E remove /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build/Y22VN.cmake && /usr/local/bin/cmake -E env "FAIL_MESSAGE=Failing the build (see errors on lines above)" /usr/local/bin/cmake -P /Users/maochun/esp32prj/esp-idf/tools/cmake/scripts/fail.cmake
+FAILED: [code=1] CMakeFiles/spiffs_spiffs_bin /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build/CMakeFiles/spiffs_spiffs_bin 
+cd /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build && /usr/local/bin/cmake -E echo "Failed to create SPIFFS image for partition 'spiffs'. " "Check project configuration if using the correct partition table file." && /usr/local/bin/cmake -E remove /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/build/Y22VN.cmake && /usr/local/bin/cmake -E env "FAIL_MESSAGE=Failing the build (see errors on lines above)" /usr/local/bin/cmake -P /Users/maochun/esp32prj/esp-idf/tools/cmake/scripts/fail.cmake
+Failed to create SPIFFS image for partition 'spiffs'.  Check project configuration if using the correct partition table file.
+CMake Error at /Users/maochun/esp32prj/esp-idf/tools/cmake/scripts/fail.cmake:3 (message):
+  Failing the build (see errors on lines above)
+
+
+[5/1085] Generating ../../partition_table/partition-table.bin
+Partition table binary generated. Contents:
+*******************************************************************************
+# ESP-IDF Partition Table
+# Name, Type, SubType, Offset, Size, Flags
+nvs,data,nvs,0x9000,24K,
+phy_init,data,phy,0xf000,4K,
+factory,app,factory,0x10000,1M,
+*******************************************************************************
+[6/1085] Building C object esp-idf/esp_http_server/CMakeFiles/__idf_esp_http_server.dir/src/httpd_sess.c.obj
+[7/1085] Building C object esp-idf/esp_http_server/CMakeFiles/__idf_esp_http_server.dir/src/httpd_main.c.obj
+[8/1085] Building C object esp-idf/esp_http_server/CMakeFiles/__idf_esp_http_server.dir/src/httpd_parse.c.obj
+[9/1085] Building C object esp-idf/esp_https_ota/CMakeFiles/__idf_esp_https_ota.dir/src/esp_https_ota.c.obj
+ninja: build stopped: subcommand failed.
