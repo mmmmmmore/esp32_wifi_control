@@ -1,4 +1,5 @@
 #include "webserver_base.h"
+#include "ota_handler.h"
 #include "esp_log.h"
 #include "esp_http_server.h"
 
@@ -41,7 +42,17 @@ static esp_err_t index_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
+//add ota handler process
 
+static esp_err_t ota_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "OTA handler called");
+
+    const char *ota_url = "http://192.168.4.2/firmware.bin";  // 替换为实际地址
+    ota_start(ota_url);
+
+    httpd_resp_send(req, "OTA started", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
 
 esp_err_t webserver_base_register(httpd_handle_t server) {
     httpd_uri_t toggle_uri = {
@@ -64,10 +75,19 @@ esp_err_t webserver_base_register(httpd_handle_t server) {
         .handler  = index_handler
         };
 
+    httpd_uri_t ota_uri = {
+        .uri      = "/ota",
+        .method   = HTTP_GET,
+        .handler  = ota_handler,
+        .user_ctx = NULL
+    };
+
+    
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &toggle_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &favicon_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &index_uri));
-
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_uri));  // 注册 OTA URI
     ESP_LOGI(TAG, "Base URIs registered");
     return ESP_OK;
 }
+
