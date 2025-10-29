@@ -75,6 +75,7 @@
   <div id="joystick-controls">
     <button onclick="requestControl()">Control</button>
     <button onclick="releaseControl()">Release</button>
+    <button onclick="startOTA()">OTA_Start</button>
   </div>
 
   <script>
@@ -222,6 +223,21 @@
           alert('Control released.');
         });
     }
+
+    function startOTA() {
+      fetch('/ota')
+    .then(response => {
+      if (response.ok) {
+        alert('OTA update started.');
+      } else {
+        alert('Failed to start OTA.');
+      }
+    })
+    .catch(error => {
+      console.error('OTA error:', error);
+      alert('OTA request failed.');
+    });
+  }
   </script>
 
 </body>
