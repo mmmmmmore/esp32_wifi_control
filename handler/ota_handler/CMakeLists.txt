@@ -1,6 +1,6 @@
 idf_component_register(
     SRCS 
-        "ov7670_handler.c"
+        "ota_handler.c"
     INCLUDE_DIRS 
         "."
     REQUIRES 
