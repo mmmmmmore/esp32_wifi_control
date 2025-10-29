@@ -1,32 +1,26 @@
-#include "ov7670_handler.h"
-#include "camera.h"
-#include "jpeg.h"
+#include "ota_handler.h"
 #include "esp_log.h"
-#include "common_gpio.h"
-#include <stdlib.h>
+#include "esp_http_client.h"
+#include "esp_https_ota.h"
+#include "esp_system.h"
 
-static const char *TAG = "ov7670_handler";
+static const char *TAG = "ota_handler";
 
-esp_err_t ov7670_handler_get_jpeg(uint8_t **jpeg_data, size_t *jpeg_size) {
-    if (!jpeg_data || !jpeg_size) {
-        ESP_LOGE(TAG, "Invalid output parameters");
-        return ESP_ERR_INVALID_ARG;
+void ota_start(const char *ota_url)
+{
+    ESP_LOGI(TAG, "Starting OTA from URL: %s", ota_url);
+
+    esp_http_client_config_t config = {
+        .url = ota_url,
+        .timeout_ms = 5000,
+        .keep_alive_enable = true,
+    };
+
+    esp_err_t ret = esp_https_ota(&config);
+    if (ret == ESP_OK) {
+        ESP_LOGI(TAG, "OTA successful, restarting...");
+        esp_restart();
+    } else {
+        ESP_LOGE(TAG, "OTA failed with error: %s", esp_err_to_name(ret));
     }
-
-    ESP_LOGI(TAG, "Capturing frame from camera...");
-    uint8_t *raw_data = camera_capture_frame();
-    if (!raw_data) {
-        ESP_LOGE(TAG, "Failed to capture frame");
-        return ESP_FAIL;
-    }
-
-    ESP_LOGI(TAG, "Encoding frame to JPEG...");
-    *jpeg_data = jpeg_encode_rgb565(raw_data, CAMERA_FRAME_SIZE, CAMERA_FRAME_WIDTH, CAMERA_FRAME_HEIGHT, jpeg_size);
-    if (!*jpeg_data || *jpeg_size == 0) {
-        ESP_LOGE(TAG, "JPEG encoding failed");
-        return ESP_FAIL;
-    }
-
-    ESP_LOGI(TAG, "JPEG encoding successful, size: %d bytes", (int)*jpeg_size);
-    return ESP_OK;
 }
