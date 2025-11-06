@@ -95,8 +95,8 @@ void ota_start(const char *manifest_url)
     // 再封装成 ota_config
     esp_https_ota_config_t ota_config = {
         .http_config = &http_config,
-        .http_client_init_cb = NULL;   
-    //    .cert_pem = NULL,   // 如果有 HTTPS 证书，可以在这里配置
+        .http_client_init_cb = NULL,   
+    //  .cert_pem = NULL,   // 如果有 HTTPS 证书，可以在这里配置
     //  .partial_http_download = false,
     };
 
