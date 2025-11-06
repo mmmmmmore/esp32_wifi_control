@@ -60,6 +60,8 @@ void ota_start(const char *manifest_url)
     esp_http_client_close(client);
     esp_http_client_cleanup(client);
 
+    ESP_LOGI(TAG, "Manifest content : %s", buffer);
+
     cJSON *root = cJSON_Parse(buffer);
     free(buffer);
     if (!root) {
@@ -90,6 +92,7 @@ void ota_start(const char *manifest_url)
         .event_handler = _http_event_handler,
         .timeout_ms = 10000,
         .keep_alive_enable = true,
+        .skip_cert_common_name_check = true, // use for test server , not need check cert.
     };
 
     // 再封装成 ota_config
