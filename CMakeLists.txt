@@ -14,6 +14,7 @@ set(EXTRA_COMPONENT_DIRS
         handler/init
         handler/ov7670_handler 
         handler/motor_handler
+        handler/ota_handler
         spiffs 
         )
 
