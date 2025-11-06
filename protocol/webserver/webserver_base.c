@@ -19,7 +19,6 @@ static esp_err_t favicon_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
-
 static esp_err_t index_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "HTTP GET /");
 
@@ -42,8 +41,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
-//add ota handler process
-
+// OTA 触发接口
 static esp_err_t ota_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "OTA handler called");
 
@@ -51,6 +49,19 @@ static esp_err_t ota_handler(httpd_req_t *req) {
     ota_start(ota_url);
 
     httpd_resp_send(req, "OTA started", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+// OTA 状态查询接口
+static esp_err_t ota_status_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "OTA status handler called");
+
+    int result = ota_get_result();
+    char resp[64];
+    snprintf(resp, sizeof(resp), "{\"result\": %d}", result);
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
 
@@ -73,7 +84,7 @@ esp_err_t webserver_base_register(httpd_handle_t server) {
         .uri      = "/",
         .method   = HTTP_GET,
         .handler  = index_handler
-        };
+    };
 
     httpd_uri_t ota_uri = {
         .uri      = "/ota",
@@ -82,12 +93,18 @@ esp_err_t webserver_base_register(httpd_handle_t server) {
         .user_ctx = NULL
     };
 
-    
+    httpd_uri_t ota_status_uri = {
+        .uri      = "/ota/status",
+        .method   = HTTP_GET,
+        .handler  = ota_status_handler,
+        .user_ctx = NULL
+    };
+
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &toggle_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &favicon_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &index_uri));
-    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_uri));  // 注册 OTA URI
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_status_uri));
     ESP_LOGI(TAG, "Base URIs registered");
     return ESP_OK;
 }
-
