@@ -1,11 +1,11 @@
--- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
--- Project sdkconfig file /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/sdkconfig
--- Compiler supported targets: xtensa-esp-elf
--- App "esp32_wifi_control" version: 2.0.1
-Traceback (most recent call last):
-  File "/Users/maochun/esp32prj/esp-idf/components/partition_table/gen_esp32part.py", line 227, in from_csv
-    res.append(PartitionDefinition.from_csv(line, line_no + 1))
-               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
-  File "/Users/maochun/esp32prj/esp-idf/components/partition_table/gen_esp32part.py", line 468, in from_csv
-    raise InputError("CSV flag column contains unknown flag '%s'" % (flag))
-gen_esp32part.InputError: CSV flag column contains unknown flag '# 1.75MB'
+
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/ota_handler/ota_handler.c: In function 'ota_start':
+/Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/ota_handler/ota_handler.c:93:35: error: passing argument 1 of 'esp_https_ota' from incompatible pointer type [-Wincompatible-pointer-types]
+   93 |     esp_err_t ret = esp_https_ota(&ota_config);
+      |                                   ^~~~~~~~~~~
+      |                                   |
+      |                                   esp_http_client_config_t *
+In file included from /Users/maochun/esp32prj/Project_CAM/branch/esp32_wifi_control/handler/ota_handler/ota_handler.c:4:
+/Users/maochun/esp32prj/esp-idf/components/esp_https_ota/include/esp_https_ota.h:114:55: note: expected 'const esp_https_ota_config_t *' but argument is of type 'esp_http_client_config_t *'
+  114 | esp_err_t esp_https_ota(const esp_https_ota_config_t *ota_config);
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
