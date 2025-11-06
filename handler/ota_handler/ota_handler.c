@@ -83,11 +83,20 @@ void ota_start(const char *manifest_url)
 
     // 执行 OTA
     ESP_LOGI(TAG, "Starting OTA from URL: %s", firmware_url);
-    esp_http_client_config_t ota_config = {
+
+    // 先定义 http_config
+    esp_http_client_config_t http_config = {
         .url = firmware_url,
         .event_handler = _http_event_handler,
         .timeout_ms = 10000,
         .keep_alive_enable = true,
+    };
+
+    // 再封装成 ota_config
+    esp_https_ota_config_t ota_config = {
+        .http_config = &http_config,
+        .cert_pem = NULL,   // 如果有 HTTPS 证书，可以在这里配置
+        .partial_http_download = false,
     };
 
     esp_err_t ret = esp_https_ota(&ota_config);
