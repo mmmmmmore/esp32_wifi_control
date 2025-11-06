@@ -20,7 +20,9 @@ set(EXTRA_COMPONENT_DIRS
 
 # ====== 新增版本号配置 ======
 # 可以在命令行通过 -DPROJECT_VER=1.0.1 覆盖
-set(PROJECT_VER "1.0.1" CACHE STRING "Project version")
+set(PROJECT_VER "2.0.1" CACHE STRING "Project version")
+
+# 2.0.1 as big change version, add ota feature
 
 # 定义项目名称和版本
 project(esp32_wifi_control VERSION ${PROJECT_VER})
