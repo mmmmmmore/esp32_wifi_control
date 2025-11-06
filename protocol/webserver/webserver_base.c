@@ -45,7 +45,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
 static esp_err_t ota_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "OTA handler called");
 
-    const char *manifest_url = "http://192.168.4.2/firmware/manifest.json";  // 替换为实际manifest url地址
+    const char *manifest_url = "http://192.168.4.2:8000/firmware/manifest.json";  // 替换为实际manifest url地址
     ota_start(manifest_url);
 
     httpd_resp_send(req, "OTA started", HTTPD_RESP_USE_STRLEN);
