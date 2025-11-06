@@ -260,7 +260,6 @@
         .then(response => {
           if (response.ok) {
             alert('OTA update started.');
-            simulateOTAProgress(); // 模拟进度
           } else {
             alert('Failed to start OTA.');
           }
@@ -271,18 +270,28 @@
         });
     }
 
-    function simulateOTAProgress() {
-      const bar = document.getElementById('ota-bar');
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 5;
-        bar.style.width = `${progress}%`;
-        if (progress >= 100) {
-          clearInterval(interval);
-          bar.style.backgroundColor = 'green'; // 完成后保持绿色
-        }
-      }, 300);
+    // 轮询 OTA 状态
+    function pollOTAStatus() {
+      fetch('/ota/status')
+        .then(response => response.json())
+        .then(data => {
+          const bar = document.getElementById('ota-bar');
+          if (data.result === 1) {
+            bar.style.width = '100%';
+            bar.style.backgroundColor = 'green';
+          } else if (data.result === -1) {
+            bar.style.width = '100%';
+            bar.style.backgroundColor = 'red';
+          } else {
+            bar.style.width = '50%';
+            bar.style.backgroundColor = '#ccc'; // 进行中或 idle
+          }
+        })
+        .catch(err => console.error('OTA status error:', err));
     }
+
+    // 每 2 秒查询一次结果
+    setInterval(pollOTAStatus, 2000);
   </script>
 
 </body>
