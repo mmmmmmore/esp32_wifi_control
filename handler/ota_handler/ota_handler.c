@@ -6,8 +6,14 @@
 #include "cJSON.h"
 #include "esp_app_desc.h"
 #include "mbedtls/sha256.h"
+#include <string.h>
+#include <stdlib.h>
 
 static const char *TAG = "ota_handler";
+
+
+extern const uint8_t server_cert_pem_start[] asm("_binary_server_cert_pem_start");
+extern const uint8_t server_cert_pem_end[] asm("_binary_server_cert_pem_end");
 
 // OTA 状态：0=idle, 1=success, -1=failed
 static int ota_result = 0;
@@ -43,7 +49,8 @@ void ota_start(const char *manifest_url)
         .url = manifest_url,
         .event_handler = _http_event_handler,
         .timeout_ms = 5000,
-        .transport_type = HTTP_TRANSPORT_OVER_TCP, // 强制用 HTTP
+        .cert_pem = (const char *)server_cert_pem_start,
+        //.transport_type = HTTP_TRANSPORT_OVER_TCP, // 强制用 HTTP
     };
 
     esp_http_client_handle_t client = esp_http_client_init(&manifest_config);
@@ -82,11 +89,14 @@ void ota_start(const char *manifest_url)
         return;
     }
 
-    const char *latest_version = ver_item->valuestring;
-    const char *firmware_url   = url_item->valuestring;
+    char *latest_version = strdup(ver_item->valuestring);
+    char *firmware_url   = strdup(url_item->valuestring);
 
     const esp_app_desc_t *app_desc = esp_app_get_description();
     ESP_LOGI(TAG, "Current version: %s, Latest: %s", app_desc->version, latest_version);
+    ESP_LOGI(TAG, "New_Firmware_url is : %s", firmware_url);
+    ESP_LOGI(TAG, "this is new for ota test http 2.1.6 update cert in server and client ");
+    ESP_LOGI(TAG, "this only for higher version test");
 
     // 用完 JSON 后再释放
     cJSON_Delete(root);
@@ -95,6 +105,8 @@ void ota_start(const char *manifest_url)
     if (strcmp(app_desc->version, latest_version) >= 0) {
         ESP_LOGI(TAG, "Already up-to-date");
         ota_result = 1; // 表示成功（无需升级）
+        free(latest_version);
+        free(firmware_url);
         return;
     }
 
@@ -106,22 +118,28 @@ void ota_start(const char *manifest_url)
         .event_handler = _http_event_handler,
         .timeout_ms = 10000,
         .keep_alive_enable = true,
-        .transport_type = HTTP_TRANSPORT_OVER_TCP, // 强制用 HTTP
-        .skip_cert_common_name_check = true,       // 如果用 HTTPS 测试，可以跳过证书检查
+        .cert_pem = (const char *)server_cert_pem_start,
+        //.transport_type = HTTP_TRANSPORT_OVER_TCP, // 强制用 HTTP
+        //.skip_cert_common_name_check = true,       // 如果用 HTTPS 测试，可以跳过证书检查
+        //.disable_auto_redirect = false,             //
     };
 
     esp_https_ota_config_t ota_config = {
         .http_config = &http_config,
-        .http_client_init_cb = NULL,
+        //.http_client_init_cb = NULL,
     };
 
     esp_err_t ret = esp_https_ota(&ota_config);
     if (ret == ESP_OK) {
         ESP_LOGI(TAG, "OTA successful, restarting...");
         ota_result = 1;
+        //free(latest_version);
+        //free(firmware_url);
         esp_restart();
     } else {
         ESP_LOGE(TAG, "OTA failed: %s", esp_err_to_name(ret));
         ota_result = -1;
+        //free(latest_version);
+        //free(firmware_url);
     }
 }

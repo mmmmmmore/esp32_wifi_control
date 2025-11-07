@@ -9,4 +9,6 @@ idf_component_register(
         mbedtls
         sccb camera common_gpio jpeg 
         webserver wifi_ap
+    EMBED_TXTFILES 
+        "server_cert.pem"
         )
