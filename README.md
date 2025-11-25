@@ -1,2 +1,2 @@
-This branch clone from arch2,
-disable the camera function, only use pwm and driver the motor
+this branch clone only for OTA server simulation
+afterwards, need clone OTA client 
