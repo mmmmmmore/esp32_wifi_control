@@ -40,6 +40,34 @@ Already up-to-date.
 maochun@MMMBP ~ % 
 
 
+maochun@MMMBP ~ % brew install node
+✔︎ JSON API cask.jws.json                                                                                                           [Downloaded   15.0MB/ 15.0MB]
+✔︎ JSON API formula.jws.json                                                                                                        [Downloaded   31.7MB/ 31.7MB]
+Warning: You are using macOS 12.
+We (and Apple) do not provide support for this old version.
+You may have better luck with MacPorts which supports older versions of macOS:
+  https://www.macports.org
+
+This is a Tier 3 configuration:
+  https://docs.brew.sh/Support-Tiers#tier-3
+You can report Tier 3 unrelated issues to Homebrew/* repositories!
+Read the above document before opening any issues or PRs.
+
+==> Fetching downloads for: node
+✔︎ API Source node.rb                                                                                                               [Verifying    11.9KB/ 11.9KB]
+✔︎ Resource node--npm                                                                                                               [Verifying     2.7MB/  2.7MB]
+✔︎ Formula node (25.2.1)                                                                                                            [Verifying    53.3MB/ 53.3MB]
+==> Installing dependencies for node: z3, ninja, pcre2, swig and llvm
+==> Installing node dependency: z3
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/f7b11851b077fabca6c7996ca223de41edbcb57d/Formula/z/z3.rb
+######################################################################################################################################################### 100.0%
+Error: An exception occurred within a child process:
+  FormulaUnavailableError: No available formula with the name "formula.jws.json".
+maochun@MMMBP ~ % brew update
+==> Updating Homebrew...
+Already up-to-date.
+maochun@MMMBP ~ % 
+
 
 
 
