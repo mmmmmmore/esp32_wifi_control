@@ -75,18 +75,30 @@ h2 {
   background: #fafafa;
 }
 
+/* Dual Joystick Layout */
+#dual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.pane {
+  background: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.pane h3 {
+  margin-bottom: 12px;
+  color: #444;
+  font-size: 1.1em;
+}
+
 /* Joystick Styles */
-#joystick-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px 0;
-}
-
-#joystick {
-  margin: 20px 0;
-}
-
 #joystick-base {
   position: relative;
   width: 200px;
@@ -120,6 +132,50 @@ h2 {
 }
 
 #joystick-info {
+  text-align: center;
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+/* Rotation Dial Styles */
+#rotation {
+  margin: 20px 0;
+}
+
+#rotation-base {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #f7f7f7 0%, #e9e9e9 100%);
+  border: 3px solid #28a745;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 18px rgba(0, 0, 0, 0.08),
+    0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+#rotation-knob {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle at 30% 30%, #28a745, #2fbf71);
+  border: 4px solid white;
+  border-radius: 50%;
+  top: 66px;
+  left: 66px;
+  cursor: grab;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease;
+  touch-action: none;
+}
+
+#rotation-knob:active {
+  cursor: grabbing;
+  transform: scale(1.08);
+}
+
+#rotation-info {
   text-align: center;
   color: #666;
   font-size: 0.9em;
@@ -253,6 +309,18 @@ h2 {
     height: 45px;
     top: 52.5px;
     left: 52.5px;
+  }
+
+  #rotation-base {
+    width: 150px;
+    height: 150px;
+  }
+
+  #rotation-knob {
+    width: 42px;
+    height: 42px;
+    top: 54px;
+    left: 54px;
   }
 
   .btn {
