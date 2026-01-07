@@ -295,5 +295,32 @@ esp_err_t motor_handler_update(int angle_deg, int distance_percent) {
     return ESP_OK;
 }
 
+esp_err_t motor_handler_rotate(bool clockwise, int degrees) {
+    // Clamp degrees to 0-180
+    if (degrees < 0) degrees = 0;
+    if (degrees > 180) degrees = 180;
+
+    // If no rotation requested, stop all motors
+    if (degrees == 0) {
+        return motor_handler_stop_all();
+    }
+
+    int speed_percent = (degrees * 100) / 180; // Map 180° -> 100% PWM
+
+    // For rotation in place:
+    //  Clockwise: left wheels forward, right wheels reverse
+    //  Counterclockwise: left wheels reverse, right wheels forward
+    int left_speed = clockwise ? speed_percent : -speed_percent;
+    int right_speed = clockwise ? -speed_percent : speed_percent;
+
+    motor_handler_set_motor(MOTOR_1, left_speed);  // Front Left
+    motor_handler_set_motor(MOTOR_3, left_speed);  // Rear Left
+    motor_handler_set_motor(MOTOR_2, right_speed); // Front Right
+    motor_handler_set_motor(MOTOR_4, right_speed); // Rear Right
+
+    ESP_LOGI(TAG, "Rotate %s %d° -> speed=%d%%", clockwise ? "CW" : "CCW", degrees, speed_percent);
+    return ESP_OK;
+}
+
 
 

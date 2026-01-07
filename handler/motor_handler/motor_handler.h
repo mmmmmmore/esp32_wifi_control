@@ -73,6 +73,14 @@ esp_err_t motor_handler_enable(bool enable);
  */
 esp_err_t motor_handler_update(int angle_deg, int distance_percent);
 
+/**
+ * @brief Rotate the robot in place based on direction and degrees
+ * @param clockwise true for clockwise, false for counterclockwise
+ * @param degrees Rotation magnitude (0-180). 180 maps to 100% PWM.
+ * @return ESP_OK on success
+ */
+esp_err_t motor_handler_rotate(bool clockwise, int degrees);
+
 #ifdef __cplusplus
 }
 #endif

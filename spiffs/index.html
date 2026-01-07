@@ -24,19 +24,33 @@
         <span class="label">Distance:</span>
         <span id="distance-display" class="value">0%</span>
       </div>
+      <div class="status-item">
+        <span class="label">Rotation:</span>
+        <span id="rotation-display" class="value">0°</span>
+      </div>
     </div>
 
     <!-- Joystick Control -->
     <div class="control-section">
       <h2>Joystick Control</h2>
       <div id="joystick-container">
-        <div id="joystick">
-          <div id="joystick-base">
-            <div id="joystick-knob"></div>
+        <div class="control-grid">
+          <div id="joystick">
+            <div id="joystick-base">
+              <div id="joystick-knob"></div>
+            </div>
+            <div id="joystick-info">
+              <p>Drag the knob to control direction and speed</p>
+            </div>
           </div>
-        </div>
-        <div id="joystick-info">
-          <p>Drag the knob to control direction and speed</p>
+          <div id="rotation">
+            <div id="rotation-base">
+              <div id="rotation-knob"></div>
+            </div>
+            <div id="rotation-info">
+              <p>Rotate clockwise or counterclockwise (±180°)</p>
+            </div>
+          </div>
         </div>
       </div>
       
