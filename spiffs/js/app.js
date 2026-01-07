@@ -363,6 +363,6 @@ function stopStream() {
 console.log('ESP32 Vehicle Control initialized');
 console.log('Client UUID:', currentUUID);
 
-// Center controls on load
+// Initialize control positions on load
 resetJoystick();
 resetRotation();

@@ -30,49 +30,45 @@
       </div>
     </div>
 
-    <!-- Dual Joystick Controls -->
+    <!-- Camera + Overlayed Controls -->
     <div class="control-section">
       <h2>Drive & Rotate</h2>
-      <div id="dual-grid">
-        <div class="pane">
-          <h3>Drive (Angle & Distance)</h3>
-          <div id="joystick">
-            <div id="joystick-base">
-              <div id="joystick-knob"></div>
+      <div id="viewport">
+        <div id="video-container">
+          <img id="video" src="" alt="Camera Feed" />
+        </div>
+        <div class="overlay-controls">
+          <div id="dual-grid">
+            <div class="pane">
+              <h3>Drive (Angle & Distance)</h3>
+              <div id="joystick">
+                <div id="joystick-base">
+                  <div id="joystick-knob"></div>
+                </div>
+                <div id="joystick-info">
+                  <p>Drag to set heading and speed</p>
+                </div>
+              </div>
             </div>
-            <div id="joystick-info">
-              <p>Drag to set heading and speed</p>
+            <div class="pane">
+              <h3>Rotate (Direction & Angle)</h3>
+              <div id="rotation">
+                <div id="rotation-base">
+                  <div id="rotation-knob"></div>
+                </div>
+                <div id="rotation-info">
+                  <p>Drag on the ring to spin (±180°)</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="pane">
-          <h3>Rotate (Direction & Angle)</h3>
-          <div id="rotation">
-            <div id="rotation-base">
-              <div id="rotation-knob"></div>
-            </div>
-            <div id="rotation-info">
-              <p>Drag inside the ring to spin (±180°)</p>
-            </div>
+          <div class="button-group">
+            <button id="request-btn" class="btn btn-primary" onclick="requestControl()">Request Control</button>
+            <button id="release-btn" class="btn btn-secondary" onclick="releaseControl()" disabled>Release Control</button>
+            <button class="btn btn-success" onclick="startStream()">Start Stream</button>
+            <button class="btn btn-danger" onclick="stopStream()">Stop Stream</button>
           </div>
         </div>
-      </div>
-
-      <div class="button-group">
-        <button id="request-btn" class="btn btn-primary" onclick="requestControl()">Request Control</button>
-        <button id="release-btn" class="btn btn-secondary" onclick="releaseControl()" disabled>Release Control</button>
-      </div>
-    </div>
-
-    <!-- Camera Section (Optional) -->
-    <div class="control-section">
-      <h2>Camera Stream</h2>
-      <div id="video-container">
-        <img id="video" src="" alt="Camera Feed" />
-      </div>
-      <div class="button-group">
-        <button class="btn btn-success" onclick="startStream()">Start Stream</button>
-        <button class="btn btn-danger" onclick="stopStream()">Stop Stream</button>
       </div>
     </div>
   </div>
