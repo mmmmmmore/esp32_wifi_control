@@ -173,14 +173,11 @@ function updateRotation(clientX, clientY) {
   let dx = clientX - centerX;
   let dy = clientY - centerY;
 
-  let distance = Math.sqrt(dx * dx + dy * dy);
   const angle = Math.atan2(dy, dx);
 
-  if (distance > rotationMaxDistance) {
-    distance = rotationMaxDistance;
-    dx = rotationMaxDistance * Math.cos(angle);
-    dy = rotationMaxDistance * Math.sin(angle);
-  }
+  // Force knob to remain on the circle perimeter like a scroll
+  dx = rotationMaxDistance * Math.cos(angle);
+  dy = rotationMaxDistance * Math.sin(angle);
 
   const knobX = rotationRadius + dx - rotationKnobRadius;
   const knobY = rotationRadius + dy - rotationKnobRadius;
@@ -202,8 +199,11 @@ function updateRotation(clientX, clientY) {
 }
 
 function resetRotation() {
-  rotationKnob.style.left = `${rotationRadius - rotationKnobRadius}px`;
-  rotationKnob.style.top = `${rotationRadius - rotationKnobRadius}px`;
+  // Place knob on perimeter at 0° (right side)
+  const dx = rotationMaxDistance;
+  const dy = 0;
+  rotationKnob.style.left = `${rotationRadius + dx - rotationKnobRadius}px`;
+  rotationKnob.style.top = `${rotationRadius + dy - rotationKnobRadius}px`;
   rotationDisplay.textContent = '0°';
   if (hasControl) {
     sendRotationData('stop', 0);
