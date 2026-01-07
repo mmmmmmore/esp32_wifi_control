@@ -30,12 +30,8 @@ project(esp32_wifi_control VERSION ${PROJECT_VER})
 # SPIFFS 构建规则（如果启用）
 spiffs_create_partition_image(spiffs spiffs FLASH_IN_PROJECT "spiffs")
 
-# ====== 新增固件重命名规则 ======
-# 编译完成后，将生成的固件文件重命名为带版本号的文件
-add_custom_command(
-    TARGET ${CMAKE_PROJECT_NAME}.elf POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.bin
-            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}_v${PROJECT_VER}.bin
-    COMMENT "Renaming firmware to ${CMAKE_PROJECT_NAME}_v${PROJECT_VER}.bin"
-)
+# ====== 固件版本号标记 ======
+# Note: The firmware binary with version number will be available after build
+# The file ${CMAKE_PROJECT_NAME}.bin will be generated in the build directory
+# If you need a versioned copy, you can manually copy it after build:
+# cp build/${CMAKE_PROJECT_NAME}.bin build/${CMAKE_PROJECT_NAME}_v${PROJECT_VER}.bin

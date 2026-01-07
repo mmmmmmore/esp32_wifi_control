@@ -42,36 +42,11 @@ void ov7670_gpio_init(void) {
 
 
 // ======================= 电机 GPIO 初始化 =======================
+// Note: Motor GPIO and PWM initialization is now handled by motor_handler component
+// This function is kept for backward compatibility but does minimal work
 void motor_gpio_init(void) {
-    gpio_config_t io_conf = {
-        .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE,
-        .pin_bit_mask = 0
-    };
-
-    gpio_num_t motor_gpios[] = {
-        GPIO_MOTOR1_AIN1, GPIO_MOTOR1_AIN2, GPIO_MOTOR1_BIN1, GPIO_MOTOR1_BIN2,
-        GPIO_MOTOR1_PWMA, GPIO_MOTOR1_PWMB,
-        GPIO_MOTOR2_AIN1, GPIO_MOTOR2_AIN2, GPIO_MOTOR2_BIN1, GPIO_MOTOR2_BIN2,
-        GPIO_MOTOR2_PWMA, GPIO_MOTOR2_PWMB,
-        GPIO_MOTOR_STBY
-    };
-
-    for (int i = 0; i < sizeof(motor_gpios)/sizeof(motor_gpios[0]); i++) {
-        if (motor_gpios[i] >= GPIO_NUM_0 && motor_gpios[i] < GPIO_NUM_MAX) {
-            io_conf.pin_bit_mask |= (1ULL << motor_gpios[i]);
-        } else {
-            ESP_LOGW(TAG, "Invalid Motor GPIO: %d", motor_gpios[i]);
-        }
-    }
-
-    gpio_set_level(GPIO_MOTOR_STBY,1);  //set stdby high
-    ESP_LOGI(TAG, "STBY GPIO %d set to HIGH", GPIO_MOTOR_STBY);
-
-    ESP_ERROR_CHECK(gpio_config(&io_conf));
-    ESP_LOGI(TAG, "Motor GPIOs initialized");
+    ESP_LOGI(TAG, "Motor GPIO initialization delegated to motor_handler component");
+    // Motor handler will initialize all motor pins and PWM channels
 }
 
 // ======================= 其他 GPIO 初始化 =======================
@@ -114,64 +89,11 @@ void common_gpio_init(void) {
 }
 
 // ======================= LEDC 初始化 =======================
+// Note: LEDC/PWM initialization for motors is now handled by motor_handler
+// This function is kept for other potential LEDC uses
 void ledc_init(void) {
-    ledc_timer_config_t ledc_timer = {
-        .speed_mode       = LEDC_MODE,
-        .timer_num        = LEDC_TIMER,
-        .duty_resolution  = LEDC_DUTY_RES,
-        .freq_hz          = LEDC_FREQUENCY,
-        .clk_cfg          = LEDC_AUTO_CLK
-    };
-
-    esp_err_t err = ledc_timer_config(&ledc_timer);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "LEDC timer config failed: %s", esp_err_to_name(err));
-        return;
-    }
-
-    ledc_channel_config_t ledc_channels[] = {
-        {
-            .channel    = LEDC_CHANNEL_MOTOR1_A,
-            .duty       = 0,
-            .gpio_num   = GPIO_MOTOR1_PWMA,
-            .speed_mode = LEDC_MODE,
-            .hpoint     = 0,
-            .timer_sel  = LEDC_TIMER
-        },
-        {
-            .channel    = LEDC_CHANNEL_MOTOR1_B,
-            .duty       = 0,
-            .gpio_num   = GPIO_MOTOR1_PWMB,
-            .speed_mode = LEDC_MODE,
-            .hpoint     = 0,
-            .timer_sel  = LEDC_TIMER
-        },
-        {
-            .channel    = LEDC_CHANNEL_MOTOR2_A,
-            .duty       = 0,
-            .gpio_num   = GPIO_MOTOR2_PWMA,
-            .speed_mode = LEDC_MODE,
-            .hpoint     = 0,
-            .timer_sel  = LEDC_TIMER
-        },
-        {
-            .channel    = LEDC_CHANNEL_MOTOR2_B,
-            .duty       = 0,
-            .gpio_num   = GPIO_MOTOR2_PWMB,
-            .speed_mode = LEDC_MODE,
-            .hpoint     = 0,
-            .timer_sel  = LEDC_TIMER
-        }
-    };
-
-    for (int i = 0; i < sizeof(ledc_channels)/sizeof(ledc_channels[0]); i++) {
-        err = ledc_channel_config(&ledc_channels[i]);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "LEDC channel %d config failed: %s", i, esp_err_to_name(err));
-        }
-    }
-
-    ESP_LOGI(TAG, "LEDC channels initialized");
+    ESP_LOGI(TAG, "LEDC initialization for motors is handled by motor_handler");
+    // Motor PWM channels are configured in motor_handler_init()
 }
 
 
@@ -206,29 +128,3 @@ void i2c_master_init(void) {
 
     ESP_LOGI(TAG, "I2C master initialized");
 }
-
-
-// ======================= 电机结构体定义 =======================
-const motor_gpio_t motor_fl = {
-    .dir_gpio = GPIO_MOTOR1_AIN1,
-    .pwm_gpio = GPIO_MOTOR1_PWMA,
-    .pwm_channel = LEDC_CHANNEL_MOTOR1_A
-};
-
-const motor_gpio_t motor_fr = {
-    .dir_gpio = GPIO_MOTOR1_AIN2,
-    .pwm_gpio = GPIO_MOTOR1_PWMB,
-    .pwm_channel = LEDC_CHANNEL_MOTOR1_B
-};
-
-const motor_gpio_t motor_rl = {
-    .dir_gpio = GPIO_MOTOR2_AIN1,
-    .pwm_gpio = GPIO_MOTOR2_PWMA,
-    .pwm_channel = LEDC_CHANNEL_MOTOR2_A
-};
-
-const motor_gpio_t motor_rr = {
-    .dir_gpio = GPIO_MOTOR2_AIN2,
-    .pwm_gpio = GPIO_MOTOR2_PWMB,
-    .pwm_channel = LEDC_CHANNEL_MOTOR2_B
-};

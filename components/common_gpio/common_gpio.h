@@ -35,25 +35,34 @@
 
 */
 
-// ======================= TB6612FNG 电机驱动模块 =======================
-// TB6612FNG #1
-#define GPIO_MOTOR1_AIN1     4
-#define GPIO_MOTOR1_AIN2     5
-#define GPIO_MOTOR1_BIN1     6
-#define GPIO_MOTOR1_BIN2     7
-#define GPIO_MOTOR1_PWMA     8
-#define GPIO_MOTOR1_PWMB     9
+// ======================= DRV8833 电机驱动（2 x DRV8833 -> 4 motors） =======================
+// DRV8833-Board_1: Motor A (Motor1) and Motor B (Motor2)
+// DRV8833-Board_2: Motor C (Motor3) and Motor D (Motor4)
+// 
+// WARNING: GPIO6-11 are typically used for SPI flash. Ensure your ESP32-S3 board
+// supports using these pins (e.g., boards with external PSRAM or OPI flash).
+//
+// Control Mode: Each motor uses two inputs (IN1/IN2) for direction and speed control.
+// Apply PWM to IN1 or IN2 depending on desired rotation direction.
 
-// TB6612FNG #2
-#define GPIO_MOTOR2_AIN1     11
-#define GPIO_MOTOR2_AIN2     12
-#define GPIO_MOTOR2_BIN1     13
-#define GPIO_MOTOR2_BIN2     14
-#define GPIO_MOTOR2_PWMA     15
-#define GPIO_MOTOR2_PWMB     16
+/* Motor 1 (Motor A on DRV8833-Board_1) */
+#define GPIO_MOTOR1_IN1     4    // AIN1 on Board_1
+#define GPIO_MOTOR1_IN2     5    // AIN2 on Board_1
 
-// 共用 STBY 引脚（用于两个电机驱动器）
-#define GPIO_MOTOR_STBY      17
+/* Motor 2 (Motor B on DRV8833-Board_1) */
+#define GPIO_MOTOR2_IN1     6    // BIN1 on Board_1
+#define GPIO_MOTOR2_IN2     7    // BIN2 on Board_1
+
+/* Motor 3 (Motor C on DRV8833-Board_2) */
+#define GPIO_MOTOR3_IN1     8    // AIN1 on Board_2
+#define GPIO_MOTOR3_IN2     9    // AIN2 on Board_2
+
+/* Motor 4 (Motor D on DRV8833-Board_2) */
+#define GPIO_MOTOR4_IN1     10   // BIN1 on Board_2
+#define GPIO_MOTOR4_IN2     11   // BIN2 on Board_2
+
+// Shared nSLEEP/STBY pin for both DRV8833 boards
+#define GPIO_MOTOR_STBY     12
 
 // ======================= 其他功能引脚 =======================
 #define GPIO_LED_STATUS      18     // 状态指示灯
@@ -95,17 +104,37 @@ void fifo_set_rclk(bool level);
 void fifo_set_rrst(bool level);
 void fifo_set_oe(bool level);
 
+/* ------------------------------------------------------------------
+ * Compatibility aliases for existing motor abstraction code
+ *
+ * DRV8833 uses IN1/IN2 for each motor channel. For compatibility
+ * with existing code that expects separate PWM pins, we map:
+ * - HBH (High-side Bridge High) -> IN1
+ * - HBL (High-side Bridge Low)  -> IN2
+ * - PWM -> IN1 (apply PWM signal to IN1 for forward, or IN2 for reverse)
+ *
+ * NOTE: GPIO6-11 are used for SPI flash on some ESP32-S3 boards.
+ * Verify your specific board supports using these pins for GPIO.
+ * ------------------------------------------------------------------ */
 
-typedef struct {
-    gpio_num_t dir_gpio;         // 控制方向的 GPIO（连接 TB6621 的 IN2）
-    gpio_num_t pwm_gpio;         // 控制速度的 GPIO（连接 TB6621 的 IN1）
-    ledc_channel_t pwm_channel;  // PWM 通道
-} motor_gpio_t;
+/* Motor 1 (alias) */
+#define M1_HBH  GPIO_MOTOR1_IN1
+#define M1_HBL  GPIO_MOTOR1_IN2
+#define M1_PWM  GPIO_MOTOR1_IN1    // PWM applied to IN1
 
-extern const motor_gpio_t motor_fl;
-extern const motor_gpio_t motor_fr;
-extern const motor_gpio_t motor_rl;
-extern const motor_gpio_t motor_rr;
+/* Motor 2 (alias) */
+#define M2_HBH  GPIO_MOTOR2_IN1
+#define M2_HBL  GPIO_MOTOR2_IN2
+#define M2_PWM  GPIO_MOTOR2_IN1    // PWM applied to IN1
 
+/* Motor 3 (alias) */
+#define M3_HBH  GPIO_MOTOR3_IN1
+#define M3_HBL  GPIO_MOTOR3_IN2
+#define M3_PWM  GPIO_MOTOR3_IN1    // PWM applied to IN1
+
+/* Motor 4 (alias) */
+#define M4_HBH  GPIO_MOTOR4_IN1
+#define M4_HBL  GPIO_MOTOR4_IN2
+#define M4_PWM  GPIO_MOTOR4_IN1    // PWM applied to IN1
 
 #endif

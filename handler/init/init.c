@@ -4,6 +4,7 @@
 #include "sccb.h"
 #include "jpeg.h"
 #include "control_mgmt.h"
+#include "motor_handler.h"
 //#include "joystick_handler.h"
 //#include "webserver_control.h"
 #include "common_gpio.h"
@@ -19,13 +20,14 @@ void platform_init(void) {
     i2c_master_init();                  
     // above from components/common_gpio
 
-    control_manager_init(); // init the control memory   
-    //init_log_handler();       // 初始化日志模块
-    //camera_init();            // 初始化摄像头
+    control_manager_init();           // init the control memory   
+    motor_handler_init();             // 初始化电机控制 (DRV8833)
+    //init_log_handler();             // 初始化日志模块
+    //camera_init();                  // 初始化摄像头
     
     //sccb_init();
-    //stream_handler_init();    // 初始化图像流处理
-    //joystick_handler_init();  // 初始化摇杆处理
-    //webserver_control_init(); // 初始化 WebServer 控制逻辑
+    //stream_handler_init();          // 初始化图像流处理
+    //joystick_handler_init();        // 初始化摇杆处理
+    //webserver_control_init();       // 初始化 WebServer 控制逻辑
 }
 

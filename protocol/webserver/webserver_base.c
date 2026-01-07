@@ -2,6 +2,7 @@
 #include "ota_handler.h"
 #include "esp_log.h"
 #include "esp_http_server.h"
+#include <string.h>
 
 static const char *TAG = "webserver_base";
 
@@ -65,6 +66,60 @@ static esp_err_t ota_status_handler(httpd_req_t *req) {
     return ESP_OK;
 }
 
+// Generic static file handler for CSS, JS, and assets
+static esp_err_t static_file_handler(httpd_req_t *req) {
+    char filepath[128];
+    snprintf(filepath, sizeof(filepath), "/spiffs%s", req->uri);
+    
+    ESP_LOGI(TAG, "Static file request: %s", filepath);
+
+    FILE *f = fopen(filepath, "r");
+    if (!f) {
+        ESP_LOGE(TAG, "Failed to open file: %s", filepath);
+        httpd_resp_send_404(req);
+        return ESP_FAIL;
+    }
+
+    // Set content type based on file extension
+    const char *ext = strrchr(req->uri, '.');
+    if (ext != NULL) {
+        if (strcmp(ext, ".css") == 0) {
+            httpd_resp_set_type(req, "text/css");
+        } else if (strcmp(ext, ".js") == 0) {
+            httpd_resp_set_type(req, "application/javascript");
+        } else if (strcmp(ext, ".json") == 0) {
+            httpd_resp_set_type(req, "application/json");
+        } else if (strcmp(ext, ".png") == 0) {
+            httpd_resp_set_type(req, "image/png");
+        } else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0) {
+            httpd_resp_set_type(req, "image/jpeg");
+        } else if (strcmp(ext, ".svg") == 0) {
+            httpd_resp_set_type(req, "image/svg+xml");
+        } else if (strcmp(ext, ".ico") == 0) {
+            httpd_resp_set_type(req, "image/x-icon");
+        } else if (strcmp(ext, ".html") == 0) {
+            httpd_resp_set_type(req, "text/html");
+        } else {
+            httpd_resp_set_type(req, "application/octet-stream");
+        }
+    }
+
+    char buf[1024];
+    size_t read_bytes;
+    
+    while ((read_bytes = fread(buf, 1, sizeof(buf), f)) > 0) {
+        if (httpd_resp_send_chunk(req, buf, read_bytes) != ESP_OK) {
+            fclose(f);
+            ESP_LOGE(TAG, "Failed to send file chunk");
+            return ESP_FAIL;
+        }
+    }
+    
+    fclose(f);
+    httpd_resp_send_chunk(req, NULL, 0);  // End response
+    return ESP_OK;
+}
+
 esp_err_t webserver_base_register(httpd_handle_t server) {
     httpd_uri_t toggle_uri = {
         .uri      = "/toggle",
@@ -100,11 +155,52 @@ esp_err_t webserver_base_register(httpd_handle_t server) {
         .user_ctx = NULL
     };
 
+    // Static file handlers
+    httpd_uri_t css_uri = {
+        .uri      = "/css/*",
+        .method   = HTTP_GET,
+        .handler  = static_file_handler,
+        .user_ctx = NULL
+    };
+
+    httpd_uri_t js_uri = {
+        .uri      = "/js/*",
+        .method   = HTTP_GET,
+        .handler  = static_file_handler,
+        .user_ctx = NULL
+    };
+
+    httpd_uri_t assets_uri = {
+        .uri      = "/assets/*",
+        .method   = HTTP_GET,
+        .handler  = static_file_handler,
+        .user_ctx = NULL
+    };
+
+    httpd_uri_t manifest_uri = {
+        .uri      = "/manifest.json",
+        .method   = HTTP_GET,
+        .handler  = static_file_handler,
+        .user_ctx = NULL
+    };
+
+    httpd_uri_t index_html_uri = {
+        .uri      = "/index.html",
+        .method   = HTTP_GET,
+        .handler  = static_file_handler,
+        .user_ctx = NULL
+    };
+
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &toggle_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &favicon_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &index_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_status_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &css_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &js_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &assets_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &manifest_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &index_html_uri));
     ESP_LOGI(TAG, "Base URIs registered");
     return ESP_OK;
 }

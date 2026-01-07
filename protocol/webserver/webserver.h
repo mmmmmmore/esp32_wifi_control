@@ -4,8 +4,10 @@
 #pragma once
 #include "esp_http_server.h"
 
-// 启动 HTTP WebServer，注册 /toggle, /image, /stream 路由
+/**
+ * @brief Start HTTP WebServer and register all URI handlers
+ * @return httpd_handle_t Server handle, NULL if failed
+ */
 httpd_handle_t start_webserver(void);
-esp_err_t webserver_init(httpd_handle_t server);
 
-#endif
+#endif // WEBSERVER_H
