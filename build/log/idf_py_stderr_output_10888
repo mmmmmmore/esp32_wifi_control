@@ -1,0 +1,55 @@
+Command: cmake -G Ninja -B C:\Users\99401\Projects\ESP32\smart_vehicle\esp32_wifi_control\build -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Users\99401\.espressif\python_env\idf6.0_py3.11_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=False C:\Users\99401\Projects\ESP32\smart_vehicle\esp32_wifi_control
+CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+CMake Error at C:/Users/99401/esp/v6.0/esp-idf/tools/cmake/project.cmake:590 (__project):
+  The CMAKE_C_COMPILER:
+
+    xtensa-esp32s3-elf-gcc
+
+  is not a full path and was not found in the PATH.  Perhaps the extension is
+  missing?
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CC" or the CMake cache entry CMAKE_C_COMPILER to the full path to
+  the compiler, or to the compiler name if it is in the PATH.
+Call Stack (most recent call first):
+  CMakeLists.txt:28 (project)
+
+
+CMake Error at C:/Users/99401/esp/v6.0/esp-idf/tools/cmake/project.cmake:590 (__project):
+  The CMAKE_CXX_COMPILER:
+
+    xtensa-esp32s3-elf-g++
+
+  is not a full path and was not found in the PATH.  Perhaps the extension is
+  missing?
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CXX" or the CMake cache entry CMAKE_CXX_COMPILER to the full path
+  to the compiler, or to the compiler name if it is in the PATH.
+Call Stack (most recent call first):
+  CMakeLists.txt:28 (project)
+
+
+CMake Error at C:/Users/99401/esp/v6.0/esp-idf/tools/cmake/project.cmake:590 (__project):
+  The CMAKE_ASM_COMPILER:
+
+    xtensa-esp32s3-elf-gcc
+
+  is not a full path and was not found in the PATH.  Perhaps the extension is
+  missing?
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "ASM" or the CMake cache entry CMAKE_ASM_COMPILER to the full path
+  to the compiler, or to the compiler name if it is in the PATH.
+Call Stack (most recent call first):
+  CMakeLists.txt:28 (project)
+
+

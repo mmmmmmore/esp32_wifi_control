@@ -1,0 +1,13 @@
+Command: cmake -G Ninja -B C:\Users\99401\Projects\ESP32\smart_vehicle\esp32_wifi_control\build -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Users\99401\.espressif\python_env\idf6.0_py3.11_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=False C:\Users\99401\Projects\ESP32\smart_vehicle\esp32_wifi_control
+-- IDF_TARGET is not set, guessed 'esp32s3' from sdkconfig 'C:/Users/99401/Projects/ESP32/smart_vehicle/esp32_wifi_control/sdkconfig'
+-- Found Git: C:/Program Files/Git/cmd/git.exe (found version "2.52.0.windows.1")
+-- Component directory C:/Users/99401/esp/v6.0/esp-idf/components/mqtt does not contain a CMakeLists.txt file. No component will be added
+-- Component directory C:/Users/99401/Projects/ESP32/smart_vehicle/esp32_wifi_control/spiffs/css does not contain a CMakeLists.txt file. No component will be added
+-- Component directory C:/Users/99401/Projects/ESP32/smart_vehicle/esp32_wifi_control/spiffs/js does not contain a CMakeLists.txt file. No component will be added
+-- Minimal build - OFF
+-- The C compiler identification is unknown
+-- The CXX compiler identification is unknown
+-- The ASM compiler identification is unknown
+-- Found assembler: xtensa-esp32s3-elf-gcc
+-- Warning: Did not find file Compiler/-ASM
+-- Configuring incomplete, errors occurred!
