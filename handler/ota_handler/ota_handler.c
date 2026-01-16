@@ -5,7 +5,6 @@
 #include "esp_system.h"
 #include "cJSON.h"
 #include "esp_app_desc.h"
-#include "mbedtls/sha256.h"
 #include <string.h>
 #include <stdlib.h>
 

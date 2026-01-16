@@ -5,5 +5,5 @@ idf_component_register(
         "."
     REQUIRES 
         esp_wifi esp_http_server nvs_flash driver 
-        motor_handler control_mgmt json
+        motor_handler control_mgmt cjson
         )
