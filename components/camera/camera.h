@@ -3,6 +3,7 @@
 
 #include "esp_err.h"
 #include <stdint.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,8 +16,8 @@ extern "C" {
 // 初始化摄像头模块
 esp_err_t camera_init(void);
 
-// 采集一帧图像，返回指向缓冲区的指针
-uint8_t* camera_capture_frame(void);
+// 采集一帧 JPEG，返回指针和长度（由调用方 free）
+esp_err_t camera_capture_jpeg(uint8_t **jpeg_data, size_t *jpeg_size);
 
 // 停止图像采集
 void camera_stop(void);

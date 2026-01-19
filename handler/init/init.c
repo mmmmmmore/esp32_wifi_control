@@ -10,6 +10,7 @@
 #include "common_gpio.h"
 #include "camera.h"
 //#include "log_handler.h"
+#include "esp_err.h"
 
 void platform_init(void) {
     // 初始化 NVS 已在 app_main 中完成
@@ -17,11 +18,12 @@ void platform_init(void) {
     //initiated the GPIOs and setup default config
     common_gpio_init();               // 初始化所有 GPIO from components/common_gpio
     ledc_init();
-    i2c_master_init();                  
+    // i2c_master_init();  // Disabled: camera driver handles I2C with new driver API (esp-idf v6.0)
     // above from components/common_gpio
 
     control_manager_init();           // init the control memory   
     motor_handler_init();             // 初始化电机控制 (DRV8833)
+    ESP_ERROR_CHECK(camera_init());   // 初始化摄像头
     //init_log_handler();             // 初始化日志模块
     //camera_init();                  // 初始化摄像头
     

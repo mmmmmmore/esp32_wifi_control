@@ -18,21 +18,21 @@ typedef struct {
 
 // Motor configuration array based on pin definitions
 static const drv8833_motor_t motors[MOTOR_COUNT] = {
-    // Motor 1: GPIO4 (AIN1), GPIO5 (AIN2) - DRV8833-Board_1
-    { .in1_gpio = GPIO_MOTOR1_IN1, .in2_gpio = GPIO_MOTOR1_IN2, 
-      .pwm_ch1 = LEDC_CHANNEL_0, .pwm_ch2 = LEDC_CHANNEL_1 },
+        // Motor 1: GPIO19 (AIN1), GPIO20 (AIN2) - DRV8833-Board_1
+        { .in1_gpio = GPIO_MOTOR1_IN1, .in2_gpio = GPIO_MOTOR1_IN2, 
+            .pwm_ch1 = LEDC_CHANNEL_0, .pwm_ch2 = LEDC_CHANNEL_1 },
     
-    // Motor 2: GPIO6 (BIN1), GPIO7 (BIN2) - DRV8833-Board_1
-    { .in1_gpio = GPIO_MOTOR2_IN1, .in2_gpio = GPIO_MOTOR2_IN2, 
-      .pwm_ch1 = LEDC_CHANNEL_2, .pwm_ch2 = LEDC_CHANNEL_3 },
+        // Motor 2: GPIO14 (BIN1), GPIO21 (BIN2) - DRV8833-Board_1
+        { .in1_gpio = GPIO_MOTOR2_IN1, .in2_gpio = GPIO_MOTOR2_IN2, 
+            .pwm_ch1 = LEDC_CHANNEL_2, .pwm_ch2 = LEDC_CHANNEL_3 },
     
-    // Motor 3: GPIO8 (AIN1), GPIO9 (AIN2) - DRV8833-Board_2
-    { .in1_gpio = GPIO_MOTOR3_IN1, .in2_gpio = GPIO_MOTOR3_IN2, 
-      .pwm_ch1 = LEDC_CHANNEL_4, .pwm_ch2 = LEDC_CHANNEL_5 },
+        // Motor 3: GPIO1 (AIN1), GPIO2 (AIN2) - DRV8833-Board_2
+        { .in1_gpio = GPIO_MOTOR3_IN1, .in2_gpio = GPIO_MOTOR3_IN2, 
+            .pwm_ch1 = LEDC_CHANNEL_4, .pwm_ch2 = LEDC_CHANNEL_5 },
     
-    // Motor 4: GPIO10 (BIN1), GPIO11 (BIN2) - DRV8833-Board_2
-    { .in1_gpio = GPIO_MOTOR4_IN1, .in2_gpio = GPIO_MOTOR4_IN2, 
-      .pwm_ch1 = LEDC_CHANNEL_6, .pwm_ch2 = LEDC_CHANNEL_7 }
+        // Motor 4: GPIO38 (BIN1), GPIO39 (BIN2) - DRV8833-Board_2
+        { .in1_gpio = GPIO_MOTOR4_IN1, .in2_gpio = GPIO_MOTOR4_IN2, 
+            .pwm_ch1 = LEDC_CHANNEL_6, .pwm_ch2 = LEDC_CHANNEL_7 }
 };
 
 // Initialize PWM timer

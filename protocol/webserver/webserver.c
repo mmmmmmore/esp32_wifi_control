@@ -1,7 +1,9 @@
 #include "webserver.h"
 #include "motor_handler.h"
 #include "control_mgmt.h"
+#include "webserver_camera.h"
 #include "esp_http_server.h"
+#include "esp_err.h"
 #include "esp_log.h"
 #include "cJSON.h"
 #include <string.h>
@@ -410,6 +412,11 @@ httpd_handle_t start_webserver(void) {
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &rotation_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &control_request_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &control_release_uri));
+
+    esp_err_t cam_res = webserver_camera_register(server);
+    if (cam_res != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to register camera handlers: %s", esp_err_to_name(cam_res));
+    }
 
     ESP_LOGI(TAG, "All URI handlers registered successfully");
     return server;

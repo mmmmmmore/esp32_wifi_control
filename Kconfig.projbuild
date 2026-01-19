@@ -1,0 +1,25 @@
+menu "Device Configuration"
+
+config DEVICE_NAME
+    string "Device name"
+    default "SCM1"
+    help
+        Device name for GW identify
+
+config CLIENT_ID
+    string "Client ID"
+    default "758"
+    help
+        Each ECU ID for GW identification
+
+config TEST_ID
+    string "test string"
+    default "CTC_OTA"
+    help only for test 
+
+config OTA_VER
+    string "Project Version"
+    default "1.0.1"
+    help this also need update when new Firemare integrate, for ota tracking
+
+endmenu

@@ -1,102 +1,101 @@
 #include "camera.h"
 #include "common_gpio.h"
-#include "driver/gpio.h"
+#include "esp_camera.h"
+#include "img_converters.h"
 #include "esp_log.h"
-#include <stdlib.h>
-#include "esp_rom_sys.h"
 #include "esp_heap_caps.h"
+#include <string.h>
 
 static const char *TAG = "camera";
 
-static uint8_t *frame_buffer = NULL;
-static bool camera_running = false;
+// Configure ESP32-S3-CAM with the requested pinout
+static const camera_config_t camera_config = {
+    .pin_pwdn = -1,
+    .pin_reset = -1,
+    .pin_xclk = CAM_PIN_XCLK,
+    .pin_sccb_sda = CAM_PIN_SIOD,
+    .pin_sccb_scl = CAM_PIN_SIOC,
+    .pin_d7 = CAM_PIN_Y9,
+    .pin_d6 = CAM_PIN_Y8,
+    .pin_d5 = CAM_PIN_Y7,
+    .pin_d4 = CAM_PIN_Y6,
+    .pin_d3 = CAM_PIN_Y5,
+    .pin_d2 = CAM_PIN_Y4,
+    .pin_d1 = CAM_PIN_Y3,
+    .pin_d0 = CAM_PIN_Y2,
+    .pin_vsync = CAM_PIN_VSYNC,
+    .pin_href = CAM_PIN_HREF,
+    .pin_pclk = CAM_PIN_PCLK,
+    .xclk_freq_hz = 20000000,
+    .ledc_timer = LEDC_TIMER_1,
+    .ledc_channel = LEDC_CHANNEL_1,
+    .pixel_format = PIXFORMAT_JPEG,
+    .frame_size = FRAMESIZE_QVGA,
+    .jpeg_quality = 12,
+    .fb_count = 2,
+    .fb_location = CAMERA_FB_IN_PSRAM,
+    .grab_mode = CAMERA_GRAB_WHEN_EMPTY
+};
 
 esp_err_t camera_init(void) {
-    ESP_LOGI(TAG, "Initializing camera module...");
-
-    frame_buffer = (uint8_t *)heap_caps_malloc(CAMERA_FRAME_SIZE, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    if (!frame_buffer) {
-        ESP_LOGE(TAG, "Failed to allocate frame buffer from PSRAM");
-        return ESP_ERR_NO_MEM;
+    ESP_LOGI(TAG, "Initializing ESP32-S3-CAM driver...");
+    esp_err_t ret = esp_camera_init(&camera_config);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "esp_camera_init failed: %s", esp_err_to_name(ret));
+        return ret;
     }
 
-    ESP_LOGI(TAG, "Frame buffer allocated at: %p", frame_buffer);
-    camera_running = true;
+    ESP_LOGI(TAG, "Camera initialized: %dx%d JPEG", CAMERA_FRAME_WIDTH, CAMERA_FRAME_HEIGHT);
+    return ESP_OK;
+}
+
+esp_err_t camera_capture_jpeg(uint8_t **jpeg_data, size_t *jpeg_size) {
+    if (!jpeg_data || !jpeg_size) {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    camera_fb_t *fb = esp_camera_fb_get();
+    if (!fb) {
+        ESP_LOGE(TAG, "Failed to get frame buffer from camera");
+        return ESP_FAIL;
+    }
+
+    esp_err_t ret = ESP_OK;
+    uint8_t *out_buf = NULL;
+    size_t out_len = 0;
+
+    if (fb->format == PIXFORMAT_JPEG) {
+        out_len = fb->len;
+        out_buf = heap_caps_malloc(out_len, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+        if (!out_buf) {
+            ESP_LOGE(TAG, "No memory for JPEG copy (%d bytes)", (int)out_len);
+            ret = ESP_ERR_NO_MEM;
+        } else {
+            memcpy(out_buf, fb->buf, out_len);
+        }
+    } else {
+        bool converted = frame2jpg(fb, 80, &out_buf, &out_len);
+        if (!converted || !out_buf) {
+            ESP_LOGE(TAG, "Failed to convert frame to JPEG");
+            ret = ESP_FAIL;
+        }
+    }
+
+    esp_camera_fb_return(fb);
+
+    if (ret != ESP_OK) {
+        if (out_buf) {
+            free(out_buf);
+        }
+        return ret;
+    }
+
+    *jpeg_data = out_buf;
+    *jpeg_size = out_len;
     return ESP_OK;
 }
 
 void camera_stop(void) {
-    camera_running = false;
-    if (frame_buffer) {
-        free(frame_buffer);
-        frame_buffer = NULL;
-    }
-}
-
-
-uint8_t* camera_capture_frame(void) {
-    if (!camera_running || !frame_buffer) {
-        ESP_LOGW(TAG, "Camera not running or buffer not allocated");
-        return NULL;
-    }
-
-    /*
-    // 显式定义 GPIO 数据线数组，避免 GPIO_D0 + bit 越界
-    gpio_num_t data_pins[8] = {
-        GPIO_D0, GPIO_D1, GPIO_D2, GPIO_D3,
-        GPIO_D4, GPIO_D5, GPIO_D6, GPIO_D7
-    };
-
-    // 检查 GPIO 编号合法性
-    for (int i = 0; i < 8; i++) {
-        if (data_pins[i] < GPIO_NUM_0 || data_pins[i] >= GPIO_NUM_MAX) {
-            ESP_LOGE(TAG, "Invalid data GPIO: %d", data_pins[i]);
-            return NULL;
-        }
-    }
-    
-    // 重置 FIFO 读指针
-    gpio_set_level(GPIO_RRST, 0);
-    gpio_set_level(GPIO_RCLK, 0);
-    esp_rom_delay_us(1);
-    gpio_set_level(GPIO_RCLK, 1);
-    esp_rom_delay_us(1);
-    gpio_set_level(GPIO_RRST, 1);
-
-    // 启用 FIFO 输出
-    gpio_set_level(GPIO_OE, 0);
-
-    // 读取 RGB565 像素（每像素 2 字节）
-    for (int i = 0; i < CAMERA_FRAME_WIDTH * CAMERA_FRAME_HEIGHT; i++) {
-        uint16_t pixel = 0;
-
-        for (int byte_index = 0; byte_index < 2; byte_index++) {
-            gpio_set_level(GPIO_RCLK, 1);
-            esp_rom_delay_us(1);
-            gpio_set_level(GPIO_RCLK, 0);
-            esp_rom_delay_us(1);
-
-            uint8_t byte = 0;
-            for (int bit = 0; bit < 8; bit++) {
-                int level = gpio_get_level(data_pins[bit]);
-                byte |= (level << bit);
-            }
-
-            if (byte_index == 0) {
-                pixel = byte << 8;  // 高字节
-            } else {
-                pixel |= byte;      // 低字节
-            }
-        }
-
-        // 写入帧缓冲区
-        frame_buffer[i * 2]     = (pixel >> 8) & 0xFF;
-        frame_buffer[i * 2 + 1] = pixel & 0xFF;
-    }
-
-    // 禁用 FIFO 输出
-    gpio_set_level(GPIO_OE, 1);
-    */
-    ESP_LOGI(TAG, "RGB565 frame captured.");
-    return frame_buffer;
+    esp_camera_deinit();
+    ESP_LOGI(TAG, "Camera driver deinitialized");
 }

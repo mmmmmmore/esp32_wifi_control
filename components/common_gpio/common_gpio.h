@@ -11,29 +11,34 @@
 
 
 
-// ======================= AL422B FIFO 摄像头模块 =======================
-#define GPIO_SCL             19     // SCCB 时钟线
-#define GPIO_SDA             20    // SCCB 数据线
+// ======================= ESP32-S3-CAM Pin Map =======================
+// SCCB / I2C
+#define CAM_PIN_SIOD         4     // SIOD / SDA
+#define CAM_PIN_SIOC         5     // SIOC / SCL
 
+// Power/reset (not used on this hardware)
+#define CAM_PIN_PWDN        -1
+#define CAM_PIN_RESET       -1
 
-/*
-#define GPIO_D0              6     // 图像数据位 0
-#define GPIO_D1              7     // 图像数据位 1
-#define GPIO_D2              8     // 图像数据位 2
-#define GPIO_D3              9     // 图像数据位 3
-#define GPIO_D4              10    // 图像数据位 4
-#define GPIO_D5              11    // 图像数据位 5
-#define GPIO_D6              12    // 图像数据位 6
-#define GPIO_D7              13    // 图像数据位 7
+// Pixel data
+#define CAM_PIN_Y9           16
+#define CAM_PIN_Y8           17
+#define CAM_PIN_Y7           18
+#define CAM_PIN_Y6           12
+#define CAM_PIN_Y5           10
+#define CAM_PIN_Y4           8
+#define CAM_PIN_Y3           9
+#define CAM_PIN_Y2           11
 
-#define GPIO_VSYNC           21    // frame sync control signal
-#define GPIO_RCLK            14    // FIFO clock 
-#define GPIO_OE              15    // FIFO output enable
-#define GPIO_WRST            16    // FIFO write reset
-#define GPIO_RRST            17    // FIFO read reset
-#define GPIO_WEN             18    // FIFO write enable
+// Sync / clock
+#define CAM_PIN_VSYNC        6
+#define CAM_PIN_HREF         7
+#define CAM_PIN_PCLK         13
+#define CAM_PIN_XCLK         15
 
-*/
+// Compatibility aliases for legacy SCCB helpers
+#define GPIO_SCL             CAM_PIN_SIOC
+#define GPIO_SDA             CAM_PIN_SIOD
 
 // ======================= DRV8833 电机驱动（2 x DRV8833 -> 4 motors） =======================
 // DRV8833-Board_1: Motor A (Motor1) and Motor B (Motor2)
@@ -46,26 +51,26 @@
 // Apply PWM to IN1 or IN2 depending on desired rotation direction.
 
 /* Motor 1 (Motor A on DRV8833-Board_1) */
-#define GPIO_MOTOR1_IN1     4    // AIN1 on Board_1
-#define GPIO_MOTOR1_IN2     5    // AIN2 on Board_1
+#define GPIO_MOTOR1_IN1     19   // AIN1 on Board_1
+#define GPIO_MOTOR1_IN2     20   // AIN2 on Board_1
 
 /* Motor 2 (Motor B on DRV8833-Board_1) */
-#define GPIO_MOTOR2_IN1     6    // BIN1 on Board_1
-#define GPIO_MOTOR2_IN2     7    // BIN2 on Board_1
+#define GPIO_MOTOR2_IN1     14   // BIN1 on Board_1
+#define GPIO_MOTOR2_IN2     21   // BIN2 on Board_1
 
 /* Motor 3 (Motor C on DRV8833-Board_2) */
-#define GPIO_MOTOR3_IN1     8    // AIN1 on Board_2
-#define GPIO_MOTOR3_IN2     9    // AIN2 on Board_2
+#define GPIO_MOTOR3_IN1     1    // AIN1 on Board_2
+#define GPIO_MOTOR3_IN2     2    // AIN2 on Board_2
 
 /* Motor 4 (Motor D on DRV8833-Board_2) */
-#define GPIO_MOTOR4_IN1     10   // BIN1 on Board_2
-#define GPIO_MOTOR4_IN2     11   // BIN2 on Board_2
+#define GPIO_MOTOR4_IN1     38   // BIN1 on Board_2
+#define GPIO_MOTOR4_IN2     39   // BIN2 on Board_2
 
 // Shared nSLEEP/STBY pin for both DRV8833 boards
-#define GPIO_MOTOR_STBY     12
+#define GPIO_MOTOR_STBY     40
 
 // ======================= 其他功能引脚 =======================
-#define GPIO_LED_STATUS      18     // 状态指示灯
+#define GPIO_LED_STATUS      41     // 状态指示灯（避免与摄像头数据线冲突）
 //#define GPIO_WEBSERVER_CTRL  44     // WebServer 控制信号（注意 GPIO0 启动模式影响）
 
 // ======================= I2C 参数定义 =======================

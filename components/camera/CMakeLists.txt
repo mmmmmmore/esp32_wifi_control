@@ -5,5 +5,5 @@ idf_component_register(
         "."
     REQUIRES 
         nvs_flash driver heap
-        common_gpio sccb jpeg 
+        common_gpio sccb jpeg esp32-camera
     )

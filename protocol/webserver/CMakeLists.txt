@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS 
         "webserver.c"
+        "webserver_camera.c"
+        "webserver_motor.c"
     INCLUDE_DIRS 
         "."
     REQUIRES 

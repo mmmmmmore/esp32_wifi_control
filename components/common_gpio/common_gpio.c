@@ -98,33 +98,10 @@ void ledc_init(void) {
 
 
 // ======================= I2C 初始化 =======================
+// Note: I2C driver is now managed by esp32-camera component using the new I2C driver API
+// The old driver (i2c_driver_install) conflicts with driver_ng used by the camera
+// Camera will initialize I2C automatically
 void i2c_master_init(void) {
-    ESP_LOGI(TAG, "Initializing I2C master...");
-
-    // 正确配置 GPIO 模式
-    gpio_config_t i2c_gpio_conf = {
-        .mode = GPIO_MODE_INPUT_OUTPUT_OD,
-        .pull_up_en = GPIO_PULLUP_ENABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE,
-        .pin_bit_mask = (1ULL << GPIO_SCL) | (1ULL << GPIO_SDA)
-    };
-    ESP_ERROR_CHECK(gpio_config(&i2c_gpio_conf));
-
-    // 配置 I2C 控制器
-    i2c_config_t conf = {
-        .mode = I2C_MODE_MASTER,
-        .sda_io_num = GPIO_SDA,
-        .scl_io_num = GPIO_SCL,
-        .sda_pullup_en = GPIO_PULLUP_ENABLE,
-        .scl_pullup_en = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = I2C_MASTER_FREQ_HZ
-    };
-
-    ESP_ERROR_CHECK(i2c_param_config(I2C_MASTER_NUM, &conf));
-    ESP_ERROR_CHECK(i2c_driver_install(I2C_MASTER_NUM, conf.mode,
-                                       I2C_MASTER_RX_BUF_DISABLE,
-                                       I2C_MASTER_TX_BUF_DISABLE, 0));
-
-    ESP_LOGI(TAG, "I2C master initialized");
+    ESP_LOGI(TAG, "I2C initialization is handled by esp32-camera component");
+    // Camera driver will set up I2C using the new driver API
 }
