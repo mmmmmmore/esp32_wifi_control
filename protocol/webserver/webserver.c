@@ -337,7 +337,8 @@ httpd_handle_t start_webserver(void) {
     
     // Configure HTTP server
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.max_uri_handlers = 16;
+    config.max_uri_handlers = 32;              // Increased from 16 to accommodate all handlers
+    config.stack_size = 8192;                  // Increased from 4096 to prevent stack overflow during JPEG streaming
     config.uri_match_fn = httpd_uri_match_wildcard;
     httpd_handle_t server = NULL;
 

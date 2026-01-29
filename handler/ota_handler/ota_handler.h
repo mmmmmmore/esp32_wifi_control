@@ -12,6 +12,13 @@ extern "C" {
  */
 void ota_start(const char *ota_url);
 
+/**
+ * @brief Get the OTA update result status.
+ *
+ * @return 0 = idle/in-progress, 1 = success, -1 = failed
+ */
+int ota_get_result(void);
+
 #ifdef __cplusplus
 }
 #endif
