@@ -2,6 +2,7 @@
 #include "motor_handler.h"
 #include "control_mgmt.h"
 #include "webserver_camera.h"
+#include "ota_handler.h"
 #include "esp_http_server.h"
 #include "esp_err.h"
 #include "esp_log.h"
@@ -93,6 +94,32 @@ static esp_err_t favicon_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "Favicon handler called");
     httpd_resp_set_type(req, "image/x-icon");
     httpd_resp_send(req, NULL, 0);
+    return ESP_OK;
+}
+
+// ========================================
+// OTA Update Handlers
+// ========================================
+
+static esp_err_t ota_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "OTA handler called");
+
+    const char *manifest_url = "https://192.168.4.2:8000/firmware/manifest.json";
+    ota_start(manifest_url);
+
+    httpd_resp_send(req, "OTA started", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+static esp_err_t ota_status_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "OTA status handler called");
+
+    int result = ota_get_result();
+    char resp[64];
+    snprintf(resp, sizeof(resp), "{\"result\": %d}", result);
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
 
@@ -371,6 +398,21 @@ httpd_handle_t start_webserver(void) {
         .user_ctx = NULL
     };
 
+    // OTA update endpoints
+    httpd_uri_t ota_uri = {
+        .uri = "/ota",
+        .method = HTTP_GET,
+        .handler = ota_handler,
+        .user_ctx = NULL
+    };
+
+    httpd_uri_t ota_status_uri = {
+        .uri = "/ota/status",
+        .method = HTTP_GET,
+        .handler = ota_status_handler,
+        .user_ctx = NULL
+    };
+
     // Register motor control endpoints
     httpd_uri_t joystick_uri = {
         .uri = "/joystick",
@@ -408,6 +450,8 @@ httpd_handle_t start_webserver(void) {
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &js_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &assets_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &manifest_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &ota_status_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &joystick_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &rotation_uri));
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &control_request_uri));

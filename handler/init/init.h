@@ -4,5 +4,6 @@
 #pragma once
 
 void platform_init(void);
+void sdcard_driver_init(void);
 
 #endif  //define init.h

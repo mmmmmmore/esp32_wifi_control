@@ -9,8 +9,36 @@
 //#include "webserver_control.h"
 #include "common_gpio.h"
 #include "camera.h"
+#include "sdcard.h"
 //#include "log_handler.h"
 #include "esp_err.h"
+#include "esp_log.h"
+
+static const char *TAG = "INIT";
+
+void sdcard_driver_init(void) {
+    ESP_LOGI(TAG, "Initializing SD card driver...");
+    
+    esp_err_t ret = sdcard_init();
+    if (ret == ESP_OK) {
+        if (sdcard_is_mounted()) {
+            ESP_LOGI(TAG, "SD card initialized and mounted successfully");
+            
+            uint64_t total_bytes = 0, used_bytes = 0;
+            if (sdcard_get_info(&total_bytes, &used_bytes) == ESP_OK) {
+                ESP_LOGI(TAG, "SD Card - Total: %llu MB, Used: %llu MB, Free: %llu MB",
+                         total_bytes / (1024 * 1024),
+                         used_bytes / (1024 * 1024),
+                         (total_bytes - used_bytes) / (1024 * 1024));
+            }
+        } else {
+            ESP_LOGW(TAG, "SD card initialized but not mounted");
+        }
+    } else {
+        ESP_LOGW(TAG, "SD card initialization failed: %s (card may not be inserted)", esp_err_to_name(ret));
+        ESP_LOGI(TAG, "System will continue without SD card support");
+    }
+}
 
 void platform_init(void) {
     // 初始化 NVS 已在 app_main 中完成
@@ -23,6 +51,10 @@ void platform_init(void) {
 
     control_manager_init();           // init the control memory   
     motor_handler_init();             // 初始化电机控制 (DRV8833)
+    
+    // Initialize SD card before camera to ensure storage is ready
+    sdcard_driver_init();             // 初始化 SD 卡驱动
+    
     ESP_ERROR_CHECK(camera_init());   // 初始化摄像头
     //init_log_handler();             // 初始化日志模块
     //camera_init();                  // 初始化摄像头

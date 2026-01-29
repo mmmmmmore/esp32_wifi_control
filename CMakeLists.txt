@@ -8,6 +8,7 @@ set(EXTRA_COMPONENT_DIRS
         components/common_gpio
         components/jpeg
         components/sccb
+        components/sdcard
         protocol/webserver
         protocol/wifi_ap 
         protocol/control_mgmt

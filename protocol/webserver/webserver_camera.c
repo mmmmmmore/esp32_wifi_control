@@ -4,6 +4,7 @@
 #include "ov7670_handler.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "sdcard.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -19,6 +20,19 @@ static esp_err_t stream_handler(httpd_req_t *req) {
     }
 
     httpd_resp_set_type(req, "multipart/x-mixed-replace; boundary=frame");
+
+    // Start SD card recording if available
+    bool recording_to_sd = false;
+    if (sdcard_is_mounted()) {
+        if (sdcard_start_recording() == ESP_OK) {
+            ESP_LOGI(TAG, "SD card recording started");
+            recording_to_sd = true;
+        } else {
+            ESP_LOGW(TAG, "Failed to start SD card recording");
+        }
+    } else {
+        ESP_LOGW(TAG, "SD card not mounted, streaming without recording");
+    }
 
     while (stream_active) {
         uint8_t *jpeg_data = NULL;
@@ -42,8 +56,29 @@ static esp_err_t stream_handler(httpd_req_t *req) {
             break;
         }
 
+        // Save frame to SD card if recording
+        if (recording_to_sd) {
+            if (sdcard_write_frame(jpeg_data, jpeg_size) != ESP_OK) {
+                ESP_LOGE(TAG, "Failed to write frame to SD card");
+                // Continue streaming even if SD write fails
+            }
+        }
+
         free(jpeg_data);
         vTaskDelay(pdMS_TO_TICKS(100)); // ~10 fps
+    }
+
+    // Stop SD card recording when stream ends
+    if (recording_to_sd) {
+        sdcard_stop_recording();
+        ESP_LOGI(TAG, "SD card recording stopped");
+        
+        // Print recording statistics
+        int file_count = 0;
+        size_t total_recorded = 0;
+        if (sdcard_get_recording_stats(&file_count, NULL, &total_recorded) == ESP_OK) {
+            ESP_LOGI(TAG, "Recorded %u bytes in %d files", (unsigned int)total_recorded, file_count);
+        }
     }
 
     httpd_resp_send_chunk(req, "--frame--\r\n", strlen("--frame--\r\n"));

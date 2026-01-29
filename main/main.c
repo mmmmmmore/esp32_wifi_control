@@ -76,6 +76,7 @@ void app_main(void) {
     //ov7670_config();
 
     init_spiffs();
+    
     // 启动 HTTP 服务器
     start_webserver();
 

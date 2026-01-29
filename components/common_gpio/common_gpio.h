@@ -63,11 +63,17 @@
 #define GPIO_MOTOR3_IN2     2    // AIN2 on Board_2
 
 /* Motor 4 (Motor D on DRV8833-Board_2) */
-#define GPIO_MOTOR4_IN1     38   // BIN1 on Board_2
-#define GPIO_MOTOR4_IN2     39   // BIN2 on Board_2
+#define GPIO_MOTOR4_IN1     47   // BIN1 on Board_2
+#define GPIO_MOTOR4_IN2     48   // BIN2 on Board_2
 
 // Shared nSLEEP/STBY pin for both DRV8833 boards
-#define GPIO_MOTOR_STBY     40
+#define GPIO_MOTOR_STBY     41
+
+#define SDCARD_DATA     40
+#define SDCARD_CLK      39
+#define SDCARD_CMD      38
+
+
 
 // ======================= 其他功能引脚 =======================
 #define GPIO_LED_STATUS      41     // 状态指示灯（避免与摄像头数据线冲突）
