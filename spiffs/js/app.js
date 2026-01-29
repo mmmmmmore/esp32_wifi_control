@@ -6,7 +6,14 @@
 const video = document.getElementById('video');
 let streamActive = false;
 let hasControl = false;
-const currentUUID = generateUUID();
+const UUID_STORAGE_KEY = 'esp32_control_uuid';
+const currentUUID = (function getOrCreateUUID() {
+  const saved = localStorage.getItem(UUID_STORAGE_KEY);
+  if (saved) return saved;
+  const created = generateUUID();
+  localStorage.setItem(UUID_STORAGE_KEY, created);
+  return created;
+})();
 
 // DOM Elements
 const controlStatus = document.getElementById('control-status');
@@ -33,33 +40,52 @@ function updateStatus(status, color = '#667eea') {
   controlStatus.style.color = color;
 }
 
+function isControlGranted(data) {
+  if (!data) return false;
+  if (data.granted === true || data.granted === 'true' || data.granted === 1 || data.granted === '1') {
+    return true;
+  }
+  if (data.current_owner && data.current_owner === currentUUID) {
+    return true;
+  }
+  return false;
+}
+
+function setControlState(granted, statusText, statusColor) {
+  hasControl = granted;
+  if (statusText) {
+    updateStatus(statusText, statusColor);
+  }
+  requestBtn.disabled = granted;
+  releaseBtn.disabled = !granted;
+}
+
 // ========================================
 // Control Management
 // ========================================
 
 function requestControl() {
+  requestBtn.disabled = true;
   fetch('/control/request', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ uuid: currentUUID })
   })
-    .then(response => response.json())
+    .then(response => response.json().catch(() => response.text().then(text => ({ _raw: text }))))
     .then(data => {
-      if (data.granted) {
-        hasControl = true;
-        updateStatus('Control Granted', '#28a745');
-        requestBtn.disabled = true;
-        releaseBtn.disabled = false;
+      const granted = isControlGranted(data);
+      if (granted) {
+        setControlState(true, 'Control Granted', '#28a745');
         console.log('Control granted:', currentUUID);
-      } else {
-        hasControl = false;
-        updateStatus('Control Denied (In Use)', '#dc3545');
-        console.log('Control denied, current owner:', data.current_owner);
+        return;
       }
+
+      setControlState(false, 'Control Denied (In Use)', '#dc3545');
+      console.log('Control denied, current owner:', data && data.current_owner ? data.current_owner : 'unknown');
     })
     .catch(err => {
       console.error('Failed to request control:', err);
-      updateStatus('Connection Error', '#dc3545');
+      setControlState(false, 'Connection Error', '#dc3545');
     });
 }
 
@@ -72,10 +98,7 @@ function releaseControl() {
     .then(response => response.json())
     .then(data => {
       if (data.released) {
-        hasControl = false;
-        updateStatus('Control Released', '#6c757d');
-        requestBtn.disabled = false;
-        releaseBtn.disabled = true;
+        setControlState(false, 'Control Released', '#6c757d');
         resetJoystick();
         resetRotation();
         console.log('Control released');
@@ -366,3 +389,19 @@ console.log('Client UUID:', currentUUID);
 // Initialize control positions on load
 resetJoystick();
 resetRotation();
+
+// Try to release control on page unload to avoid stale ownership
+window.addEventListener('beforeunload', function () {
+  if (!hasControl) return;
+  const payload = JSON.stringify({ uuid: currentUUID });
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon('/control/release', payload);
+    return;
+  }
+  fetch('/control/release', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: payload,
+    keepalive: true
+  }).catch(() => {});
+});

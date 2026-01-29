@@ -12,27 +12,27 @@ static const char *TAG = "motor_handler";
 typedef struct {
     gpio_num_t in1_gpio;      // DRV8833 IN1 pin
     gpio_num_t in2_gpio;      // DRV8833 IN2 pin
-    ledc_channel_t pwm_ch1;   // PWM channel for IN1
-    ledc_channel_t pwm_ch2;   // PWM channel for IN2
+    ledc_channel_t pwm_ch;    // PWM channel (shared between IN1/IN2)
+    gpio_num_t pwm_gpio;      // Current PWM output GPIO (IN1 or IN2)
 } drv8833_motor_t;
 
 // Motor configuration array based on pin definitions
-static const drv8833_motor_t motors[MOTOR_COUNT] = {
+static drv8833_motor_t motors[MOTOR_COUNT] = {
         // Motor 1: GPIO19 (AIN1), GPIO20 (AIN2) - DRV8833-Board_1
         { .in1_gpio = GPIO_MOTOR1_IN1, .in2_gpio = GPIO_MOTOR1_IN2, 
-            .pwm_ch1 = LEDC_CHANNEL_0, .pwm_ch2 = LEDC_CHANNEL_1 },
+            .pwm_ch = LEDC_CHANNEL_0, .pwm_gpio = GPIO_MOTOR1_IN1 },
     
         // Motor 2: GPIO14 (BIN1), GPIO21 (BIN2) - DRV8833-Board_1
         { .in1_gpio = GPIO_MOTOR2_IN1, .in2_gpio = GPIO_MOTOR2_IN2, 
-            .pwm_ch1 = LEDC_CHANNEL_2, .pwm_ch2 = LEDC_CHANNEL_3 },
+            .pwm_ch = LEDC_CHANNEL_2, .pwm_gpio = GPIO_MOTOR2_IN1 },
     
         // Motor 3: GPIO1 (AIN1), GPIO2 (AIN2) - DRV8833-Board_2
         { .in1_gpio = GPIO_MOTOR3_IN1, .in2_gpio = GPIO_MOTOR3_IN2, 
-            .pwm_ch1 = LEDC_CHANNEL_4, .pwm_ch2 = LEDC_CHANNEL_5 },
+            .pwm_ch = LEDC_CHANNEL_3, .pwm_gpio = GPIO_MOTOR3_IN1 },
     
-        // Motor 4: GPIO38 (BIN1), GPIO39 (BIN2) - DRV8833-Board_2
+        // Motor 4: GPIO47 (BIN1), GPIO48 (BIN2) - DRV8833-Board_2
         { .in1_gpio = GPIO_MOTOR4_IN1, .in2_gpio = GPIO_MOTOR4_IN2, 
-            .pwm_ch1 = LEDC_CHANNEL_6, .pwm_ch2 = LEDC_CHANNEL_7 }
+            .pwm_ch = LEDC_CHANNEL_4, .pwm_gpio = GPIO_MOTOR4_IN1 }
 };
 
 // Initialize PWM timer
@@ -55,44 +55,55 @@ static esp_err_t init_pwm_timer(void) {
     return ESP_OK;
 }
 
-// Initialize single motor PWM channels
-static esp_err_t init_motor_pwm(const drv8833_motor_t *motor) {
-    // Configure IN1 PWM channel
-    ledc_channel_config_t ch1_conf = {
+// Initialize single motor PWM channel (IN1 by default)
+static esp_err_t init_motor_pwm(drv8833_motor_t *motor) {
+    ledc_channel_config_t ch_conf = {
         .gpio_num = motor->in1_gpio,
         .speed_mode = LEDC_LOW_SPEED_MODE,
-        .channel = motor->pwm_ch1,
+        .channel = motor->pwm_ch,
         .intr_type = LEDC_INTR_DISABLE,
         .timer_sel = LEDC_TIMER_0,
         .duty = 0,
         .hpoint = 0
     };
     
-    esp_err_t ret = ledc_channel_config(&ch1_conf);
+    esp_err_t ret = ledc_channel_config(&ch_conf);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to configure IN1 PWM channel (GPIO%d): %s", 
+        ESP_LOGE(TAG, "Failed to configure PWM channel (GPIO%d): %s", 
                  motor->in1_gpio, esp_err_to_name(ret));
         return ret;
     }
-    
-    // Configure IN2 PWM channel
-    ledc_channel_config_t ch2_conf = {
-        .gpio_num = motor->in2_gpio,
+    motor->pwm_gpio = motor->in1_gpio;
+
+    // Ensure the other pin is a GPIO output and low
+    gpio_set_direction(motor->in2_gpio, GPIO_MODE_OUTPUT);
+    gpio_set_level(motor->in2_gpio, 0);
+
+    return ESP_OK;
+}
+
+static esp_err_t set_motor_pwm_gpio(drv8833_motor_t *motor, gpio_num_t gpio) {
+    if (motor->pwm_gpio == gpio) {
+        return ESP_OK;
+    }
+
+    ledc_channel_config_t ch_conf = {
+        .gpio_num = gpio,
         .speed_mode = LEDC_LOW_SPEED_MODE,
-        .channel = motor->pwm_ch2,
+        .channel = motor->pwm_ch,
         .intr_type = LEDC_INTR_DISABLE,
         .timer_sel = LEDC_TIMER_0,
         .duty = 0,
         .hpoint = 0
     };
-    
-    ret = ledc_channel_config(&ch2_conf);
+
+    esp_err_t ret = ledc_channel_config(&ch_conf);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to configure IN2 PWM channel (GPIO%d): %s", 
-                 motor->in2_gpio, esp_err_to_name(ret));
+        ESP_LOGE(TAG, "Failed to switch PWM GPIO to GPIO%d: %s", gpio, esp_err_to_name(ret));
         return ret;
     }
-    
+
+    motor->pwm_gpio = gpio;
     return ESP_OK;
 }
 
@@ -132,8 +143,8 @@ esp_err_t motor_handler_init(void) {
             ESP_LOGE(TAG, "Failed to initialize motor %d", i + 1);
             return ret;
         }
-        ESP_LOGI(TAG, "Motor %d initialized: IN1=GPIO%d, IN2=GPIO%d", 
-                 i + 1, motors[i].in1_gpio, motors[i].in2_gpio);
+        ESP_LOGI(TAG, "Motor %d initialized: IN1=GPIO%d, IN2=GPIO%d (PWM ch=%d)", 
+                 i + 1, motors[i].in1_gpio, motors[i].in2_gpio, motors[i].pwm_ch);
     }
     
     // Stop all motors initially
@@ -153,43 +164,48 @@ esp_err_t motor_handler_set_mode(int motor_id, motor_mode_t mode, int speed_perc
     if (speed_percent < 0) speed_percent = 0;
     if (speed_percent > 100) speed_percent = 100;
     
-    const drv8833_motor_t *motor = &motors[motor_id - 1];
+    drv8833_motor_t *motor = &motors[motor_id - 1];
     uint32_t duty = (speed_percent * 255) / 100;  // Convert to 8-bit PWM duty
     
     switch (mode) {
         case MOTOR_STOP_COAST:
             // IN1=0, IN2=0
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1, 0);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1);
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2, 0);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2);
+            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch, 0);
+            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch);
+            gpio_set_direction(motor->in1_gpio, GPIO_MODE_OUTPUT);
+            gpio_set_direction(motor->in2_gpio, GPIO_MODE_OUTPUT);
+            gpio_set_level(motor->in1_gpio, 0);
+            gpio_set_level(motor->in2_gpio, 0);
             ESP_LOGD(TAG, "Motor %d: COAST", motor_id);
             break;
             
         case MOTOR_FORWARD:
             // IN1=PWM, IN2=0
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1, duty);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1);
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2, 0);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2);
+            set_motor_pwm_gpio(motor, motor->in1_gpio);
+            gpio_set_direction(motor->in2_gpio, GPIO_MODE_OUTPUT);
+            gpio_set_level(motor->in2_gpio, 0);
+            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch, duty);
+            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch);
             ESP_LOGD(TAG, "Motor %d: FORWARD speed=%d%% (duty=%ld)", motor_id, speed_percent, duty);
             break;
             
         case MOTOR_REVERSE:
             // IN1=0, IN2=PWM
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1, 0);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1);
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2, duty);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2);
+            set_motor_pwm_gpio(motor, motor->in2_gpio);
+            gpio_set_direction(motor->in1_gpio, GPIO_MODE_OUTPUT);
+            gpio_set_level(motor->in1_gpio, 0);
+            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch, duty);
+            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch);
             ESP_LOGD(TAG, "Motor %d: REVERSE speed=%d%% (duty=%ld)", motor_id, speed_percent, duty);
             break;
             
         case MOTOR_BRAKE:
             // IN1=1, IN2=1
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1, 255);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch1);
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2, 255);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch2);
+            set_motor_pwm_gpio(motor, motor->in1_gpio);
+            ledc_set_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch, 255);
+            ledc_update_duty(LEDC_LOW_SPEED_MODE, motor->pwm_ch);
+            gpio_set_direction(motor->in2_gpio, GPIO_MODE_OUTPUT);
+            gpio_set_level(motor->in2_gpio, 1);
             ESP_LOGD(TAG, "Motor %d: BRAKE", motor_id);
             break;
             
