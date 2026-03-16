@@ -3,8 +3,6 @@
 #include "webserver.h"
 #include "sccb.h"
 #include "jpeg.h"
-#include "control_mgmt.h"
-#include "motor_handler.h"
 //#include "joystick_handler.h"
 //#include "webserver_control.h"
 #include "common_gpio.h"
@@ -21,8 +19,6 @@ void platform_init(void) {
     // i2c_master_init();  // Disabled: camera driver handles I2C with new driver API (esp-idf v6.0)
     // above from components/common_gpio
 
-    control_manager_init();           // init the control memory   
-    motor_handler_init();             // 初始化电机控制 (DRV8833)
     ESP_ERROR_CHECK(camera_init());   // 初始化摄像头
     //init_log_handler();             // 初始化日志模块
     //camera_init();                  // 初始化摄像头

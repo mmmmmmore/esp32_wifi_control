@@ -13,9 +13,7 @@ set(EXTRA_COMPONENT_DIRS
         protocol/control_mgmt
         handler/init
         handler/ov7670_handler 
-        handler/motor_handler
-        handler/ota_handler
-        spiffs 
+        handler/object_detector
         )
 
 # ====== 新增版本号配置 ======
@@ -26,9 +24,6 @@ set(PROJECT_VER "2.0.1" CACHE STRING "Project version")
 
 # 定义项目名称和版本
 project(esp32_wifi_control VERSION ${PROJECT_VER})
-
-# SPIFFS 构建规则（如果启用）
-spiffs_create_partition_image(spiffs spiffs FLASH_IN_PROJECT "spiffs")
 
 # ====== 固件版本号标记 ======
 # Note: The firmware binary with version number will be available after build

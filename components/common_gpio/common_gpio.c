@@ -41,14 +41,6 @@ void ov7670_gpio_init(void) {
 */
 
 
-// ======================= 电机 GPIO 初始化 =======================
-// Note: Motor GPIO and PWM initialization is now handled by motor_handler component
-// This function is kept for backward compatibility but does minimal work
-void motor_gpio_init(void) {
-    ESP_LOGI(TAG, "Motor GPIO initialization delegated to motor_handler component");
-    // Motor handler will initialize all motor pins and PWM channels
-}
-
 // ======================= 其他 GPIO 初始化 =======================
 /*
 void misc_gpio_init(void) {
@@ -83,17 +75,13 @@ void misc_gpio_init(void) {
 void common_gpio_init(void) {
     ESP_LOGI(TAG, "Starting GPIO initialization...");
     //ov7670_gpio_init();
-    motor_gpio_init();
     //misc_gpio_init();
     ESP_LOGI(TAG, "All GPIOs initialized");
 }
 
 // ======================= LEDC 初始化 =======================
-// Note: LEDC/PWM initialization for motors is now handled by motor_handler
-// This function is kept for other potential LEDC uses
 void ledc_init(void) {
-    ESP_LOGI(TAG, "LEDC initialization for motors is handled by motor_handler");
-    // Motor PWM channels are configured in motor_handler_init()
+    ESP_LOGI(TAG, "LEDC initialized for camera/system usage");
 }
 
 

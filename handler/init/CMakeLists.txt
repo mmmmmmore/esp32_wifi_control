@@ -3,6 +3,6 @@ idf_component_register(
     INCLUDE_DIRS "."
     REQUIRES 
         driver camera common_gpio jpeg  sccb
-        ov7670_handler motor_handler
+        ov7670_handler
         webserver wifi_ap control_mgmt
     )
