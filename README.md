@@ -11,7 +11,8 @@ This branch is now focused on camera stream and object-identification metadata f
 - `GET /detection` - latest detection JSON
 - `GET /detector?enable=true|false` - enable/disable detector
 - `GET /detector/status` - detector health and model status
-- `GET /ws/detection` - WebSocket detection stream (requires `CONFIG_HTTPD_WS_SUPPORT=y`)
+- `GET /ws` - primary bi-directional WebSocket command/event channel (requires `CONFIG_HTTPD_WS_SUPPORT=y`)
+- `GET /ws/detection` - compatibility alias of `/ws` (same handler)
 
 Current firmware has no HTTP POST interface in the webserver component.
 

@@ -2,6 +2,7 @@
 
 #include "ov7670_handler.h"
 #include "object_detector.h"
+#include "faceid_handler.h"
 
 #include "esp_err.h"
 #include "esp_http_server.h"
@@ -44,7 +45,7 @@ static esp_err_t detector_update_from_frame(const uint8_t *jpeg_data, size_t jpe
     return ESP_OK;
 }
 
-static char *detector_result_to_json_string(const detector_result_t *result)
+static cJSON *detector_result_to_json_object(const detector_result_t *result)
 {
     if (!result) {
         return NULL;
@@ -85,17 +86,472 @@ static char *detector_result_to_json_string(const detector_result_t *result)
         cJSON_AddItemToArray(boxes, box);
     }
 
-    char *json_str = cJSON_PrintUnformatted(root);
-    cJSON_Delete(root);
-    return json_str;
+    return root;
 }
 
 #if CONFIG_HTTPD_WS_SUPPORT
-static esp_err_t detection_ws_handler(httpd_req_t *req)
+static esp_err_t ws_send_json_async(httpd_handle_t server, int fd, cJSON *root)
+{
+    if (!server || fd < 0 || !root) {
+        cJSON_Delete(root);
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    char *json_str = cJSON_PrintUnformatted(root);
+    cJSON_Delete(root);
+    if (!json_str) {
+        return ESP_ERR_NO_MEM;
+    }
+
+    httpd_ws_frame_t frame = {
+        .type = HTTPD_WS_TYPE_TEXT,
+        .payload = (uint8_t *)json_str,
+        .len = strlen(json_str),
+    };
+
+    esp_err_t ret = httpd_ws_send_frame_async(server, fd, &frame);
+    free(json_str);
+    if (ret != ESP_OK) {
+        ESP_LOGW(TAG, "WS send failed, fd=%d", fd);
+        if (fd == s_ws_fd) {
+            s_ws_fd = -1;
+        }
+    }
+    return ret;
+}
+
+static esp_err_t ws_send_json(httpd_req_t *req, cJSON *root)
+{
+    if (!req || !root) {
+        cJSON_Delete(root);
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    char *json_str = cJSON_PrintUnformatted(root);
+    cJSON_Delete(root);
+    if (!json_str) {
+        return ESP_ERR_NO_MEM;
+    }
+
+    httpd_ws_frame_t frame = {
+        .type = HTTPD_WS_TYPE_TEXT,
+        .payload = (uint8_t *)json_str,
+        .len = strlen(json_str),
+    };
+
+    esp_err_t ret = httpd_ws_send_frame(req, &frame);
+    free(json_str);
+    return ret;
+}
+
+static void ws_copy_request_id(cJSON *root, const cJSON *request)
+{
+    if (!root || !request) {
+        return;
+    }
+
+    cJSON *request_id = cJSON_GetObjectItem((cJSON *)request, "request_id");
+    if (cJSON_IsString(request_id) && request_id->valuestring) {
+        cJSON_AddStringToObject(root, "request_id", request_id->valuestring);
+    }
+}
+
+static cJSON *detector_status_to_json_object(void)
+{
+    cJSON *root = cJSON_CreateObject();
+    if (!root) {
+        return NULL;
+    }
+
+    cJSON_AddBoolToObject(root, "enabled", object_detector_is_enabled());
+    cJSON_AddBoolToObject(root, "model_ready", object_detector_model_ready());
+    cJSON_AddStringToObject(root, "model_source", object_detector_model_source());
+    cJSON_AddBoolToObject(root, "has_result", s_detection_valid);
+    cJSON_AddNumberToObject(root, "last_box_count", s_detection_valid ? s_last_detection.box_count : 0);
+    return root;
+}
+
+static cJSON *face_status_to_json_object(void)
+{
+    cJSON *root = cJSON_CreateObject();
+    if (!root) {
+        return NULL;
+    }
+
+    cJSON_AddBoolToObject(root, "ready", faceid_handler_is_ready());
+    cJSON_AddStringToObject(root, "mode", faceid_handler_mode_to_string(faceid_handler_get_mode()));
+    cJSON_AddNumberToObject(root, "enrolled_count", faceid_handler_get_count());
+    cJSON_AddNumberToObject(root, "max_ids", FACEID_HANDLER_MAX_IDS);
+    cJSON_AddNumberToObject(root, "match_threshold", 0.90);
+    return root;
+}
+
+static cJSON *face_result_to_json_object(const faceid_result_t *result)
+{
+    if (!result) {
+        return NULL;
+    }
+
+    cJSON *root = cJSON_CreateObject();
+    if (!root) {
+        return NULL;
+    }
+
+    cJSON_AddBoolToObject(root, "success", result->success);
+    cJSON_AddBoolToObject(root, "matched", result->matched);
+    cJSON_AddNumberToObject(root, "id", result->id);
+    cJSON_AddNumberToObject(root, "similarity", result->similarity);
+    cJSON_AddNumberToObject(root, "detected_face_count", result->detected_face_count);
+    cJSON_AddNumberToObject(root, "enrolled_count", result->enrolled_count);
+    cJSON_AddStringToObject(root, "name", result->name[0] ? result->name : "unknown");
+    cJSON_AddStringToObject(root, "message", result->message);
+    cJSON_AddStringToObject(root, "mode", faceid_handler_mode_to_string(result->mode));
+    return root;
+}
+
+static esp_err_t capture_jpeg_frame(uint8_t **jpeg_data, size_t *jpeg_size)
+{
+    if (!jpeg_data || !jpeg_size) {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    *jpeg_data = NULL;
+    *jpeg_size = 0;
+    return ov7670_handler_get_jpeg(jpeg_data, jpeg_size);
+}
+
+static bool parse_bool_value(const cJSON *item, bool *value)
+{
+    if (!item || !value) {
+        return false;
+    }
+
+    if (cJSON_IsBool(item)) {
+        *value = cJSON_IsTrue(item);
+        return true;
+    }
+
+    if (cJSON_IsNumber(item)) {
+        *value = item->valuedouble != 0;
+        return true;
+    }
+
+    if (cJSON_IsString(item) && item->valuestring) {
+        if (strcasecmp(item->valuestring, "true") == 0 || strcmp(item->valuestring, "1") == 0) {
+            *value = true;
+            return true;
+        }
+        if (strcasecmp(item->valuestring, "false") == 0 || strcmp(item->valuestring, "0") == 0) {
+            *value = false;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static faceid_mode_t parse_face_mode(const char *mode, bool *ok)
+{
+    if (ok) {
+        *ok = true;
+    }
+
+    if (!mode) {
+        if (ok) {
+            *ok = false;
+        }
+        return FACEID_MODE_IDLE;
+    }
+
+    if (strcmp(mode, "idle") == 0) {
+        return FACEID_MODE_IDLE;
+    }
+    if (strcmp(mode, "setup") == 0) {
+        return FACEID_MODE_SETUP;
+    }
+    if (strcmp(mode, "identify") == 0) {
+        return FACEID_MODE_IDENTIFY;
+    }
+
+    if (ok) {
+        *ok = false;
+    }
+    return FACEID_MODE_IDLE;
+}
+
+static cJSON *build_ws_response(const cJSON *request, const char *cmd, bool ok)
+{
+    cJSON *root = cJSON_CreateObject();
+    if (!root) {
+        return NULL;
+    }
+
+    cJSON_AddStringToObject(root, "type", "response");
+    cJSON_AddStringToObject(root, "cmd", cmd ? cmd : "unknown");
+    cJSON_AddBoolToObject(root, "ok", ok);
+    ws_copy_request_id(root, request);
+    return root;
+}
+
+static cJSON *handle_ws_command(const cJSON *request)
+{
+    cJSON *cmd_item = cJSON_GetObjectItem((cJSON *)request, "cmd");
+    const char *cmd = cJSON_IsString(cmd_item) ? cmd_item->valuestring : NULL;
+    if (!cmd) {
+        cJSON *root = build_ws_response(request, "unknown", false);
+        if (root) {
+            cJSON_AddStringToObject(root, "message", "Missing cmd");
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "ping") == 0) {
+        cJSON *root = build_ws_response(request, cmd, true);
+        if (root) {
+            cJSON_AddStringToObject(root, "message", "pong");
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "detector.status") == 0) {
+        cJSON *root = build_ws_response(request, cmd, true);
+        if (root) {
+            cJSON_AddItemToObject(root, "payload", detector_status_to_json_object());
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "detector.set_enabled") == 0) {
+        bool enabled = false;
+        cJSON *enabled_item = cJSON_GetObjectItem((cJSON *)request, "enabled");
+        if (!parse_bool_value(enabled_item, &enabled)) {
+            cJSON *root = build_ws_response(request, cmd, false);
+            if (root) {
+                cJSON_AddStringToObject(root, "message", "Missing enabled boolean");
+            }
+            return root;
+        }
+
+        object_detector_set_enabled(enabled);
+        cJSON *root = build_ws_response(request, cmd, true);
+        if (root) {
+            cJSON_AddItemToObject(root, "payload", detector_status_to_json_object());
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "detector.get_latest") == 0) {
+        cJSON *root = build_ws_response(request, cmd, s_detection_valid);
+        if (!root) {
+            return NULL;
+        }
+
+        if (s_detection_valid) {
+            detector_result_t local_result;
+            if (s_detection_mutex && xSemaphoreTake(s_detection_mutex, pdMS_TO_TICKS(500)) == pdTRUE) {
+                local_result = s_last_detection;
+                xSemaphoreGive(s_detection_mutex);
+                cJSON_AddItemToObject(root, "payload", detector_result_to_json_object(&local_result));
+            } else {
+                cJSON_ReplaceItemInObject(root, "ok", cJSON_CreateBool(false));
+                cJSON_AddStringToObject(root, "message", "Detector busy");
+            }
+        } else {
+            cJSON_AddStringToObject(root, "message", "No detection result yet");
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "face.mode.set") == 0) {
+        cJSON *mode_item = cJSON_GetObjectItem((cJSON *)request, "mode");
+        bool mode_ok = false;
+        faceid_mode_t mode = parse_face_mode(cJSON_IsString(mode_item) ? mode_item->valuestring : NULL, &mode_ok);
+        cJSON *root = build_ws_response(request, cmd, mode_ok);
+        if (!root) {
+            return NULL;
+        }
+        if (!mode_ok) {
+            cJSON_AddStringToObject(root, "message", "Invalid face mode");
+            return root;
+        }
+
+        faceid_handler_set_mode(mode);
+        cJSON_AddItemToObject(root, "payload", face_status_to_json_object());
+        return root;
+    }
+
+    if (strcmp(cmd, "face.mode.get") == 0 || strcmp(cmd, "face.status") == 0) {
+        cJSON *root = build_ws_response(request, cmd, true);
+        if (root) {
+            cJSON_AddItemToObject(root, "payload", face_status_to_json_object());
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "face.list") == 0) {
+        faceid_entry_t entries[FACEID_HANDLER_MAX_IDS];
+        size_t count = 0;
+        esp_err_t ret = faceid_handler_list(entries, FACEID_HANDLER_MAX_IDS, &count);
+        cJSON *root = build_ws_response(request, cmd, ret == ESP_OK);
+        if (!root) {
+            return NULL;
+        }
+
+        if (ret != ESP_OK) {
+            cJSON_AddStringToObject(root, "message", esp_err_to_name(ret));
+            return root;
+        }
+
+        cJSON *payload = cJSON_CreateObject();
+        cJSON *faces = cJSON_CreateArray();
+        if (!payload || !faces) {
+            cJSON_Delete(payload);
+            cJSON_Delete(faces);
+            cJSON_Delete(root);
+            return NULL;
+        }
+
+        for (size_t index = 0; index < count; ++index) {
+            cJSON *entry = cJSON_CreateObject();
+            if (!entry) {
+                continue;
+            }
+            cJSON_AddNumberToObject(entry, "id", entries[index].id);
+            cJSON_AddStringToObject(entry, "name", entries[index].name);
+            cJSON_AddItemToArray(faces, entry);
+        }
+
+        cJSON_AddNumberToObject(payload, "count", count);
+        cJSON_AddItemToObject(payload, "faces", faces);
+        cJSON_AddItemToObject(root, "payload", payload);
+        return root;
+    }
+
+    if (strcmp(cmd, "face.enroll.confirm") == 0) {
+        cJSON *name_item = cJSON_GetObjectItem((cJSON *)request, "name");
+        const char *name = cJSON_IsString(name_item) ? name_item->valuestring : NULL;
+        ESP_LOGI(TAG, "WS cmd face.enroll.confirm name=%s", name ? name : "<null>");
+        faceid_result_t result;
+        uint8_t *jpeg_data = NULL;
+        size_t jpeg_size = 0;
+        esp_err_t ret = capture_jpeg_frame(&jpeg_data, &jpeg_size);
+        if (ret == ESP_OK) {
+            ret = faceid_handler_enroll_from_jpeg(jpeg_data, jpeg_size, name, &result);
+        } else {
+            memset(&result, 0, sizeof(result));
+            result.mode = faceid_handler_get_mode();
+            strlcpy(result.message, "Failed to capture frame", sizeof(result.message));
+        }
+        if (jpeg_data) {
+            free(jpeg_data);
+        }
+
+        cJSON *root = build_ws_response(request, cmd, ret == ESP_OK && result.success);
+        if (!root) {
+            return NULL;
+        }
+        cJSON_AddItemToObject(root, "payload", face_result_to_json_object(&result));
+        ESP_LOGI(TAG,
+                 "WS face.enroll.confirm ret=%s success=%d id=%d name=%s similarity=%.3f msg=%s",
+                 esp_err_to_name(ret),
+                 result.success,
+                 result.id,
+                 result.name[0] ? result.name : "unknown",
+                 result.similarity,
+                 result.message);
+        if (ret != ESP_OK) {
+            cJSON_AddStringToObject(root, "error", esp_err_to_name(ret));
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "face.identify") == 0) {
+        ESP_LOGI(TAG, "WS cmd face.identify");
+        faceid_result_t result;
+        uint8_t *jpeg_data = NULL;
+        size_t jpeg_size = 0;
+        esp_err_t ret = capture_jpeg_frame(&jpeg_data, &jpeg_size);
+        if (ret == ESP_OK) {
+            ret = faceid_handler_identify_from_jpeg(jpeg_data, jpeg_size, &result);
+        } else {
+            memset(&result, 0, sizeof(result));
+            result.mode = faceid_handler_get_mode();
+            strlcpy(result.name, "unknown", sizeof(result.name));
+            strlcpy(result.message, "Failed to capture frame", sizeof(result.message));
+        }
+        if (jpeg_data) {
+            free(jpeg_data);
+        }
+
+        cJSON *root = build_ws_response(request, cmd, ret == ESP_OK);
+        if (!root) {
+            return NULL;
+        }
+        cJSON_AddItemToObject(root, "payload", face_result_to_json_object(&result));
+        ESP_LOGI(TAG,
+                 "WS face.identify ret=%s success=%d matched=%d id=%d name=%s similarity=%.3f msg=%s",
+                 esp_err_to_name(ret),
+                 result.success,
+                 result.matched,
+                 result.id,
+                 result.name[0] ? result.name : "unknown",
+                 result.similarity,
+                 result.message);
+        if (ret != ESP_OK) {
+            cJSON_AddStringToObject(root, "error", esp_err_to_name(ret));
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "face.delete_last") == 0) {
+        faceid_result_t result;
+        esp_err_t ret = faceid_handler_delete_last(&result);
+        cJSON *root = build_ws_response(request, cmd, ret == ESP_OK && result.success);
+        if (!root) {
+            return NULL;
+        }
+        cJSON_AddItemToObject(root, "payload", face_result_to_json_object(&result));
+        if (ret != ESP_OK) {
+            cJSON_AddStringToObject(root, "error", esp_err_to_name(ret));
+        }
+        return root;
+    }
+
+    if (strcmp(cmd, "face.clear") == 0) {
+        faceid_result_t result;
+        esp_err_t ret = faceid_handler_clear_all(&result);
+        cJSON *root = build_ws_response(request, cmd, ret == ESP_OK && result.success);
+        if (!root) {
+            return NULL;
+        }
+        cJSON_AddItemToObject(root, "payload", face_result_to_json_object(&result));
+        if (ret != ESP_OK) {
+            cJSON_AddStringToObject(root, "error", esp_err_to_name(ret));
+        }
+        return root;
+    }
+
+    cJSON *root = build_ws_response(request, cmd, false);
+    if (root) {
+        cJSON_AddStringToObject(root, "message", "Unknown command");
+    }
+    return root;
+}
+
+static esp_err_t websocket_handler(httpd_req_t *req)
 {
     if (req->method == HTTP_GET) {
         s_ws_fd = httpd_req_to_sockfd(req);
         ESP_LOGI(TAG, "WebSocket connected, fd=%d", s_ws_fd);
+
+        cJSON *hello = cJSON_CreateObject();
+        if (hello) {
+            cJSON_AddStringToObject(hello, "type", "event");
+            cJSON_AddStringToObject(hello, "event", "ws.connected");
+            cJSON_AddItemToObject(hello, "detector", detector_status_to_json_object());
+            cJSON_AddItemToObject(hello, "face", face_status_to_json_object());
+            return ws_send_json(req, hello);
+        }
         return ESP_OK;
     }
 
@@ -110,22 +566,45 @@ static esp_err_t detection_ws_handler(httpd_req_t *req)
         return ret;
     }
 
-    if (ws_pkt.len > 0) {
-        uint8_t *buf = calloc(1, ws_pkt.len + 1);
-        if (!buf) {
-            return ESP_ERR_NO_MEM;
+    if (ws_pkt.len == 0) {
+        cJSON *root = build_ws_response(NULL, "unknown", false);
+        if (root) {
+            cJSON_AddStringToObject(root, "message", "Empty WebSocket payload");
+            return ws_send_json(req, root);
         }
-
-        ws_pkt.payload = buf;
-        ret = httpd_ws_recv_frame(req, &ws_pkt, ws_pkt.len);
-        free(buf);
-
-        if (ret != ESP_OK) {
-            return ret;
-        }
+        return ESP_OK;
     }
 
-    return ESP_OK;
+    uint8_t *buf = calloc(1, ws_pkt.len + 1);
+    if (!buf) {
+        return ESP_ERR_NO_MEM;
+    }
+
+    ws_pkt.payload = buf;
+    ret = httpd_ws_recv_frame(req, &ws_pkt, ws_pkt.len);
+    if (ret != ESP_OK) {
+        free(buf);
+        return ret;
+    }
+
+    cJSON *request = cJSON_ParseWithLength((const char *)buf, ws_pkt.len);
+    free(buf);
+    if (!request) {
+        cJSON *root = build_ws_response(NULL, "unknown", false);
+        if (root) {
+            cJSON_AddStringToObject(root, "message", "Invalid JSON payload");
+            return ws_send_json(req, root);
+        }
+        return ESP_OK;
+    }
+
+    cJSON *response = handle_ws_command(request);
+    cJSON_Delete(request);
+    if (!response) {
+        return ESP_ERR_NO_MEM;
+    }
+
+    return ws_send_json(req, response);
 }
 #endif
 
@@ -148,26 +627,21 @@ esp_err_t webserver_push_detection(httpd_handle_t server)
     local_result = s_last_detection;
     xSemaphoreGive(s_detection_mutex);
 
-    char *json_str = detector_result_to_json_string(&local_result);
-    if (!json_str) {
+    cJSON *payload = detector_result_to_json_object(&local_result);
+    if (!payload) {
         return ESP_ERR_NO_MEM;
     }
 
-    httpd_ws_frame_t frame = {
-        .type = HTTPD_WS_TYPE_TEXT,
-        .payload = (uint8_t *)json_str,
-        .len = strlen(json_str),
-    };
-
-    esp_err_t ret = httpd_ws_send_frame_async(server, s_ws_fd, &frame);
-    free(json_str);
-
-    if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "WS send failed, disconnect fd=%d", s_ws_fd);
-        s_ws_fd = -1;
+    cJSON *root = cJSON_CreateObject();
+    if (!root) {
+        cJSON_Delete(payload);
+        return ESP_ERR_NO_MEM;
     }
 
-    return ret;
+    cJSON_AddStringToObject(root, "type", "event");
+    cJSON_AddStringToObject(root, "event", "detector.result");
+    cJSON_AddItemToObject(root, "payload", payload);
+    return ws_send_json_async(server, s_ws_fd, root);
 #else
     return ESP_ERR_NOT_SUPPORTED;
 #endif
@@ -299,7 +773,9 @@ static esp_err_t detection_handler(httpd_req_t *req)
     local_result = s_last_detection;
     xSemaphoreGive(s_detection_mutex);
 
-    char *json = detector_result_to_json_string(&local_result);
+    cJSON *payload = detector_result_to_json_object(&local_result);
+    char *json = payload ? cJSON_PrintUnformatted(payload) : NULL;
+    cJSON_Delete(payload);
     if (!json) {
         httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "JSON encode failed");
         return ESP_FAIL;
@@ -313,17 +789,11 @@ static esp_err_t detection_handler(httpd_req_t *req)
 
 static esp_err_t detector_status_handler(httpd_req_t *req)
 {
-    cJSON *root = cJSON_CreateObject();
+    cJSON *root = detector_status_to_json_object();
     if (!root) {
         httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "JSON create failed");
         return ESP_FAIL;
     }
-
-    cJSON_AddBoolToObject(root, "enabled", object_detector_is_enabled());
-    cJSON_AddBoolToObject(root, "model_ready", object_detector_model_ready());
-    cJSON_AddStringToObject(root, "model_source", object_detector_model_source());
-    cJSON_AddBoolToObject(root, "has_result", s_detection_valid);
-    cJSON_AddNumberToObject(root, "last_box_count", s_detection_valid ? s_last_detection.box_count : 0);
 
     char *json = cJSON_PrintUnformatted(root);
     cJSON_Delete(root);
@@ -433,7 +903,7 @@ httpd_handle_t start_webserver(void)
     }
 
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.max_uri_handlers = 16;
+    config.max_uri_handlers = 20;
     config.uri_match_fn = httpd_uri_match_wildcard;
 
     httpd_handle_t server = NULL;
@@ -504,7 +974,15 @@ httpd_handle_t start_webserver(void)
     httpd_uri_t detection_ws_uri = {
         .uri = "/ws/detection",
         .method = HTTP_GET,
-        .handler = detection_ws_handler,
+        .handler = websocket_handler,
+        .user_ctx = NULL,
+        .is_websocket = true,
+    };
+
+    httpd_uri_t websocket_uri = {
+        .uri = "/ws",
+        .method = HTTP_GET,
+        .handler = websocket_handler,
         .user_ctx = NULL,
         .is_websocket = true,
     };
@@ -521,6 +999,7 @@ httpd_handle_t start_webserver(void)
 
 #if CONFIG_HTTPD_WS_SUPPORT
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &detection_ws_uri));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &websocket_uri));
 #endif
 
     ESP_LOGI(TAG, "Webserver ready");

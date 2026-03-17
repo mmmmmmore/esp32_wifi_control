@@ -14,6 +14,7 @@ set(EXTRA_COMPONENT_DIRS
         handler/init
         handler/ov7670_handler 
         handler/object_detector
+        handler/faceid_handler
         )
 
 # ====== 新增版本号配置 ======
@@ -24,6 +25,8 @@ set(PROJECT_VER "2.0.1" CACHE STRING "Project version")
 
 # 定义项目名称和版本
 project(esp32_wifi_control VERSION ${PROJECT_VER})
+
+spiffs_create_partition_image(spiffs spiffs FLASH_IN_PROJECT)
 
 # ====== 固件版本号标记 ======
 # Note: The firmware binary with version number will be available after build

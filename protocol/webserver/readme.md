@@ -1,41 +1,111 @@
-# Webserver API Definition (for APK integration)
+# WebSocket Interface Contract (for APK redesign)
 
-This file is the **authoritative interface contract** for current firmware.
+This document defines the **current firmware WebSocket protocol** implemented in `protocol/webserver/webserver.c`.
 
-## 1) Protocol summary
+## 1) Connection
 
-- Base URL: `http://<device-ip>` (typically `192.168.4.1` in AP mode)
-- Content types:
-	- `application/json` for metadata/control endpoints
-	- `image/jpeg` for snapshot
-	- `multipart/x-mixed-replace; boundary=frame` for live stream
-	- WebSocket text JSON on `/ws/detection`
-- Auth: none (LAN/AP local access)
+- Base URL: `ws://192.168.4.2/ws`
+- Compatible alias: `ws://192.168.4.2/ws/detection` (same handler/behavior)
+- Data format: text JSON frames only
+- Build requirement: `CONFIG_HTTPD_WS_SUPPORT=y`
+- Current implementation keeps one active WS client socket (`s_ws_fd`), so treat connection as **single-client**.
 
-## 2) Active HTTP endpoints
+After handshake, device sends a welcome event:
 
-| Method | Path | Query | Description | Response |
-|---|---|---|---|---|
-| GET | `/` | - | Health check | `text/plain`: `ok` |
-| GET | `/start` | - | Enable stream loop flag | `text/plain`: `Stream started` |
-| GET | `/stop` | - | Disable stream loop flag | `text/plain`: `Stream stopped` |
-| GET | `/stream` | - | Continuous MJPEG stream (video only, no inline inference) | multipart JPEG frames |
-| GET | `/snapshot` | - | Single JPEG capture only | JPEG binary |
-| GET | `/detection` | - | Last detection result JSON (updated by background detector task) | JSON object (see section 4) |
-| GET | `/detector` | `enable=1/0/true/false` (optional) | Read/update detector enable state | JSON: `{"enabled":true|false}` |
-| GET | `/detector/status` | - | Detector runtime health | JSON status (see section 5) |
+```json
+{
+	"type": "event",
+	"event": "ws.connected",
+	"detector": {
+		"enabled": true,
+		"model_ready": true,
+		"model_source": "embedded_rodata",
+		"has_result": false,
+		"last_box_count": 0
+	},
+	"face": {
+		"ready": true,
+		"mode": "idle",
+		"enrolled_count": 0,
+		"max_ids": 5,
+		"match_threshold": 0.9
+	}
+}
+```
 
-## 3) Active WebSocket endpoint
+## 2) Common message envelope
 
-| Method | Path | Description | Payload |
+### Request (APK -> device)
+
+```json
+{
+	"cmd": "face.identify",
+	"request_id": "optional-client-id"
+}
+```
+
+- `cmd` is required.
+- `request_id` is optional; if provided it will be echoed in response.
+
+### Response (device -> APK)
+
+```json
+{
+	"type": "response",
+	"cmd": "face.identify",
+	"ok": true,
+	"request_id": "optional-client-id",
+	"payload": {}
+}
+```
+
+- `ok=false` means command failed or validation failed.
+- On some failures, response may include `message` and/or `error`.
+
+### Async event (device -> APK)
+
+```json
+{
+	"type": "event",
+	"event": "detector.result",
+	"payload": {}
+}
+```
+
+## 3) Supported commands
+
+| Command | Required fields | Purpose | Response payload |
 |---|---|---|---|
-| GET (WS handshake) | `/ws/detection` | Push detection JSON whenever the background detector finishes a run | Same JSON schema as `/detection` |
+| `ping` | - | Connectivity check | `{ "message": "pong" }` (as top-level `message`) |
+| `detector.status` | - | Get detector runtime status | detector status object |
+| `detector.set_enabled` | `enabled` (bool/0/1/"true"/"false") | Enable/disable object detector | detector status object |
+| `detector.get_latest` | - | Read latest detection snapshot | detection result object |
+| `face.mode.set` | `mode` = `idle` \| `setup` \| `identify` | Switch FaceID mode | face status object |
+| `face.mode.get` | - | Get current FaceID mode/status | face status object |
+| `face.status` | - | Alias of `face.mode.get` | face status object |
+| `face.list` | - | List enrolled identities | `{ "count": n, "faces": [{"id":1,"name":"Alice"}] }` |
+| `face.enroll.confirm` | `name` (string, optional but recommended) | Capture current frame and enroll face in setup flow | face result object |
+| `face.identify` | - | Capture current frame and identify face | face result object |
+| `face.delete_last` | - | Remove most recent enrolled identity | face result object |
+| `face.clear` | - | Remove all enrolled identities | face result object |
 
-> Requires build option `CONFIG_HTTPD_WS_SUPPORT=y`.
+Unknown/malformed command returns `ok=false` with `message`.
 
-## 4) `/detection` JSON schema
+## 4) Payload schemas
 
-Returned when there is a valid detection result:
+### 4.1 Detector status payload
+
+```json
+{
+	"enabled": true,
+	"model_ready": true,
+	"model_source": "embedded_rodata",
+	"has_result": true,
+	"last_box_count": 1
+}
+```
+
+### 4.2 Detection result payload (`detector.get_latest` and `detector.result` event)
 
 ```json
 {
@@ -59,47 +129,42 @@ Returned when there is a valid detection result:
 }
 ```
 
-If no result exists yet, still returns HTTP 200 with:
+### 4.3 Face status payload
 
 ```json
 {
-	"enabled": true,
-	"model_ready": true,
-	"model_source": "embedded_rodata",
-	"message": "No detection result yet",
-	"boxes": []
+	"ready": true,
+	"mode": "idle",
+	"enrolled_count": 0,
+	"max_ids": 5,
+	"match_threshold": 0.9
 }
 ```
 
-## 5) `/detector/status` JSON schema
+### 4.4 Face result payload
 
 ```json
 {
-	"enabled": true,
-	"model_ready": true,
-	"model_source": "embedded_rodata",
-	"has_result": false,
-	"last_box_count": 0
+	"success": true,
+	"matched": true,
+	"id": 1,
+	"similarity": 0.93,
+	"detected_face_count": 1,
+	"enrolled_count": 3,
+	"name": "Alice",
+	"message": "Identify success",
+	"mode": "identify"
 }
 ```
 
-## 6) POST support status
+Notes:
+- If similarity does not reach threshold, firmware returns `name: "unknown"` and `matched: false`.
+- `face.enroll.confirm`, `face.identify`, `face.delete_last`, `face.clear` can include top-level `error` when ESP-IDF API returns an error code.
 
-- **Current firmware has no POST HTTP interfaces** in `webserver.c`.
-- APK should use GET endpoints above and WebSocket `/ws/detection`.
+## 5) APK redesign guidance
 
-## 7) Legacy (lagency) interface compatibility
-
-The following routes/features are **legacy only** from previous branches and are not part of this firmware:
-
-- OTA routes (`/ota`, `/ota/status`, etc.)
-- SPIFFS static files (`/index.html`, `/favicon.ico`, `/manifest.json` served by device)
-- Motor/joystick routes (`/joystick`, `/rotate`, `/control/request`, `/control/release`)
-
-For APK migration:
-
-1. Remove calls to legacy routes above.
-2. Use `/stream` for video and either poll `/detection` every 1-2s or subscribe to `/ws/detection` for live metadata updates.
-3. Use `/detector?enable=1|0` and `/detector/status` for detector lifecycle.
-4. Do not expect per-frame detection updates from `/stream` in current firmware.
+- Use `/ws` as the primary endpoint; keep `/ws/detection` as compatibility fallback.
+- Treat WS as command+event bus (request/response + async events) instead of detection-only stream.
+- Include `request_id` on every command so APK can map UI actions to responses.
+- Keep reconnect logic: on reconnect, wait for `ws.connected`, then query `face.status` and `face.list` to rebuild UI state.
  

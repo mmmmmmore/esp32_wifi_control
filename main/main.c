@@ -9,6 +9,7 @@
 #include "jpeg.h"
 #include "ov7670_handler.h"
 #include "object_detector.h"
+#include "faceid_handler.h"
 #include "init.h"
 #include "sccb.h"
 //#include "spiffs.h"
@@ -59,6 +60,11 @@ void app_main(void) {
         .score_threshold = 0.45f,
     };
     object_detector_init(&detector_cfg);
+
+    ret = faceid_handler_init();
+    if (ret != ESP_OK) {
+        ESP_LOGW("FACEID", "Face ID init failed: %s", esp_err_to_name(ret));
+    }
     
 
     platform_init();

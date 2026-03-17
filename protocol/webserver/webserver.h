@@ -9,10 +9,11 @@
  *          - Health        : GET /
  *          - Camera stream : GET /start  GET /stop  GET /stream  GET /snapshot
  *          - Detection     : GET /detection  GET /detector?enable=0|1  GET /detector/status
- *          - WebSocket     : GET /ws/detection  (if CONFIG_HTTPD_WS_SUPPORT)
+ *          - WebSocket     : GET /ws and GET /ws/detection (if CONFIG_HTTPD_WS_SUPPORT)
  *        Detection results are produced by a background task and exposed
- *        through /detection and /ws/detection.
- *        Note: no HTTP POST routes are registered in current firmware.
+ *        through /detection and pushed as JSON events over WebSocket.
+ *        WebSocket also accepts bi-directional JSON commands for detector
+ *        control and face ID mode/enroll/identify operations.
  * @return httpd_handle_t  Server handle, or NULL on failure.
  */
 httpd_handle_t start_webserver(void);
